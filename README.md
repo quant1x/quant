@@ -10,3 +10,7 @@ a_{m0}&a_{m1}&{\cdots}&{a_{mn}}\\
 \end{vmatrix}
 $$
 
+$$
+\sum_{i=0}^n
+$$
+
