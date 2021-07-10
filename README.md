@@ -8,7 +8,7 @@
 - [ ] 技术分析训练营
 
 ## 2. Mind-Map
-- [x] [证券分析技术(docs/波浪理论.png)
+- [x] [证券分析技术](https://github.mymmsc/quant/tree/1.0.x/docs/波浪理论.png)
 
 ---
 
