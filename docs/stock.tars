@@ -1,0 +1,35 @@
+module Stock
+{
+    // K线
+    struct KLine
+    {
+        // day        时间
+        0  require  string day;
+        // open       开盘价
+        1  require  double open;
+        // high       最高价
+        2  require  double high;
+        // low        最低价
+        3  require  double low;
+        // close      收盘价
+        4  require  double close;
+        // volume     成交量，单位股，除以100为手
+        5  require  long   volume;
+        // MA5        五日平均价
+        6  optional double MA5Price;
+        // MA5Volume  五日平均交易量
+        7  optional long   MA5Volume;
+        // MA10       十日平均价
+        8  optional double MA10Price;
+        // MA10Volume 十日平均交易量
+        9  optional long   MA10Volume;
+        // MA20       二十日平均价
+        10 optional double MA20Price;
+        // MA20Volume 二十日平均交易量
+        11 optional long   MA20Volume;
+        // MA30       三十日平均价
+        12 optional double MA30Price;
+        // MA30Volume 三十日平均交易量
+        13 optional long   MA30Volume;
+    };
+};

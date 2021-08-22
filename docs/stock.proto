@@ -1,0 +1,7 @@
+syntax = "proto3";
+package Cache;
+
+message StockInfo {
+    string code = 1; // 股票代码
+    string name = 2; // 股票名称
+}

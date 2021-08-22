@@ -1,0 +1,19 @@
+module Cache
+{
+    // 日线历史数据
+    struct DayKLine
+    {
+        // day        时间
+        0  require  string day;
+        // open       开盘价
+        1  require  double open;
+        // high       最高价
+        2  require  double high;
+        // low        最低价
+        3  require  double low;
+        // close      收盘价
+        4  require  double close;
+        // volume     成交量，单位股，除以100为手
+        5  require  long   volume;
+    };
+};
