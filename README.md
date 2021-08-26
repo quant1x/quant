@@ -14,4 +14,4 @@
 ---
 
 [注意事项]
-- 数学公式查看，只能在chrome上，安装一个插件 [数学插件](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
+- 数学公式查看，只能在chrome上，安装一个插件 [数学插件: MathJax Plugin for Github](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
