@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"github.com/quant1x/quant/category"
 	"github.com/mymmsc/gox/errors"
 	"github.com/mymmsc/gox/util"
+	"github.com/quant1x/quant/category"
 	"strings"
 	"time"
 )
@@ -80,6 +80,7 @@ func CanUpdateTime() time.Time {
 		if CanUpdate(t) {
 			break
 		} else {
+			t = updateTime(t)
 			t = t.AddDate(0, 0, -1)
 		}
 	}

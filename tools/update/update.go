@@ -125,8 +125,8 @@ func pullData(fc string, listTime time.Time) int {
 		}
 	}
 	cacheDate := dataLastDay.Format(util.DateFormat)
-	updateDate := canUpdateTime.Format(util.DateFormat)
-	nextDate := nextTradingDay.Format(util.DateFormat)
+	updateDate := canUpdateTime.Format(util.TimeFormat)
+	nextDate := nextTradingDay.Format(util.TimeFormat)
 	if dataLen < 1 {
 		logger.Infof("code[%s@%s]: 数据不需要更新, %s - %s", fc, cacheDate, nextDate, updateDate)
 		return stock.D_ERROR | stock.D_ENEED
