@@ -21,14 +21,14 @@ var (
 )
 
 // 指标计算接口
-type IndexHandler = func(n int, x int) (error)
+type IndexHandler = func(n int, x int) error
 
 // 公式接口
-type FormulaHandler = func(hds []Cache.DayKLine, n int, x int) (error)
+type FormulaHandler = func(hds []Cache.DayKLine, n int, x int) error
 
 type Formula interface {
 	Len() int
-	Load(code string) (error)
+	Load(code string) error
 	Data() interface{}
 }
 
@@ -57,7 +57,7 @@ func Ref(slice interface{}, flag string, n int) float64 {
 		return stock.DefaultValue
 	}
 	count := val.Len()
-	if count < n + 1 {
+	if count < n+1 {
 		return stock.DefaultValue
 	}
 	n = count - n - 1
@@ -72,7 +72,7 @@ func RefInt(slice interface{}, flag string, n int) int64 {
 }
 
 // 计算n周期内的flag的总和
-func SUM(slice interface{}, flag string, n int) (float64) {
+func SUM(slice interface{}, flag string, n int) float64 {
 	v := reflect.ValueOf(slice)
 	if v.Kind() != reflect.Slice {
 		return stock.DefaultValue
@@ -123,7 +123,8 @@ type CompVal struct {
 	Cycle int         // 周期
 }
 
-// 金叉判断, 当期 a > b 并且 前一期 a < b
+// Cross 金叉判断
+// 当期 a > b 并且 前一期 a < b
 // a和b对调就是死叉
 func Cross(a, b CompVal) bool {
 	sa := reflect.ValueOf(a.Data)
@@ -138,13 +139,13 @@ func Cross(a, b CompVal) bool {
 		return false
 	}
 	// 首先判断前一周期是否 a < b
-	fa1 := Ref(a.Data, a.Flag, a.Cycle + 1)
-	fb1 := Ref(b.Data, b.Flag, b.Cycle + 1)
+	fa1 := Ref(a.Data, a.Flag, a.Cycle+1)
+	fb1 := Ref(b.Data, b.Flag, b.Cycle+1)
 	if fa1 >= fb1 {
 		return false
 	} else {
-		fa0 := Ref(a.Data, a.Flag, a.Cycle + 0)
-		fb0 := Ref(b.Data, b.Flag, b.Cycle + 0)
+		fa0 := Ref(a.Data, a.Flag, a.Cycle+0)
+		fb0 := Ref(b.Data, b.Flag, b.Cycle+0)
 
 		if fa0 <= fb0 {
 			return false
@@ -154,12 +155,12 @@ func Cross(a, b CompVal) bool {
 	}
 }
 
-// EMA 当前值算法
+// ExpMA EMA 当前值算法
 // previous 前一值
 // current 当前值
 // EMAtoday = α * Pricetoday + ( 1 - α ) * EMAyesterday
 // α = n + 1
 func ExpMA(previous, current float64, n int) float64 {
 	factor := float64(n) + 1
-	return (previous * (factor - EmaWeight) + current * EmaWeight) / factor
+	return (previous*(factor-EmaWeight) + current*EmaWeight) / factor
 }
