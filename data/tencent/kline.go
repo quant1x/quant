@@ -2,15 +2,15 @@ package tencent
 
 import (
 	"fmt"
+	"github.com/mymmsc/gox/api"
+	"github.com/mymmsc/gox/fastjson"
+	"github.com/mymmsc/gox/logger"
+	"github.com/mymmsc/gox/util"
 	"github.com/quant1x/quant/data/qtimg"
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/http"
 	"github.com/quant1x/quant/stock"
 	"github.com/quant1x/quant/utils"
-	"github.com/mymmsc/gox/api"
-	"github.com/mymmsc/gox/fastjson"
-	"github.com/mymmsc/gox/logger"
-	"github.com/mymmsc/gox/util"
 	"strings"
 	"time"
 )
@@ -184,9 +184,10 @@ func (this *TencentDataApi) DailyFromDate(code string, startTime time.Time) ([]s
 	}
 	// 测试时间比对
 	//nextTradingDay = time.Date(2021, 1, 4, 0, 0, 0, 0, time.Local)
+	days = utils.KLineRequireDays(now, startTime)
 	history := historyByDays(code, days)
 	dls, lastDay := extract(nextTradingDay, history)
-	//nextTradingDay = lastDay
+	nextTradingDay = lastDay
 	_ = lastDay
 	kLines = append(kLines, dls...)
 	listDay := listTime.Format(util.DateFormat)
