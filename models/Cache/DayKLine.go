@@ -10,12 +10,12 @@ import (
 
 //DayKLine strcut implement
 type DayKLine struct {
-	Date   string  `json:"date"`
-	Open   float64 `json:"open"`
-	High   float64 `json:"high"`
-	Low    float64 `json:"low"`
-	Close  float64 `json:"close"`
-	Volume int64   `json:"volume"`
+	Date   string  `json:"date" csv:"date" array:"0"`
+	Open   float64 `json:"open" csv:"open" array:"1"`
+	High   float64 `json:"high" csv:"high" array:"2"`
+	Low    float64 `json:"low" csv:"low" array:"3"`
+	Close  float64 `json:"close" csv:"close" array:"4"`
+	Volume int64   `json:"volume" csv:"volume" array:"5"`
 }
 
 func (st *DayKLine) resetDefault() {
