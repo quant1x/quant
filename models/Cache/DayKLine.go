@@ -8,7 +8,7 @@ import (
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
 )
 
-//DayKLine strcut implement
+//DayKLine struct implement
 type DayKLine struct {
 	Date   string  `json:"date" csv:"date" array:"0"`
 	Open   float64 `json:"open" csv:"open" array:"1"`
