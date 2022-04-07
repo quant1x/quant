@@ -8,18 +8,18 @@ import (
 )
 
 const (
-	Open = "Open"
-	Close = "Close"
-	High = "High"
-	Low = "Low"
-	Volume = "Volume"
-	MA5 = "MA5"
-	MA5Volume = "MA5Volume"
-	MA10 = "MA10"
+	Open       = "Open"
+	Close      = "Close"
+	High       = "High"
+	Low        = "Low"
+	Volume     = "Volume"
+	MA5        = "MA5"
+	MA5Volume  = "MA5Volume"
+	MA10       = "MA10"
 	MA10Volume = "MA10Volume"
-	MA20 = "MA20"
+	MA20       = "MA20"
 	MA20Volume = "MA20Volume"
-	MA30 = "MA30"
+	MA30       = "MA30"
 	MA30Volume = "MA30Volume"
 )
 
@@ -63,8 +63,13 @@ func KLinePath(fc string) (string, string, int) {
 	pos := len(fc) - 3
 	fc = strings.ToLower(fc)
 	// 组织存储路径
-	return fc, cache.GetDayPath() + "/" + fc[0:pos] + "/" + fc, D_OK
+	filename := cache.GetDayPath() + "/" + fc[0:pos] + "/" + fc
+	if cache.CACHE_DATA_CSV {
+		filename += ".csv"
+	}
+	return fc, filename, D_OK
 }
+
 //
 func LoadKLine(fullCode string) []Cache.DayKLine {
 	return cache.LoadKLine(fullCode)

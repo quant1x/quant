@@ -32,11 +32,13 @@ func check(e error) {
 func main() {
 	defer logger.FlushLogger()
 	var (
-		path string // 数据路径
+		path   string // 数据路径
+		useCSV bool   // 是否使用CSV格式
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
+	flag.BoolVar(&useCSV, "csv", false, "use CSV format")
 	flag.Parse()
-	cache.Init(path)
+	cache.Init(path, useCSV)
 
 	fullCodes := data.GetCodeList()
 	for _, code := range fullCodes {
@@ -67,6 +69,7 @@ func sleep() {
 	time.Sleep(time.Second * 2)
 }
 
+// 拉取数据
 func pullData(fc string, listTime time.Time) int {
 	fc, filename, ret := stock.KLinePath(fc)
 	if ret != stock.D_OK {

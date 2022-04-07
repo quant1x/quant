@@ -4,8 +4,10 @@
 package Cache
 
 import (
+	"encoding/csv"
 	"fmt"
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
+	"github.com/mymmsc/gox/api"
 )
 
 //DayKLine struct implement
@@ -91,6 +93,28 @@ func (st *DayKLine) ReadBlock(_is *codec.Reader, tag byte, require bool) error {
 	}
 	_ = have
 	return nil
+}
+
+func (st *DayKLine) Update(_writer interface{}) error {
+
+	if _w, ok := _writer.(*codec.Buffer); ok {
+		return st.WriteTo(_w)
+	}
+	if _w, ok := _writer.(*csv.Writer); ok {
+		return st.WriteCSV(_w)
+	}
+	return nil
+}
+
+func (st *DayKLine) WriteCSV(_writer *csv.Writer) error {
+	line := []string{}
+	line = append(line, st.Date)
+	line = append(line, api.ToString(st.Open))
+	line = append(line, api.ToString(st.High))
+	line = append(line, api.ToString(st.Low))
+	line = append(line, api.ToString(st.Close))
+	line = append(line, api.ToString(st.Volume))
+	return _writer.Write(line)
 }
 
 //WriteTo encode struct to buffer

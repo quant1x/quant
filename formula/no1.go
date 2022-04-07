@@ -21,7 +21,7 @@ func main() {
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
 	flag.Parse()
-	cache.Init(path)
+	cache.Init(path, cache.CACHE_DATA_CSV)
 	// 获取全部证券代码
 	ss := data.GetCodeList()
 	count := len(ss)
