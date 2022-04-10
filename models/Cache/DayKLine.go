@@ -5,9 +5,11 @@ package Cache
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
-	"github.com/mymmsc/gox/api"
+	"reflect"
+	"strconv"
 )
 
 //DayKLine struct implement
@@ -106,17 +108,6 @@ func (st *DayKLine) Update(_writer interface{}) error {
 	return nil
 }
 
-func (st *DayKLine) WriteCSV(_writer *csv.Writer) error {
-	line := []string{}
-	line = append(line, st.Date)
-	line = append(line, api.ToString(st.Open))
-	line = append(line, api.ToString(st.High))
-	line = append(line, api.ToString(st.Low))
-	line = append(line, api.ToString(st.Close))
-	line = append(line, api.ToString(st.Volume))
-	return _writer.Write(line)
-}
-
 //WriteTo encode struct to buffer
 func (st *DayKLine) WriteTo(_os *codec.Buffer) error {
 	var err error
@@ -169,4 +160,112 @@ func (st *DayKLine) WriteBlock(_os *codec.Buffer, tag byte) error {
 		return err
 	}
 	return nil
+}
+
+//写入
+func (st *DayKLine) WriteCSV(_writer *csv.Writer) error {
+	val := reflect.ValueOf(st)
+	var line []string
+	for i := 0; i < val.Elem().NumField(); i++ {
+		fd := val.Elem().Field(i)
+		vs := fmt.Sprintf("%v", fd)
+		line = append(line, vs)
+	}
+	return _writer.Write(line)
+}
+
+//读取
+func (st *DayKLine) ReadCsvRow(record []string) error {
+	val := reflect.ValueOf(st).Elem()
+	sts := val.NumField()
+	rs := len(record)
+	if sts > rs {
+		sts = rs
+	}
+	for i := 0; i < sts; i++ {
+		vf := val.Field(i)
+		rv := record[i]
+		var vs reflect.Value
+		switch vf.Kind() {
+		case reflect.Float64:
+			if v, err := strconv.ParseFloat(rv, 64); err != nil {
+				return errors.New(fmt.Sprintf("转换第%d字段为Float64失败:%v", i, err))
+			} else {
+				vs = reflect.ValueOf(v)
+				break
+			}
+		case reflect.Float32:
+			if v, err := strconv.ParseFloat(rv, 32); err != nil {
+				return errors.New(fmt.Sprintf("转换第%d字段为Float32失败:%v", i, err))
+			} else {
+				vs = reflect.ValueOf(v)
+				break
+			}
+		case reflect.Int32:
+			if v, err := strconv.ParseInt(rv, 10, 32); err != nil {
+				return errors.New(fmt.Sprintf("转换第%d字段为Int32失败:%v", i, err))
+			} else {
+				vs = reflect.ValueOf(int32(v))
+				break
+			}
+		case reflect.Int64:
+			if v, err := strconv.ParseInt(rv, 10, 64); err != nil {
+				return errors.New(fmt.Sprintf("转换第%d字段为Int64失败:%v", i, err))
+			} else {
+				vs = reflect.ValueOf(v)
+				break
+			}
+		case reflect.Bool:
+			if v, err := strconv.ParseBool(rv); err != nil {
+				return errors.New(fmt.Sprintf("转换第%d字段为Bool失败:%v", i, err))
+			} else {
+				vs = reflect.ValueOf(v)
+				break
+			}
+		default:
+			// reflect.String:
+			vs = reflect.ValueOf(rv)
+			break
+		}
+		vf.Set(vs)
+	}
+	return nil
+}
+
+//初始化
+func (st *DayKLine) Init(_writer *csv.Writer) error {
+	t := reflectType(st)
+	fieldNum := t.NumField()
+	var line []string
+	for i := 0; i < fieldNum; i++ {
+		f := t.Field(i)
+		fn := f.Name
+		line = append(line, fn)
+	}
+	return _writer.Write(line)
+}
+
+func reflectType(i any) reflect.Type {
+	t := reflect.TypeOf(i)
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+	return t
+}
+
+func (st *DayKLine) ReadFromCsv(reader *csv.Reader) ([]DayKLine, error) {
+	var result []DayKLine
+	records, _ := reader.ReadAll()
+	for row, record := range records {
+		if row == 0 {
+			continue
+		}
+		var kLine DayKLine
+		err := kLine.ReadCsvRow(record)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, kLine)
+	}
+	return result, nil
 }

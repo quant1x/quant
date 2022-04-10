@@ -1,8 +1,9 @@
 package main
 
 import (
+	"encoding/csv"
+	"errors"
 	"flag"
-	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
 	"github.com/mymmsc/gox/api"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/util"
@@ -16,9 +17,9 @@ import (
 	"github.com/quant1x/quant/models/Cache"
 	"github.com/quant1x/quant/stock"
 	"github.com/quant1x/quant/utils"
-	"io/ioutil"
 	"os"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -36,7 +37,7 @@ func main() {
 		useCSV bool   // 是否使用CSV格式
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
-	flag.BoolVar(&useCSV, "csv", false, "use CSV format")
+	flag.BoolVar(&useCSV, "csv", true, "use CSV format")
 	flag.Parse()
 	cache.Init(path, useCSV)
 
@@ -75,22 +76,32 @@ func pullData(fc string, listTime time.Time) int {
 	if ret != stock.D_OK {
 		return ret
 	}
+	//构建目录
 	cache.CheckFilepath(filename)
-	// 读取日线数据
+	// 读取本地日线数据
 	mapKLine := treemap.NewWithStringComparator()
-	fileBuf, err := ioutil.ReadFile(filename)
-	if err != nil {
-		logger.Debugf("code[%s]: K线数据文件不存在", fc)
+	fcNotExist := false
+	if fr, err := os.Open(filename); err != nil {
+		//ENOENT (2)
+		if errors.Is(err, syscall.ENOENT) {
+			logger.Debugf("code[%s]: K线数据文件不存在", fc)
+			fcNotExist = true
+		} else {
+			logger.Errorf("code[%s]: K线数据文件操作失败:%v", fc, err)
+			return 0
+		}
 	} else {
-		// 读取日线数据
-		cr := codec.NewReader(fileBuf)
-		for {
-			var kLine Cache.DayKLine
-			err := kLine.ReadFrom(cr)
-			if err != nil {
-				break
-			}
-			mapKLine.Put(kLine.Date, kLine)
+		var kLine Cache.DayKLine
+		records, err := kLine.ReadFromCsv(csv.NewReader(fr))
+		if err != nil {
+			logger.Errorf("code[%s]: K线数据文件读取失败:%v", fc, err)
+			return 0
+		}
+		if len(records) == 0 {
+			fcNotExist = true
+		}
+		for _, record := range records {
+			mapKLine.Put(record.Date, record)
 		}
 	}
 	// 取得当前缓存中最后一个日期
@@ -164,15 +175,14 @@ func pullData(fc string, listTime time.Time) int {
 		return ec
 	}
 
-	//对于更细粒度的写入，先打开一个文件。
-	//fw, err := os.Create(filename)
-	fw, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, category.CACHE_FILE_MODE)
-	if err != nil {
-		logger.Errorf("code[%s]: 写日线文件失败, error[%+v]", fc, err)
-		return stock.D_ERROR | stock.D_EDISK
-	}
 	count := len(ha)
 	wrote := 0
+	fw, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, category.CACHE_FILE_MODE)
+	_writer := csv.NewWriter(fw)
+	if fcNotExist && count > 0 {
+		var cskHead Cache.DayKLine
+		cskHead.Init(_writer)
+	}
 	for j := 0; j < count; j++ {
 		kl := ha[j]
 		var csk Cache.DayKLine
@@ -193,15 +203,11 @@ func pullData(fc string, listTime time.Time) int {
 		csk.Low = kl.Low
 		csk.Volume = kl.Volume*/
 
-		_cos := codec.NewBuffer()
-		weer := csk.WriteTo(_cos)
-		if weer != nil {
-			logger.Debugf("cache output error, %+v", weer)
-		}
-		fw.Write(_cos.ToBytes())
+		csk.WriteCSV(_writer)
 		wrote += 1
 	}
-	fw.Sync()
+	_writer.Flush()
+	//fw.Sync()
 	fw.Close()
 	if wrote > 0 {
 		logger.Infof("code[%s]: 写日线文件, SUCCESS", fc)
