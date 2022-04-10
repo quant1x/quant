@@ -33,13 +33,11 @@ func check(e error) {
 func main() {
 	defer logger.FlushLogger()
 	var (
-		path   string // 数据路径
-		useCSV bool   // 是否使用CSV格式
+		path string // 数据路径
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
-	flag.BoolVar(&useCSV, "csv", true, "use CSV format")
 	flag.Parse()
-	cache.Init(path, useCSV)
+	cache.Init(path)
 
 	fullCodes := data.GetCodeList()
 	for _, code := range fullCodes {
@@ -79,30 +77,26 @@ func pullData(fc string, listTime time.Time) int {
 	//构建目录
 	cache.CheckFilepath(filename)
 	// 读取本地日线数据
-	mapKLine := treemap.NewWithStringComparator()
+	var mapKLine *treemap.Map
 	fcNotExist := false
 	if fr, err := os.Open(filename); err != nil {
 		//ENOENT (2)
 		if errors.Is(err, syscall.ENOENT) {
 			logger.Debugf("code[%s]: K线数据文件不存在", fc)
 			fcNotExist = true
+			mapKLine = treemap.NewWithStringComparator()
 		} else {
 			logger.Errorf("code[%s]: K线数据文件操作失败:%v", fc, err)
 			return 0
 		}
 	} else {
 		var kLine Cache.DayKLine
-		records, err := kLine.ReadFromCsv(csv.NewReader(fr))
+		mapKLine, err = kLine.ReadMapFromCsv(csv.NewReader(fr))
 		if err != nil {
 			logger.Errorf("code[%s]: K线数据文件读取失败:%v", fc, err)
 			return 0
 		}
-		if len(records) == 0 {
-			fcNotExist = true
-		}
-		for _, record := range records {
-			mapKLine.Put(record.Date, record)
-		}
+		fcNotExist = mapKLine.Empty()
 	}
 	// 取得当前缓存中最后一个日期
 	canUpdateTime := utils.CanUpdateTime()
@@ -174,7 +168,6 @@ func pullData(fc string, listTime time.Time) int {
 	if ec != 0 {
 		return ec
 	}
-
 	count := len(ha)
 	wrote := 0
 	fw, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, category.CACHE_FILE_MODE)

@@ -14,8 +14,6 @@ const (
 var (
 	// CACHE_ROOT_PATH cache路径
 	CACHE_ROOT_PATH = category.DATA_ROOT_PATH
-	// 是否启用CSV格式
-	CACHE_DATA_CSV = false
 )
 
 // CheckFilepath
@@ -27,13 +25,12 @@ func CheckFilepath(filename string) error {
 
 // Init
 // 初始化缓存路径
-func Init(path string, useCSV bool) error {
+func Init(path string) error {
 	err := os.MkdirAll(path, category.CACHE_DIR_MODE)
 	if err != nil {
 		return err
 	}
 	CACHE_ROOT_PATH = path
-	CACHE_DATA_CSV = useCSV
 	return nil
 }
 

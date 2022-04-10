@@ -1,12 +1,13 @@
 package cache
 
 import (
-	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
-	"github.com/quant1x/quant/models/Cache"
+	"encoding/csv"
+	"errors"
 	"github.com/mymmsc/gox/logger"
-	"github.com/mymmsc/gox/util/treemap"
-	"io/ioutil"
+	"github.com/quant1x/quant/models/Cache"
+	"os"
 	"strings"
+	"syscall"
 )
 
 // LoadKLine 加载日线文件
@@ -20,22 +21,22 @@ func LoadKLine(fc string) []Cache.DayKLine {
 	// 组织存储路径
 	filename := GetDayPath() + "/" + fc[0:pos] + "/" + fc
 	CheckFilepath(filename)
-	// 读取日线数据
-	mapKLine := treemap.NewWithStringComparator()
-	fileBuf, err := ioutil.ReadFile(filename)
-	if err != nil {
-		logger.Debugf("code[%s]: K线数据文件不存在", fc)
-		return nil
+	if fr, err := os.Open(filename); err != nil {
+		//ENOENT (2)
+		if errors.Is(err, syscall.ENOENT) {
+			logger.Debugf("code[%s]: K线数据文件不存在", fc)
+			return nil
+		} else {
+			logger.Errorf("code[%s]: K线数据文件操作失败:%v", fc, err)
+			return nil
+		}
 	} else {
+		var kLine Cache.DayKLine
 		// 读取日线数据
-		cr := codec.NewReader(fileBuf)
-		for {
-			var kLine Cache.DayKLine
-			err := kLine.ReadFrom(cr)
-			if err != nil {
-				break
-			}
-			mapKLine.Put(kLine.Date, kLine)
+		mapKLine, err := kLine.ReadMapFromCsv(csv.NewReader(fr))
+		if err != nil {
+			logger.Errorf("code[%s]: K线数据文件读取失败:%v", fc, err)
+			return nil
 		}
 		var kls []Cache.DayKLine
 		for _, v := range mapKLine.Values() {

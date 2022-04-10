@@ -19,14 +19,14 @@ func HttpGet0(url string) ([]byte, error) {
 	logger.Debugf("url=[%s]\n", url)
 	res, err := http.Get(url)
 	if err != nil {
-		logger.Errorf("url=[%s], err=[%+v]\n",  url, err)
+		logger.Errorf("url=[%s], err=[%+v]\n", url, err)
 		return nil, err
 	}
 	//defer res.Body.Close()
 	defer api.CloseQuietly(res.Body)
 	data, err := ioutil.ReadAll(transform.NewReader(res.Body, simplifiedchinese.GBK.NewDecoder()))
 	if err != nil {
-		logger.Errorf("url=[%s], err=[%+v]\n",  url, err)
+		logger.Errorf("url=[%s], err=[%+v]\n", url, err)
 		return nil, err
 	}
 	//sret, err := json.Marshal(res)
@@ -43,7 +43,7 @@ func HttpRequest(url string, method string) ([]byte, error) {
 		return nil, err
 	}
 	header := make(map[string]string)
-	header["Accept"] = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+	header["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
 	header["Accept-Encoding"] = "gzip, deflate"
 	header["Accept-Language"] = "zh-CN,zh;q=0.9,en;q=0.8"
 	header["Cache-Control"] = "no-cache"
@@ -51,7 +51,7 @@ func HttpRequest(url string, method string) ([]byte, error) {
 	header["Host"] = u.Host
 	header["Pragma"] = "no-cache"
 	header["Upgrade-Insecure-Requests"] = "1"
-	header["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+	header["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36"
 
 	client := &http.Client{}
 	request, err := http.NewRequest(strings.ToUpper(method), url, nil)

@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	urlKLine = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=%s&scale=%d&datalen=%d"
+	urlKLine    = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=%s&scale=%d&datalen=%d"
 	urlRealtime = "http://hq.sinajs.cn/list=%s"
 )
 
@@ -29,6 +29,7 @@ func GetHistory(fullCode string, datalen int) ([]SinaHistory, error) {
 	data, err := http.HttpGet(url)
 	if err != nil {
 		logger.Errorf("%+v\n", err)
+		fmt.Println(err)
 		return nil, err
 	}
 	var kl []SinaHistory

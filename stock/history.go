@@ -63,10 +63,7 @@ func KLinePath(fc string) (string, string, int) {
 	pos := len(fc) - 3
 	fc = strings.ToLower(fc)
 	// 组织存储路径
-	filename := cache.GetDayPath() + "/" + fc[0:pos] + "/" + fc
-	if cache.CACHE_DATA_CSV {
-		filename += ".csv"
-	}
+	filename := cache.GetDayPath() + "/" + fc[0:pos] + "/" + fc + ".csv"
 	return fc, filename, D_OK
 }
 

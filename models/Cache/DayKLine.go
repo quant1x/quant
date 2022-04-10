@@ -7,7 +7,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
+	"github.com/mymmsc/gox/util/treemap"
 	"reflect"
 	"strconv"
 )
@@ -23,143 +23,6 @@ type DayKLine struct {
 }
 
 func (st *DayKLine) resetDefault() {
-}
-
-//ReadFrom reads  from _is and put into struct.
-func (st *DayKLine) ReadFrom(_is *codec.Reader) error {
-	var err error
-	var length int32
-	var have bool
-	var ty byte
-	st.resetDefault()
-
-	err = _is.Read_string(&st.Date, 0, true)
-	if err != nil {
-		return err
-	}
-
-	err = _is.Read_float64(&st.Open, 1, true)
-	if err != nil {
-		return err
-	}
-
-	err = _is.Read_float64(&st.High, 2, true)
-	if err != nil {
-		return err
-	}
-
-	err = _is.Read_float64(&st.Low, 3, true)
-	if err != nil {
-		return err
-	}
-
-	err = _is.Read_float64(&st.Close, 4, true)
-	if err != nil {
-		return err
-	}
-
-	err = _is.Read_int64(&st.Volume, 5, true)
-	if err != nil {
-		return err
-	}
-
-	_ = length
-	_ = have
-	_ = ty
-	return nil
-}
-
-//ReadBlock reads struct from the given tag , require or optional.
-func (st *DayKLine) ReadBlock(_is *codec.Reader, tag byte, require bool) error {
-	var err error
-	var have bool
-	st.resetDefault()
-
-	err, have = _is.SkipTo(codec.STRUCT_BEGIN, tag, require)
-	if err != nil {
-		return err
-	}
-	if !have {
-		if require {
-			return fmt.Errorf("require DayKLine, but not exist. tag %d", tag)
-		}
-		return nil
-
-	}
-
-	st.ReadFrom(_is)
-
-	err = _is.SkipToStructEnd()
-	if err != nil {
-		return err
-	}
-	_ = have
-	return nil
-}
-
-func (st *DayKLine) Update(_writer interface{}) error {
-
-	if _w, ok := _writer.(*codec.Buffer); ok {
-		return st.WriteTo(_w)
-	}
-	if _w, ok := _writer.(*csv.Writer); ok {
-		return st.WriteCSV(_w)
-	}
-	return nil
-}
-
-//WriteTo encode struct to buffer
-func (st *DayKLine) WriteTo(_os *codec.Buffer) error {
-	var err error
-
-	err = _os.Write_string(st.Date, 0)
-	if err != nil {
-		return err
-	}
-
-	err = _os.Write_float64(st.Open, 1)
-	if err != nil {
-		return err
-	}
-
-	err = _os.Write_float64(st.High, 2)
-	if err != nil {
-		return err
-	}
-
-	err = _os.Write_float64(st.Low, 3)
-	if err != nil {
-		return err
-	}
-
-	err = _os.Write_float64(st.Close, 4)
-	if err != nil {
-		return err
-	}
-
-	err = _os.Write_int64(st.Volume, 5)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-//WriteBlock encode struct
-func (st *DayKLine) WriteBlock(_os *codec.Buffer, tag byte) error {
-	var err error
-	err = _os.WriteHead(codec.STRUCT_BEGIN, tag)
-	if err != nil {
-		return err
-	}
-
-	st.WriteTo(_os)
-
-	err = _os.WriteHead(codec.STRUCT_END, 0)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 //写入
@@ -268,4 +131,22 @@ func (st *DayKLine) ReadFromCsv(reader *csv.Reader) ([]DayKLine, error) {
 		result = append(result, kLine)
 	}
 	return result, nil
+}
+
+func (st *DayKLine) ReadMapFromCsv(reader *csv.Reader) (*treemap.Map, error) {
+	mapKLine := treemap.NewWithStringComparator()
+	records, _ := reader.ReadAll()
+	for row, record := range records {
+		if row == 0 {
+			continue
+		}
+		var kLine DayKLine
+		err := kLine.ReadCsvRow(record)
+		if err != nil {
+			return nil, err
+		}
+		mapKLine.Put(kLine.Date, kLine)
+	}
+	return mapKLine, nil
+
 }
