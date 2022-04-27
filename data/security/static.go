@@ -4,10 +4,12 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
-	"github.com/quant1x/quant/data/constant"
-	"github.com/quant1x/quant/utils"
 	"github.com/mymmsc/gox/errors"
 	"github.com/mymmsc/gox/logger"
+	"github.com/quant1x/quant/category"
+	"github.com/quant1x/quant/data/constant"
+	"github.com/quant1x/quant/utils"
+	"os"
 )
 
 const (
@@ -63,6 +65,8 @@ type StaticBasic struct {
 	ListTime      string   `json:"listTime,omitempty"`      //上市时间字符串
 	Delisting     bool     `json:"delisting,omitempty"`     //是否退市
 	ListTimestamp float64  `json:"listTimestamp,omitempty"` //上市时间戳, 秒数
+	CCass         string   `json:"cCass,omitempty"`         //CCASS股份编号
+	ASecurity     bool     `json:aSecurity,omitempty`       //是否A股通
 }
 
 // 生成指数静态信息
@@ -189,7 +193,7 @@ func init() {
 	// 4. 加载 上海的个股信息
 	for market, name := range MarketName {
 		logger.Infof("开始加载 %s 个股静态信息...", name)
-		list, err := getStaticBasic(market)
+		list, err := GetStaticBasic(market)
 		if err != nil {
 			logger.Errorf("上海个股信息加载失败")
 		} else {
@@ -207,7 +211,7 @@ func init() {
 	logger.Infof("开始初始化市场静态数据...OK")
 }
 
-func getStaticBasic(market string) (list []StaticBasic, err error) {
+func GetStaticBasic(market string) (list []StaticBasic, err error) {
 	filename := fmt.Sprintf("%s/%s.json", ResourcesPath, market)
 	fileBuf, err := resources.ReadFile(filename)
 	if err != nil {
@@ -224,4 +228,17 @@ func GetBasicInfo(code string) (*StaticBasic, error) {
 		return nil, ErrCodeNotExist
 	}
 	return &info, nil
+}
+
+func WriteBasicInfo(market string, array []byte) {
+	filename := fmt.Sprintf("%s/%s.json", ResourcesPath, market)
+	fw, err := os.OpenFile("data/security/"+filename, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, category.CACHE_FILE_MODE)
+	if err != nil {
+		logger.Debugf("filename[%s]: JSON文件打开失败", filename, err)
+	}
+	defer fw.Close()
+	_, err = fw.Write(array)
+	if err != nil {
+		logger.Debugf("filename[%s]: JSON文件写入失败", filename, err)
+	}
 }
