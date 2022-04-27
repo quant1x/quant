@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"errors"
 	"flag"
+	"github.com/axgle/mahonia"
 	"github.com/mymmsc/gox/api"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/util"
@@ -17,6 +19,8 @@ import (
 	"github.com/quant1x/quant/models/Cache"
 	"github.com/quant1x/quant/stock"
 	"github.com/quant1x/quant/utils"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"strings"
 	"syscall"
@@ -40,6 +44,9 @@ func main() {
 	cache.Init(path)
 
 	fullCodes := data.GetCodeList()
+	updateSpe("https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SZSE_Securities_c.csv?la=zh-HK", "sz")
+	updateSpe("https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SSE_Securities_c.csv?la=zh-HK", "sh")
+
 	for _, code := range fullCodes {
 		basicInfo, err := security.GetBasicInfo(code)
 		if err == security.ErrCodeNotExist {
@@ -220,4 +227,77 @@ func fetchData(dataApi stock.DataApi, code string, nextTradingDay time.Time) ([]
 		return nil, stock.D_ERROR | stock.D_ENEED
 	}
 	return ha, 0
+}
+
+func ChangeDecode(src string, srcCode string, tagCode string) string {
+	srcCoder := mahonia.NewDecoder(srcCode)
+	srcResult := srcCoder.ConvertString(src)
+	tagCoder := mahonia.NewDecoder(tagCode)
+	_, cdata, _ := tagCoder.Translate([]byte(srcResult), true)
+	result := string(cdata)
+	return result
+}
+
+//深股通特别证券/中华通特别证券名单（只可卖出）https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SZSE_Securities_c.csv?la=zh-HK
+//港股通特别证券/中华通特别证卷名单 (只可卖出) https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SSE_Securities_c.csv?la=zh-HK
+func updateSpe(url string, market string) {
+	//抓取HKEX csv文件
+	speMap := fetchHKEX(url)
+	//加载market到数组
+	list, err := security.GetStaticBasic(market)
+	if err != nil {
+		logger.Errorf(market, "个股信息加载失败")
+	} else {
+		//遍历market数组 比对HKEX csv文件是否存在
+		for k, item := range list {
+			cCass, ok := speMap[item.Security.Code]
+			if ok {
+				list[k].CCass = cCass
+				list[k].ASecurity = true
+			} else {
+				list[k].ASecurity = false
+			}
+		}
+		u, _ := json.Marshal(list)
+		//写入文件 json
+		security.WriteBasicInfo(market, u)
+	}
+
+}
+
+func fetchHKEX(url string) map[string]string {
+	res, _ := http.Get(url)
+	defer res.Body.Close()
+
+	buffer, _ := ioutil.ReadAll(res.Body)
+	src := string(buffer)
+
+	reDecodeSrc := ChangeDecode(src, "utf16", "utf8")
+	enterSrc := strings.Split(reDecodeSrc, "\n")
+
+	var k, j, start int
+	var startPoint bool
+	startPoint = true
+	for start = 0; start < len(enterSrc); start++ {
+		rowSrc := strings.Split(enterSrc[start], "\t")
+		if startPoint {
+			//从序号为1的开始
+			if strings.Compare(strings.TrimSpace(rowSrc[0]), "1") == 0 {
+				startPoint = false
+				break
+			}
+		}
+	}
+	j = 1
+
+	szMap := make(map[string]string)
+
+	for k = start; k < len(enterSrc); k++ {
+		rowSrc := strings.Split(enterSrc[k], "\t")
+		if len(rowSrc) > 1 {
+			szMap[strings.TrimSpace(rowSrc[1])] = strings.TrimSpace(rowSrc[2])
+		}
+		j++
+	}
+	return szMap
 }
