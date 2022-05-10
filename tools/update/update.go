@@ -5,9 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
-	"github.com/sirupsen/logrus"
-	"time"
-
 	"github.com/axgle/mahonia"
 	"github.com/mymmsc/gox/api"
 	"github.com/mymmsc/gox/util"
@@ -22,29 +19,15 @@ import (
 	"github.com/quant1x/quant/stock"
 	"github.com/quant1x/quant/utils"
 	"github.com/robfig/cron/v3"
-	"gopkg.in/natefinch/lumberjack.v2"
+	logger "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 )
-
-var logger = logrus.New()
-
-func initLog(logPath string) {
-	lf := &lumberjack.Logger{
-		Filename:   logPath,
-		MaxSize:    500,  // 日志文件大小，单位是 MB
-		MaxBackups: 3,    // 最大过期日志保留个数
-		MaxAge:     28,   // 保留过期文件最大时间，单位 天
-		Compress:   true, // 是否压缩日志，默认是不压缩。这里设置为true，压缩日志
-	}
-
-	logger.SetOutput(lf) // logrus 设置日志的输出方式
-	//logrus.SetLevel(logrus.DebugLevel)
-}
 
 // 更新日线数据工具
 func main() {
@@ -62,7 +45,7 @@ func main() {
 	flag.StringVar(&logPath, "log_path", "./runtime.log", "log output dir")
 	flag.StringVar(&cronConfig, "cron_config", "0 0 17 * * ?", "pull code data cron")
 	flag.Parse()
-	initLog(logPath)
+	utils.InitLog(logPath, 500, 5, 5)
 	logger.Info("data path: ", path, ",logPath:", logPath, ",cronConfig:", cronConfig)
 	cache.Init(path)
 
