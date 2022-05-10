@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"github.com/sirupsen/logrus"
+	"time"
+
 	"github.com/axgle/mahonia"
 	"github.com/mymmsc/gox/api"
-	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/util"
 	"github.com/mymmsc/gox/util/treemap"
 	"github.com/quant1x/quant/cache"
@@ -20,19 +22,28 @@ import (
 	"github.com/quant1x/quant/stock"
 	"github.com/quant1x/quant/utils"
 	"github.com/robfig/cron/v3"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
-	"time"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
+var logger = logrus.New()
+
+func initLog(logPath string) {
+	lf := &lumberjack.Logger{
+		Filename:   logPath,
+		MaxSize:    500,  // 日志文件大小，单位是 MB
+		MaxBackups: 3,    // 最大过期日志保留个数
+		MaxAge:     28,   // 保留过期文件最大时间，单位 天
+		Compress:   true, // 是否压缩日志，默认是不压缩。这里设置为true，压缩日志
 	}
+
+	logger.SetOutput(lf) // logrus 设置日志的输出方式
+	//logrus.SetLevel(logrus.DebugLevel)
 }
 
 // 更新日线数据工具
@@ -42,36 +53,35 @@ func main() {
 	//监听指定信号 ctrl+c kill
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM,
 		syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
-	defer logger.FlushLogger()
 	var (
 		path       string // 数据路径
 		logPath    string //日志输出路径
 		cronConfig string //定时脚本
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
-	flag.StringVar(&logPath, "logPath", "./", "log output dir")
-	flag.StringVar(&logPath, "cronConfig", "0 0 17 * * ?", "pull code data cron")
-
+	flag.StringVar(&logPath, "log_path", "./runtime.log", "log output dir")
+	flag.StringVar(&cronConfig, "cron_config", "0 0 17 * * ?", "pull code data cron")
 	flag.Parse()
-	logger.SetLogPath(logPath)
+	initLog(logPath)
+	logger.Info("data path: ", path, ",logPath:", logPath, ",cronConfig:", cronConfig)
 	cache.Init(path)
 
 	crontab := cron.New(cron.WithSeconds()) //精确到秒
 	// 添加定时任务,
 	crontab.AddFunc(cronConfig, handleCodeData)
-	// 启动定时器
+	//启动定时器
 	crontab.Start()
 	select {
 	case sig := <-c:
 		{
-			logger.Infof("进程结束:%v", sig)
+			logger.Info("进程结束:", sig)
 			os.Exit(1)
 		}
 	}
 }
 
 func handleCodeData() {
-	logger.Infof("任务开始启动:%s", time.Now())
+	logger.Info("任务开始启动...")
 	fullCodes := data.GetCodeList()
 	updateSpe("https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SZSE_Securities_c.csv?la=zh-HK", "sz")
 	updateSpe("https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SSE_Securities_c.csv?la=zh-HK", "sh")
@@ -97,7 +107,7 @@ func handleCodeData() {
 			sleep()
 		}
 	}
-	logger.Infof("任务执行完毕:%s", time.Now())
+	logger.Info("任务执行完毕.", time.Now())
 }
 
 func sleep() {
