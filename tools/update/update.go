@@ -19,6 +19,7 @@ import (
 	"github.com/quant1x/quant/models/Cache"
 	"github.com/quant1x/quant/stock"
 	"github.com/quant1x/quant/utils"
+	"github.com/robfig/cron/v3"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -37,12 +38,28 @@ func check(e error) {
 func main() {
 	defer logger.FlushLogger()
 	var (
-		path string // 数据路径
+		path       string // 数据路径
+		logPath    string //日志输出路径
+		cronConfig string //定时脚本
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
+	flag.StringVar(&logPath, "logPath", "./", "log output dir")
+	flag.StringVar(&logPath, "cronConfig", "0 0 17 * * ?", "pull code data cron")
+
 	flag.Parse()
+	logger.SetLogPath(logPath)
 	cache.Init(path)
 
+	crontab := cron.New(cron.WithSeconds()) //精确到秒
+	// 添加定时任务,
+	crontab.AddFunc(cronConfig, handleCodeData)
+	// 启动定时器
+	crontab.Start()
+
+}
+
+func handleCodeData() {
+	logger.Infof("任务开始启动:%s", time.Now())
 	fullCodes := data.GetCodeList()
 	updateSpe("https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SZSE_Securities_c.csv?la=zh-HK", "sz")
 	updateSpe("https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SSE_Securities_c.csv?la=zh-HK", "sh")
@@ -68,6 +85,7 @@ func main() {
 			sleep()
 		}
 	}
+	logger.Infof("任务执行完毕:%s", time.Now())
 }
 
 func sleep() {
