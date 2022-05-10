@@ -23,6 +23,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
 	"syscall"
 	"time"
@@ -36,6 +37,11 @@ func check(e error) {
 
 // 更新日线数据工具
 func main() {
+	//创建监听退出chan
+	c := make(chan os.Signal)
+	//监听指定信号 ctrl+c kill
+	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM,
+		syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
 	defer logger.FlushLogger()
 	var (
 		path       string // 数据路径
@@ -55,7 +61,13 @@ func main() {
 	crontab.AddFunc(cronConfig, handleCodeData)
 	// 启动定时器
 	crontab.Start()
-
+	select {
+	case sig := <-c:
+		{
+			logger.Infof("进程结束:%v", sig)
+			os.Exit(1)
+		}
+	}
 }
 
 func handleCodeData() {
