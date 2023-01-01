@@ -20,6 +20,10 @@ func LoadKLine(fc string) []Cache.DayKLine {
 	fc = strings.ToLower(fc)
 	// 组织存储路径
 	filename := GetDayPath() + "/" + fc[0:pos] + "/" + fc
+	if CACHE_TYPE == CACHE_CSV {
+		filename += ".csv"
+	}
+
 	CheckFilepath(filename)
 	if fr, err := os.Open(filename); err != nil {
 		//ENOENT (2)

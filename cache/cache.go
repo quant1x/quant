@@ -11,9 +11,17 @@ const (
 	DAY_PATH  = "day"
 )
 
+type CacheType int
+
+const (
+	CACHE_TARS CacheType = iota
+	CACHE_CSV
+)
+
 var (
 	// CACHE_ROOT_PATH cache路径
-	CACHE_ROOT_PATH = category.DATA_ROOT_PATH
+	CACHE_ROOT_PATH           = category.DATA_ROOT_PATH
+	CACHE_TYPE      CacheType = CACHE_CSV
 )
 
 // CheckFilepath
