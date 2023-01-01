@@ -16,7 +16,7 @@ import (
 type FormulaApi interface {
 	Name() string
 	// 评估 日线数据
-	Evaluate(fullCode string, info *security.StaticBasic, result *[][]string)
+	Evaluate(fullCode string, info *security.StaticBasic, result *[]ResultInfo)
 }
 
 func main() {
@@ -55,7 +55,7 @@ func main() {
 		}),
 	)
 	//fmt.Printf("计划买入, 信号日期, 委托价格, 目标价位\n")
-	result := make([][]string, 0)
+	result := make([]ResultInfo, 0)
 	for _, v := range ss {
 		bar.Add(1)
 		fullCode := v
@@ -72,12 +72,14 @@ func main() {
 		api.Evaluate(fullCode, basicInfo, &result)
 	}
 	//<-doneCh
-	fmt.Println("\n ======= progress bar completed ==========\n")
+
+	fmt.Println("\n ======= progress bar completed ==========\n", "")
 	table := termTable.NewWriter(os.Stdout)
-	table.SetHeader([]string{"证券代码", "证券名称", "信号日期", "委托价格", "目标价位"})
+	var t1 ResultInfo
+	table.SetHeader(t1.Headers())
 
 	for _, v := range result {
-		table.Append(v)
+		table.Append(v.Values())
 	}
 	table.Render() // Send output
 }

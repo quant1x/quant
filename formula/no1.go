@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/index"
 )
@@ -16,7 +15,7 @@ func (this *FormulaNo1) Name() string {
 }
 
 // Evaluate 评估K线数据
-func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *[][]string) {
+func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *[]ResultInfo) {
 	//fmt.Printf("%s\n", fullCode)
 	var f index.Formula
 	f = &index.MA{}
@@ -59,9 +58,17 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 		b2 := index.Cross(b, c)
 		if b1 && b2 {
 			//fmt.Printf("%s, %s, %.02f, %.02f\n", fullCode, hd.Date, hd.MA10, hd.MA10*1.05)
-			buy := fmt.Sprintf("%.3f", hd.MA10)
-			sell := fmt.Sprintf("%.3f", hd.MA10*1.05)
-			*result = append(*result, []string{fullCode, info.Name, hd.Date, buy, sell})
+			//buy := fmt.Sprintf("%.3f", hd.MA10)
+			//sell := fmt.Sprintf("%.3f", hd.MA10*1.05)
+
+			buy := hd.MA10
+			sell := hd.MA10 * 1.05
+
+			*result = append(*result, ResultInfo{Code: fullCode,
+				Name: info.Name,
+				Date: hd.Date,
+				Buy:  buy,
+				Sell: sell})
 			break
 		}
 	}
