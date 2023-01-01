@@ -6,17 +6,15 @@ import (
 	"github.com/quant1x/quant/index"
 )
 
-//3天内5天线上穿10天线，10天线上穿20天线的个股
-//count(cross(**(c,5),**(c,10)),3)>=1 and count(cross(**(c,10),**(c,20)),3)>=1
-type FormulaNo1 struct {
+type FormulaNo89 struct {
 }
 
-func (this *FormulaNo1) Name() string {
-	return "1号策略"
+func (this *FormulaNo89) Name() string {
+	return "89K策略"
 }
 
 // Evaluate 评估K线数据
-func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *[][]string) {
+func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, result *[][]string) {
 	//fmt.Printf("%s\n", fullCode)
 	var f index.Formula
 	f = &index.MA{}
