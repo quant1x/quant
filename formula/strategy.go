@@ -21,15 +21,15 @@ type FormulaApi interface {
 
 func main() {
 	var (
-		path   string
-		number int
+		path     string
+		strategy int
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
-	flag.IntVar(&number, "number", 1, "formula serial number")
+	flag.IntVar(&strategy, "strategy", 1, "formula serial number")
 	flag.Parse()
 	cache.Init(path)
 	var api FormulaApi
-	switch number {
+	switch strategy {
 	case 89:
 		api = new(FormulaNo89)
 	default:
