@@ -38,27 +38,32 @@ func main() {
 		syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
 	var (
 		path       string // 数据路径
-		logPath    string //日志输出路径
-		cronConfig string //定时脚本
+		logPath    string // 日志输出路径
+		cronConfig string // 定时脚本
+		cronTrue   bool   // 是否启用应用内定时器
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
-	flag.StringVar(&logPath, "log_path", "./runtime.log", "log output dir")
+	flag.StringVar(&logPath, "log_path", category.LOG_ROOT_PATH+"/runtime.log", "log output dir")
 	flag.StringVar(&cronConfig, "cron_config", "0 0 17 * * ?", "pull code data cron")
+	flag.BoolVar(&cronTrue, "cron_true", false, "use crontab in application")
 	flag.Parse()
 	utils.InitLog(logPath, 500, 5, 5)
 	logger.Info("data path: ", path, ",logPath:", logPath, ",cronConfig:", cronConfig)
 	cache.Init(path)
-
-	crontab := cron.New(cron.WithSeconds()) //精确到秒
-	// 添加定时任务,
-	crontab.AddFunc(cronConfig, handleCodeData)
-	//启动定时器
-	crontab.Start()
-	select {
-	case sig := <-c:
-		{
-			logger.Info("进程结束:", sig)
-			os.Exit(1)
+	if !cronTrue {
+		handleCodeData()
+	} else {
+		crontab := cron.New(cron.WithSeconds()) //精确到秒
+		// 添加定时任务,
+		crontab.AddFunc(cronConfig, handleCodeData)
+		//启动定时器
+		crontab.Start()
+		select {
+		case sig := <-c:
+			{
+				logger.Info("进程结束:", sig)
+				os.Exit(1)
+			}
 		}
 	}
 }
