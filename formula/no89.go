@@ -5,6 +5,7 @@ import (
 	"github.com/quant1x/quant/index"
 )
 
+// 89K策略
 type FormulaNo89 struct {
 }
 
@@ -24,6 +25,18 @@ func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, r
 	if days < 100 {
 		return
 	}
+	var (
+		k5  float64 = 0.00
+		n5  int     = -1
+		k7  float64 = 0.00
+		n7  int     = -1
+		k8  float64 = 0.00
+		n8  int     = -1
+		k9  float64 = 0.00
+		n9  int     = -1
+		k10 float64 = 0.00
+		n10 int     = -1
+	)
 	hds := f.Data().([]index.MaLine)
 	for i := 0; i < N; i++ {
 		hd := hds[days-i-1]
@@ -42,6 +55,7 @@ func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, r
 			Flag:  index.MA20,
 			Cycle: i,
 		}
+		// 第一步, 找最低价
 		// 过滤 超过10.00的股票
 		//if hd.Close > 9.00 || hd.Close < 4.00 {
 		//	continue

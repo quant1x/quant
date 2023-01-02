@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/TarsCloud/TarsGo v1.1.6
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
+	github.com/favar/lambda v0.0.0-20210129094225-b7a424067857
 	github.com/golang/protobuf v1.5.2
 	github.com/melman-go/aliopengo v0.0.0-20151127102017-013e7eb1446d
 	github.com/mymmsc/gox v1.1.20

@@ -164,3 +164,26 @@ func ExpMA(previous, current float64, n int) float64 {
 	factor := float64(n) + 1
 	return (previous*(factor-EmaWeight) + current*EmaWeight) / factor
 }
+
+// 计算n周期内的flag的最大值
+func HHV(slice interface{}, flag string, n int) float64 {
+	v := reflect.ValueOf(slice)
+	if v.Kind() != reflect.Slice {
+		return stock.DefaultValue
+	}
+	if n < 1 {
+		return stock.DefaultValue
+	}
+	count := v.Len()
+	if count < n {
+		return stock.DefaultValue
+	}
+	var (
+		val float64 = 0
+	)
+	for i := 0; i < n; i++ {
+		hd := v.Index(count - 1 - i).Interface()
+		val += get(hd, flag)
+	}
+	return val
+}
