@@ -25,18 +25,6 @@ func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, r
 	if days < 100 {
 		return
 	}
-	var (
-		k5  float64 = 0.00
-		n5  int     = -1
-		k7  float64 = 0.00
-		n7  int     = -1
-		k8  float64 = 0.00
-		n8  int     = -1
-		k9  float64 = 0.00
-		n9  int     = -1
-		k10 float64 = 0.00
-		n10 int     = -1
-	)
 	hds := f.Data().([]index.MaLine)
 	for i := 0; i < N; i++ {
 		hd := hds[days-i-1]
