@@ -17,9 +17,18 @@ import (
 
 const (
 	urlKLine = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=%s,day,,,%d,qfq"
+	// // 2. param=代码,日k，开始日期，结束日期，获取多少个交易日，前复权
+	// 	2.1 usAAPL.OQ 股票代码，这里是us是美股，AAPL是苹果，“.OQ”是美股拼接后缀，其他不需要拼接
+	// 	2.2 500代表获取多少个交易日，500实际查出来的是501条数据，多一条
+	// 	2.3 qfq前复权
+	// 美股，苹果【usAAPL】，需要拼接“.OQ”
+	// https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=usAAPL.OQ,day,2020-3-1,2021-3-1,500,qfq
+	// 上海，茅台【sh600519】，不需要拼接“.OQ”
+	// https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600519,day,2020-3-1,2021-3-1,500,qfq
+	// 港股，小米【hk01810】，不需要拼接“.OQ”
+	// https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=hk01810,day,2020-3-1,2021-3-1,500,qfq
+	// 原文链接：https://blog.csdn.net/geofferysun/article/details/114640013
 )
-
-var ()
 
 func createUrl(code string, datalen int) string {
 	return fmt.Sprintf(urlKLine, code, datalen)

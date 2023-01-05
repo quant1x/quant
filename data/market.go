@@ -3,11 +3,11 @@ package data
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/mymmsc/gox/api"
+	"github.com/mymmsc/gox/logger"
 	"github.com/quant1x/quant/category"
 	"github.com/quant1x/quant/http"
 	"github.com/quant1x/quant/stock"
-	"github.com/mymmsc/gox/api"
-	"github.com/mymmsc/gox/logger"
 	"strings"
 )
 
@@ -102,7 +102,7 @@ func GetCodeList() []string {
 			fullCodes = append(fullCodes, fc)
 		}
 	}
-
+	fullCodes = fullCodes[0:0]
 	// 港股: hk00001-hk09999
 	{
 		var (
@@ -117,7 +117,6 @@ func GetCodeList() []string {
 
 	return fullCodes
 }
-
 
 func getMarket0() []string {
 	url := "http://nufm.dfcfw.com/EM_Finance2014NumericApplication/JS.aspx?type=CT&token=4f1862fc3b5e77c150a2b985b12db0fd&sty=FCOIATC&cmd=C._A&st=(Code)&sr=1&p=1&ps=10000&_=1555752561456"

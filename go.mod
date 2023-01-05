@@ -3,7 +3,7 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	github.com/TarsCloud/TarsGo v1.3.7
+	github.com/TarsCloud/TarsGo v1.1.6
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/dop251/goja v0.0.0-20221229151140-b95230a9dbad
 	github.com/golang/protobuf v1.5.2

@@ -12,6 +12,7 @@ import (
 	"github.com/quant1x/quant/cache"
 	"github.com/quant1x/quant/category"
 	"github.com/quant1x/quant/data"
+	"github.com/quant1x/quant/data/dfcf"
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/data/sina"
 	"github.com/quant1x/quant/data/tencent"
@@ -178,6 +179,7 @@ func pullData(fc string, listTime time.Time) int {
 	// 拉取日线数据
 	apiTencent := new(tencent.TencentDataApi)
 	apiSina := new(sina.SinaDataApi)
+	apiDfcf := new(dfcf.EastmoneyApi)
 	//var dataApi stock.DataApi
 	//dataApi = apiSina
 	/*ha, _, err := dataApi.DailyFromDate(fc, nextTradingDay)
@@ -192,7 +194,7 @@ func pullData(fc string, listTime time.Time) int {
 	var ha []stock.DayKLine
 	var ec int = -1
 	if strings.HasPrefix(fc, "hk") {
-		ha, ec = fetchData(apiTencent, fc, nextTradingDay)
+		ha, ec = fetchData(apiDfcf, fc, nextTradingDay)
 	} else {
 		ha, ec = fetchData(apiSina, fc, nextTradingDay)
 		if ec != 0 || len(ha) == 0 {
@@ -266,8 +268,8 @@ func ChangeDecode(src string, srcCode string, tagCode string) string {
 	return result
 }
 
-//深股通特别证券/中华通特别证券名单（只可卖出）https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SZSE_Securities_c.csv?la=zh-HK
-//港股通特别证券/中华通特别证卷名单 (只可卖出) https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SSE_Securities_c.csv?la=zh-HK
+// 深股通特别证券/中华通特别证券名单（只可卖出）https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SZSE_Securities_c.csv?la=zh-HK
+// 港股通特别证券/中华通特别证卷名单 (只可卖出) https://www.hkex.com.hk/-/media/HKEX-Market/Mutual-Market/Stock-Connect/Eligible-Stocks/View-All-Eligible-Securities/SSE_Securities_c.csv?la=zh-HK
 func updateSpe(url string, market string) {
 	//抓取HKEX csv文件
 	speMap := fetchHKEX(url)
