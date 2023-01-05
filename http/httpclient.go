@@ -9,7 +9,7 @@ import (
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 	"io"
-	"io/ioutil"
+	ioutil "io"
 	"net/http"
 	urlpkg "net/url"
 	"strings"
