@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
-	"io/ioutil"
+	ioutil "io"
 	"log"
 	"net/http"
 	"runtime"

@@ -1,11 +1,11 @@
 package tencent
 
 import (
-	"github.com/quant1x/quant/stock"
 	"github.com/mymmsc/gox/api"
+	"github.com/quant1x/quant/stock"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
-	"io/ioutil"
+	ioutil "io"
 	"net/http"
 	"strings"
 )
@@ -35,7 +35,7 @@ func (ts *TencentStock) RealTime(code string) (*stock.RealTime, error) {
 	}
 	pairs := strings.Split(result, "~")
 	rt := &stock.RealTime{
-		FullCode:code,
+		FullCode: code,
 	}
 	err = api.Convert(pairs, rt)
 	return rt, err
@@ -66,7 +66,7 @@ func (ts *TencentStock) RealTime0(code string) (*stock.RealTime, error) {
 		return nil, invalidResponse
 	}*/
 	rt := &stock.RealTime{
-		FullCode:code,
+		FullCode: code,
 	}
 	//0:  "未知",
 	rt.UnknownCode = pairs[0]
@@ -81,15 +81,15 @@ func (ts *TencentStock) RealTime0(code string) (*stock.RealTime, error) {
 	//5:  "今开",
 	rt.Open = pairs[5]
 	//6:  "成交量（手)",
-	rt.Volume  = pairs[6]
+	rt.Volume = pairs[6]
 	//7:  "外盘",
 	rt.OuterVol = pairs[7]
 	//8:  "内盘",
-	rt.InnerVol  = pairs[8]
+	rt.InnerVol = pairs[8]
 	//9:  "买一",
-	rt.Buy1Price  = pairs[9]
+	rt.Buy1Price = pairs[9]
 	//10: "买一量（手）",
-	rt.Buy1Vol  = pairs[10]
+	rt.Buy1Vol = pairs[10]
 	//11: "买二",
 	rt.Buy2Price = pairs[11]
 	//12: "买二量（手）",
@@ -97,7 +97,7 @@ func (ts *TencentStock) RealTime0(code string) (*stock.RealTime, error) {
 	//13: "买三",
 	rt.Buy3Price = pairs[13]
 	//14: "买三量（手）",
-	rt.Buy3Vol  = pairs[14]
+	rt.Buy3Vol = pairs[14]
 	//15: "买四",
 	rt.Buy4Price = pairs[15]
 	//16: "买四量（手）",
