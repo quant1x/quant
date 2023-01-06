@@ -83,10 +83,15 @@ func GetHistory(fullCode string, datalen int) ([]DfcfHistory, error) {
 		return kl, nil
 	}
 	for _, item := range history {
-		tmp := item.String()
-		if strings.HasPrefix(tmp, "\"") && strings.HasSuffix(tmp, "\"") {
-			tmp = tmp[1 : len(tmp)-1]
+		if item.Type() != json.TypeString {
+			continue
 		}
+		sb, err := item.StringBytes()
+		if err != nil {
+			logger.Fatalf("cannot obtain string: %s", err)
+		}
+
+		tmp := string(sb)
 		hd := strings.Split(tmp, ",")
 		var kl0 DfcfHistory
 		err = api.Convert(hd, &kl0)
