@@ -1,6 +1,7 @@
 package index
 
 import (
+	"fmt"
 	"github.com/quant1x/quant/cache"
 	"github.com/quant1x/quant/category"
 )
@@ -34,22 +35,23 @@ func (this *KNode) Comp(k float64) int {
 }
 
 func (this *KNode) Lt(k float64) bool {
-	return this.Comp(k) < 0
+	return this.Comp(k) <= 0
 }
 
 func (this *KNode) Gt(k float64) bool {
-	return this.Comp(k) > 0
+	return this.Comp(k) >= 0
 }
 
 type K89 struct {
-	data []MaLine
-	P0   KNode
-	P5   KNode
-	P7   KNode
-	P8   KNode
-	P9   KNode
-	P10  KNode
-	P11  KNode
+	data   []MaLine
+	P0     KNode
+	P5     KNode
+	P7     KNode
+	P8     KNode
+	P9     KNode
+	P10    KNode
+	P11    KNode
+	Signal MaLine
 }
 
 func (this *K89) Reset() {
@@ -67,7 +69,7 @@ func (self *K89) Len() int {
 }
 
 func (self *K89) Data() interface{} {
-	return self.data
+	return self.Signal
 }
 
 // 89日均线
@@ -161,9 +163,14 @@ func (self *K89) Load(code string) error {
 	}
 
 	count := len(kls)
-	var t K89
-	var ma89 = 0.00
 	const w = 89
+	var (
+		t        K89
+		ma89             = 0.00
+		zhisun   float64 = 0
+		huicai   bool    = false
+		bConsole         = false
+	)
 	for i, v := range kls {
 		var (
 			price  float64
@@ -172,27 +179,82 @@ func (self *K89) Load(code string) error {
 
 		tmp := MaLine{DayKLine: v}
 
+		hds := kls[:i+1]
 		// 第一步, 计算MA89
 		if i+1 >= w {
-			hds := kls[:i+1]
 			price = SUM(hds, Close, w) / float64(w)
 			volume = int64(SUM(hds, Volume, w)) / int64(w)
 			tmp.MA30 = price
 			tmp.MA30Volume = volume
-
 			// 重置MA89均线
 			ma89 = price
+		} else {
+			continue
 		}
 		// 第二步, 低于收盘价低于MA89
 		if v.Close < ma89 {
 			// 重置⑤
-			if t.P5.K < v.Low {
+			if t.P5.Gt(v.Low) {
+				t.Reset()
 				t.P5.Set(v.Low, i)
+				if bConsole {
+					fmt.Printf("%s, ⑤: %.2f\n", v.Date, v.Low)
+				}
+				continue
 			}
 		}
-		// 第三步, 股价不创新低
-		if t.P5.Gt(v.Low) {
+		// 第三步, 股价不再创新低之后
+		if t.P5.Lt(v.Low) {
 			// 找从P5开始的最高价
+			n5 := i - t.P5.N + 1
+			hp := HHV(hds, High, n5)
+			if t.P7.Lt(hp) {
+				t.P7.Set(hp, i)
+				if bConsole {
+					fmt.Printf("%s, ⑦: %.2f\n", v.Date, hp)
+				}
+			}
+			hv := HHV(hds, Volume, n5)
+			if int64(hv) == v.Volume {
+				zhisun = v.Low
+				if bConsole {
+					fmt.Printf("%s, 画止损线: %.2f\n", v.Date, zhisun)
+				}
+				continue
+			}
+		}
+		// 第四步, 股价不再创新高之后
+		if t.P7.Gt(v.High) {
+			// 开始回落
+			n7 := i - t.P7.N + 1
+			lc := LLV(hds, Close, n7)
+			if lc < zhisun {
+				huicai = true
+				if bConsole {
+					fmt.Printf("%s, 跌破止损: %.2f, 收盘: %.2f, 卖出\n", v.Date, zhisun, v.Close)
+				}
+				continue
+			}
+			// 重置⑧
+			if t.P8.Gt(v.Low) {
+				t.P8.Set(v.Low, i)
+				if bConsole {
+					fmt.Printf("%s, ⑧: %.2f\n", v.Date, v.Low)
+				}
+				continue
+			}
+		}
+		// 第五步, 股价第2次不再新低
+		if huicai {
+			if zhisun < v.Close {
+				if bConsole {
+					fmt.Printf("%s, 回踩止损: %.2f, 突破, 收盘: %.2f, 买入\n", v.Date, zhisun, v.Close)
+				}
+				huicai = false
+				zhisun = 0
+				t.Reset()
+				self.Signal = tmp
+			}
 		}
 		self.data = append(self.data, tmp)
 		// 输出最后2组数据

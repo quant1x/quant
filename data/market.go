@@ -102,7 +102,7 @@ func GetCodeList() []string {
 			fullCodes = append(fullCodes, fc)
 		}
 	}
-	fullCodes = fullCodes[0:0]
+	//fullCodes = fullCodes[0:0]
 	// 港股: hk00001-hk09999
 	{
 		var (

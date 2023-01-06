@@ -3,7 +3,6 @@ package index
 import (
 	"github.com/mymmsc/gox/errors"
 	"github.com/quant1x/quant/models/Cache"
-	"github.com/quant1x/quant/stock"
 	"reflect"
 )
 
@@ -16,8 +15,9 @@ const (
 )
 
 var (
-	ErrCode = errors.New("股票代码不存在")
-	ErrData = errors.New("数据错误")
+	ErrCode  = errors.New("股票代码不存在")
+	ErrData  = errors.New("数据错误")
+	ErrArray = errors.New("数组未对齐")
 )
 
 // 指标计算接口
@@ -32,66 +32,9 @@ type Formula interface {
 	Data() interface{}
 }
 
-// 单一对象反射获取数值
-func get(obj interface{}, flag string) float64 {
-	t := reflect.ValueOf(obj)
-	if t.Kind() != reflect.Struct {
-		return stock.DefaultValue
-	}
-	v := t.FieldByName(flag)
-	k := v.Kind()
-	switch k {
-	case reflect.Float32:
-		fallthrough
-	case reflect.Float64:
-		return v.Float()
-	default:
-		return float64(v.Int())
-	}
-}
-
-// 引用n周期前的flag浮点值
-func Ref(slice interface{}, flag string, n int) float64 {
-	val := reflect.ValueOf(slice)
-	if val.Kind() != reflect.Slice {
-		return stock.DefaultValue
-	}
-	count := val.Len()
-	if count < n+1 {
-		return stock.DefaultValue
-	}
-	n = count - n - 1
-	hd := val.Index(n).Interface()
-
-	return get(hd, flag)
-}
-
 // 引用n周期前的flag整型值
 func RefInt(slice interface{}, flag string, n int) int64 {
 	return int64(Ref(slice, flag, n))
-}
-
-// 计算n周期内的flag的总和
-func SUM(slice interface{}, flag string, n int) float64 {
-	v := reflect.ValueOf(slice)
-	if v.Kind() != reflect.Slice {
-		return stock.DefaultValue
-	}
-	if n < 1 {
-		return stock.DefaultValue
-	}
-	count := v.Len()
-	if count < n {
-		return stock.DefaultValue
-	}
-	var (
-		val float64 = 0
-	)
-	for i := 0; i < n; i++ {
-		hd := v.Index(count - 1 - i).Interface()
-		val += get(hd, flag)
-	}
-	return val
 }
 
 /*
@@ -163,27 +106,4 @@ func Cross(a, b CompVal) bool {
 func ExpMA(previous, current float64, n int) float64 {
 	factor := float64(n) + 1
 	return (previous*(factor-EmaWeight) + current*EmaWeight) / factor
-}
-
-// 计算n周期内的flag的最大值
-func HHV(slice interface{}, flag string, n int) float64 {
-	v := reflect.ValueOf(slice)
-	if v.Kind() != reflect.Slice {
-		return stock.DefaultValue
-	}
-	if n < 1 {
-		return stock.DefaultValue
-	}
-	count := v.Len()
-	if count < n {
-		return stock.DefaultValue
-	}
-	var (
-		val float64 = 0
-	)
-	for i := 0; i < n; i++ {
-		hd := v.Index(count - 1 - i).Interface()
-		val += get(hd, flag)
-	}
-	return val
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/quant1x/quant/data/security"
 	"github.com/schollz/progressbar/v3"
 	"os"
+	"sync"
 )
 
 // DataApi 数据接口
@@ -38,6 +39,8 @@ func main() {
 	// 获取全部证券代码
 	ss := data.GetCodeList()
 	count := len(ss)
+	var wg = sync.WaitGroup{}
+	wg.Add(count)
 	//bar := progressbar.DefaultSilent(int64(count))
 	//doneCh := make(chan struct{})
 	bar := progressbar.NewOptions(count,
@@ -69,11 +72,11 @@ func main() {
 			continue
 		}
 
-		api.Evaluate(fullCode, basicInfo, &result)
+		go api.Evaluate(fullCode, basicInfo, &result)
 	}
 	//<-doneCh
-
-	fmt.Println("\n ======= progress bar completed ==========\n", "")
+	wg.Done()
+	fmt.Println("\n ======= ["+api.Name()+"] progress bar completed ==========\n", "")
 	table := termTable.NewWriter(os.Stdout)
 	var t1 ResultInfo
 	table.SetHeader(t1.Headers())
