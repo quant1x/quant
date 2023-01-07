@@ -249,7 +249,7 @@ func (self *K89) Load(code string) error {
 		// 第四步, 股价不再创新高之后
 		if t.P7.Gt(v.High) {
 			// 开始回落
-			n7 := i - t.P7.N + 1
+			n7 := i - t.P7.N
 			lc := LLV(hds, Close, n7)
 			if lc < zhisun {
 				huicai = true
