@@ -216,8 +216,8 @@ func (self *K89) Load(code string) error {
 					fmt.Printf("%s, ⑦: %.2f\n", v.Date, hp)
 				}
 			}
-
-			use89k := true
+			// TODO: 打开use89K开关时n5的周期数存在bug, 会引发panic
+			use89k := false
 
 			if !use89k {
 				hv := HHV(hds, Volume, n5)
