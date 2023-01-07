@@ -180,6 +180,7 @@ func (self *K89) Load(code string) error {
 		tmp := MaLine{DayKLine: v}
 
 		hds := kls[:i+1]
+		//hdlen := len(hds)
 		// 第一步, 计算MA89
 		if i+1 >= w {
 			price = SUM(hds, Close, w) / float64(w)
@@ -208,7 +209,7 @@ func (self *K89) Load(code string) error {
 		// 第三步, 股价不再创新低之后
 		if t.P5.Lt(v.Low) {
 			// 找从P5开始的最高价
-			n5 := i - t.P5.N + 1
+			n5 := i - t.P5.N
 			hp := HHV(hds, High, n5)
 			if t.P7.Lt(hp) {
 				t.P7.Set(hp, i)
@@ -217,7 +218,7 @@ func (self *K89) Load(code string) error {
 				}
 			}
 			// TODO: 打开use89K开关时n5的周期数存在bug, 会引发panic
-			use89k := false
+			use89k := true
 
 			if !use89k {
 				hv := HHV(hds, Volume, n5)
