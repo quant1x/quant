@@ -97,7 +97,7 @@ func (self *MACD) Load(code string) error {
 		// previous, Previous value
 		//dea = (dea * 8 + dif * 2) / 10
 		//dea = dif*factor + dea*(1.0000-factor)
-		dea = ExpMA(dea, dif, 9)
+		dea = ExpMA(dea, dif, self.N)
 		tmp.Dif = dif
 		tmp.Dea = dea
 		tmp.Macd = (tmp.Dif - tmp.Dea) * 2
