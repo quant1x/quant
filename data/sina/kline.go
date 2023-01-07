@@ -29,7 +29,6 @@ func GetHistory(fullCode string, datalen int) ([]SinaHistory, error) {
 	data, err := http.HttpGet(url)
 	if err != nil {
 		logger.Errorf("%+v\n", err)
-		fmt.Println(err)
 		return nil, err
 	}
 	var kl []SinaHistory

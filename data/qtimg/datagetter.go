@@ -2,8 +2,8 @@ package qtimg
 
 import (
 	"fmt"
-	"github.com/quant1x/quant/http"
 	"github.com/mymmsc/gox/encoding"
+	"github.com/quant1x/quant/http"
 	"strconv"
 	"strings"
 )
@@ -46,7 +46,6 @@ func GetRealtime(code string) *RealTimeData {
 	}
 	res := encoding.NewDecoder("gbk").ConvertString(string(body))
 	dataArray := strings.Split(res, "~")
-	fmt.Println(strings.Join(dataArray, "\n"))
 	data := new(RealTimeData)
 	data.Name = strings.Replace(dataArray[1], " ", "", -1)
 	data.Gid = dataArray[2]

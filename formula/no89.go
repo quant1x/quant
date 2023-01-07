@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mymmsc/gox/util/arraylist"
+	"github.com/mymmsc/gox/util/treemap"
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/index"
 	"github.com/quant1x/quant/utils"
@@ -12,12 +12,16 @@ import (
 type FormulaNo89 struct {
 }
 
+func (this *FormulaNo89) Code() int {
+	return 89
+}
+
 func (this *FormulaNo89) Name() string {
 	return "89K策略"
 }
 
 // Evaluate 评估K线数据
-func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, result *arraylist.List) {
+func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map) {
 	//fmt.Printf("%s\n", fullCode)
 	var f index.Formula
 	f = &index.K89{}
@@ -38,11 +42,14 @@ func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, r
 		if utils.DifferDays(now, tt) < 5 {
 			buy := tmp.Close
 			sell := buy * 1.05
-			result.Add(ResultInfo{Code: fullCode,
-				Name: info.Name,
-				Date: tmp.Date,
-				Buy:  buy,
-				Sell: sell})
+			result.Put(fullCode, ResultInfo{Code: fullCode,
+				Name:         info.Name,
+				Date:         tmp.Date,
+				Buy:          buy,
+				Sell:         sell,
+				StrategyCode: this.Code(),
+				StrategyName: this.Name(),
+			})
 		}
 
 	}

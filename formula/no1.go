@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mymmsc/gox/util/arraylist"
+	"github.com/mymmsc/gox/util/treemap"
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/index"
 )
@@ -11,12 +11,16 @@ import (
 type FormulaNo1 struct {
 }
 
+func (this *FormulaNo1) Code() int {
+	return 1
+}
+
 func (this *FormulaNo1) Name() string {
 	return "1号策略"
 }
 
 // Evaluate 评估K线数据
-func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *arraylist.List) {
+func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map) {
 	//fmt.Printf("%s\n", fullCode)
 	var f index.Formula
 	f = &index.MA{}
@@ -65,11 +69,13 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 			buy := hd.MA10
 			sell := hd.MA10 * 1.05
 
-			result.Add(ResultInfo{Code: fullCode,
-				Name: info.Name,
-				Date: hd.Date,
-				Buy:  buy,
-				Sell: sell})
+			result.Put(fullCode, ResultInfo{Code: fullCode,
+				Name:         info.Name,
+				Date:         hd.Date,
+				Buy:          buy,
+				Sell:         sell,
+				StrategyCode: this.Code(),
+				StrategyName: this.Name()})
 			break
 		}
 	}
