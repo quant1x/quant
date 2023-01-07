@@ -53,6 +53,14 @@ func Ref(slice interface{}, flag string, n int) float64 {
 	return get(hd, flag)
 }
 
+// 引用n周期前的flag浮点值
+func _ref(v reflect.Value, flag string, count int, n int) float64 {
+	hd := v.Index(count - 1 - n).Interface()
+
+	return get(hd, flag)
+}
+
+// Deprecated: 旧版本代码不利于复用
 func Ref_v1(slice interface{}, flag string, n int) float64 {
 	val := reflect.ValueOf(slice)
 	if val.Kind() != reflect.Slice {
@@ -99,6 +107,8 @@ func slice_universal(slice interface{}, flag string, n int, iterator algorithmHa
 }
 
 // 计算n周期内的flag的总和
+//
+// Deprecated: 旧版本代码不利于复用
 func SUM_v1(slice interface{}, flag string, n int) float64 {
 	v := reflect.ValueOf(slice)
 	if v.Kind() != reflect.Slice {
@@ -146,4 +156,40 @@ func LLV(slice interface{}, flag string, n int) float64 {
 		}
 		return a
 	})
+}
+
+// 指标计算接口
+type BarHandler = func(a, b float64) bool
+
+func slice_ssincen(slice interface{}, flag string, n int, iterator BarHandler) int {
+	v, count, err := slice_quote(slice, n)
+	if err != nil {
+		return stock.DefaultValue
+	}
+	var (
+		ret int = -1
+		//inited bool = false
+	)
+	//pos := count - n
+	for i := 0; i < n; i++ {
+		// 对比成交量至少需要2天的数据
+		if i < 1 {
+			continue
+		}
+		// CompVal
+		v1 := _ref(v, flag, count, i+1)
+		v2 := _ref(v, flag, count, i+0)
+
+		bRet := iterator(v1, v2)
+		if bRet {
+			ret = i
+			break
+		}
+	}
+	return ret
+}
+
+// BARSSINCEN N周期内第一次X不为0到现在的周期数,N为常量
+func BARSSINCEN(slice interface{}, flag string, n int, iterator BarHandler) int {
+	return slice_ssincen(slice, flag, n, iterator)
 }

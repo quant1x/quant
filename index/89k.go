@@ -169,7 +169,7 @@ func (self *K89) Load(code string) error {
 		ma89             = 0.00
 		zhisun   float64 = 0
 		huicai   bool    = false
-		bConsole         = false
+		bConsole         = true
 	)
 	for i, v := range kls {
 		var (
@@ -196,6 +196,8 @@ func (self *K89) Load(code string) error {
 			// 重置⑤
 			if t.P5.Gt(v.Low) {
 				t.Reset()
+				huicai = false
+				zhisun = 0
 				t.P5.Set(v.Low, i)
 				if bConsole {
 					fmt.Printf("%s, ⑤: %.2f\n", v.Date, v.Low)
@@ -214,13 +216,33 @@ func (self *K89) Load(code string) error {
 					fmt.Printf("%s, ⑦: %.2f\n", v.Date, hp)
 				}
 			}
-			hv := HHV(hds, Volume, n5)
-			if int64(hv) == v.Volume {
-				zhisun = v.Low
-				if bConsole {
-					fmt.Printf("%s, 画止损线: %.2f\n", v.Date, zhisun)
+
+			use89k := true
+
+			if !use89k {
+				hv := HHV(hds, Volume, n5)
+				if int64(hv) == v.Volume {
+					zhisun = v.Low
+					if bConsole {
+						fmt.Printf("%s, 画止损线: %.2f\n", v.Date, zhisun)
+					}
+					continue
 				}
-				continue
+			} else /*if zhisun == 0.00*/ {
+				n := BARSSINCEN(hds, Volume, n5, func(a, b float64) bool {
+					if a == 0.00 {
+						return false
+					}
+					return b/a >= 2
+				})
+				if n > 0 {
+					v := hds[i-n]
+					zhisun = v.Low
+					if bConsole {
+						fmt.Printf("%s, 画止损线: %.2f\n", v.Date, zhisun)
+					}
+					//continue
+				}
 			}
 		}
 		// 第四步, 股价不再创新高之后
