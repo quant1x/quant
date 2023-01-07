@@ -53,7 +53,7 @@ func Ref(slice interface{}, flag string, n int) float64 {
 	return get(hd, flag)
 }
 
-func Ref_old(slice interface{}, flag string, n int) float64 {
+func Ref_v1(slice interface{}, flag string, n int) float64 {
 	val := reflect.ValueOf(slice)
 	if val.Kind() != reflect.Slice {
 		return stock.DefaultValue
@@ -99,7 +99,7 @@ func slice_universal(slice interface{}, flag string, n int, iterator algorithmHa
 }
 
 // 计算n周期内的flag的总和
-func SUM_old(slice interface{}, flag string, n int) float64 {
+func SUM_v1(slice interface{}, flag string, n int) float64 {
 	v := reflect.ValueOf(slice)
 	if v.Kind() != reflect.Slice {
 		return stock.DefaultValue

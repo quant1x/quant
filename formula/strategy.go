@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/mymmsc/gox/util/arraylist"
 	termTable "github.com/olekukonko/tablewriter"
 	"github.com/quant1x/quant/cache"
 	"github.com/quant1x/quant/category"
@@ -16,8 +17,9 @@ import (
 // DataApi 数据接口
 type FormulaApi interface {
 	Name() string
+	//Evaluate(fullCode string, info *security.StaticBasic, result *[]ResultInfo)
 	// 评估 日线数据
-	Evaluate(fullCode string, info *security.StaticBasic, result *[]ResultInfo)
+	Evaluate(fullCode string, info *security.StaticBasic, result *arraylist.List)
 }
 
 func main() {
@@ -40,7 +42,7 @@ func main() {
 	ss := data.GetCodeList()
 	count := len(ss)
 	var wg = sync.WaitGroup{}
-	wg.Add(count)
+	//var ch = make(chan int)
 	//bar := progressbar.DefaultSilent(int64(count))
 	//doneCh := make(chan struct{})
 	bar := progressbar.NewOptions(count,
@@ -58,8 +60,9 @@ func main() {
 		}),
 	)
 	//fmt.Printf("计划买入, 信号日期, 委托价格, 目标价位\n")
-	result := make([]ResultInfo, 0)
-	for _, v := range ss {
+	//result := make([]ResultInfo, 0)
+	list := arraylist.New()
+	for i, v := range ss {
 		bar.Add(1)
 		fullCode := v
 		basicInfo, err := security.GetBasicInfo(fullCode)
@@ -71,18 +74,29 @@ func main() {
 			// 其它错误 输出错误信息
 			continue
 		}
+		//go api.Evaluate(fullCode, basicInfo, &result)
+		//go evaluate(api, ch, fullCode, basicInfo, &result)
+		//ch <- i
+		wg.Add(1)
+		go evaluate(api, &wg, fullCode, basicInfo, list)
+		_ = i
 
-		go api.Evaluate(fullCode, basicInfo, &result)
 	}
 	//<-doneCh
-	wg.Done()
+	wg.Wait()
 	fmt.Println("\n ======= ["+api.Name()+"] progress bar completed ==========\n", "")
 	table := termTable.NewWriter(os.Stdout)
-	var t1 ResultInfo
-	table.SetHeader(t1.Headers())
+	var row ResultInfo
+	table.SetHeader(row.Headers())
 
-	for _, v := range result {
-		table.Append(v.Values())
-	}
+	list.Each(func(index int, value interface{}) {
+		row := value.(ResultInfo)
+		table.Append(row.Values())
+	})
 	table.Render() // Send output
+}
+
+func evaluate(api FormulaApi, wg *sync.WaitGroup, code string, info *security.StaticBasic, result *arraylist.List) {
+	defer wg.Done()
+	api.Evaluate(code, info, result)
 }

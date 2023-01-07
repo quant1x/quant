@@ -1,12 +1,13 @@
 package main
 
 import (
+	"github.com/mymmsc/gox/util/arraylist"
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/index"
 )
 
-//3天内5天线上穿10天线，10天线上穿20天线的个股
-//count(cross(**(c,5),**(c,10)),3)>=1 and count(cross(**(c,10),**(c,20)),3)>=1
+// 3天内5天线上穿10天线，10天线上穿20天线的个股
+// count(cross(**(c,5),**(c,10)),3)>=1 and count(cross(**(c,10),**(c,20)),3)>=1
 type FormulaNo1 struct {
 }
 
@@ -15,7 +16,7 @@ func (this *FormulaNo1) Name() string {
 }
 
 // Evaluate 评估K线数据
-func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *[]ResultInfo) {
+func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *arraylist.List) {
 	//fmt.Printf("%s\n", fullCode)
 	var f index.Formula
 	f = &index.MA{}
@@ -64,7 +65,7 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 			buy := hd.MA10
 			sell := hd.MA10 * 1.05
 
-			*result = append(*result, ResultInfo{Code: fullCode,
+			result.Add(ResultInfo{Code: fullCode,
 				Name: info.Name,
 				Date: hd.Date,
 				Buy:  buy,

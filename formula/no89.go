@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/mymmsc/gox/util/arraylist"
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/index"
 	"github.com/quant1x/quant/utils"
@@ -16,7 +17,7 @@ func (this *FormulaNo89) Name() string {
 }
 
 // Evaluate 评估K线数据
-func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, result *[]ResultInfo) {
+func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, result *arraylist.List) {
 	//fmt.Printf("%s\n", fullCode)
 	var f index.Formula
 	f = &index.K89{}
@@ -37,7 +38,7 @@ func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, r
 		if utils.DifferDays(now, tt) < 5 {
 			buy := tmp.Close
 			sell := buy * 1.05
-			*result = append(*result, ResultInfo{Code: fullCode,
+			result.Add(ResultInfo{Code: fullCode,
 				Name: info.Name,
 				Date: tmp.Date,
 				Buy:  buy,
