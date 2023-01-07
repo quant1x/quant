@@ -11,6 +11,7 @@ import (
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/utils/progressbar"
 	"os"
+	"runtime"
 	"sync"
 )
 
@@ -40,8 +41,8 @@ func main() {
 	default:
 		api = new(FormulaNo1)
 	}
-	//numCPU := runtime.NumCPU() / 2
-	//runtime.GOMAXPROCS(numCPU)
+	numCPU := runtime.NumCPU() / 2
+	runtime.GOMAXPROCS(numCPU)
 	// 获取全部证券代码
 	ss := data.GetCodeList()
 	count := len(ss)
