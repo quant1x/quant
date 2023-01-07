@@ -169,7 +169,7 @@ func (self *K89) Load(code string) error {
 		ma89             = 0.00
 		zhisun   float64 = 0
 		huicai   bool    = false
-		bConsole         = true
+		bConsole         = false
 	)
 	for i, v := range kls {
 		var (
