@@ -97,13 +97,3 @@ func Cross(a, b CompVal) bool {
 		}
 	}
 }
-
-// ExpMA EMA 当前值算法
-// previous 前一值
-// current 当前值
-// EMAtoday = α * Pricetoday + ( 1 - α ) * EMAyesterday
-// α = n + 1
-func ExpMA(previous, current float64, n int) float64 {
-	factor := float64(n) + 1
-	return (previous*(factor-EmaWeight) + current*EmaWeight) / factor
-}
