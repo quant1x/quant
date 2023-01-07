@@ -6,6 +6,6 @@ func TestLoadMa(t *testing.T) {
 	code := "sh000001"
 
 	var f Formula
-	f = &MA{}
+	f = &MA1X{}
 	f.Load(code)
 }

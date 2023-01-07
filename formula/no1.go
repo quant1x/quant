@@ -23,7 +23,7 @@ func (this *FormulaNo1) Name() string {
 func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map) {
 	//fmt.Printf("%s\n", fullCode)
 	var f index.Formula
-	f = &index.MA{}
+	f = &index.MA1X{}
 	f.Load(fullCode)
 
 	N := MaximumResultDays

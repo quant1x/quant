@@ -148,6 +148,17 @@ func SUM(slice interface{}, flag string, n int) float64 {
 	})
 }
 
+// 计算n周期的算术平均值
+func ma(slice interface{}, flag string, n int) float64 {
+	v := SUM(slice, flag, n)
+	return v / float64(n)
+}
+
+// SMA(X,N,M)，求X的N日移动平均，M为权重。算法：若Y=SMA(X,N,M) 则 Y=(M*X+(N-M)*Y')/N，其中Y'表示上一周期Y值，N必须大于M。
+func sma(pervious float64, n, m int) float64 {
+	return 0.00
+}
+
 // HHV 计算n周期内的flag的最大值
 func HHV(slice interface{}, flag string, n int) float64 {
 	return slice_universal(slice, flag, n, func(a, b float64) float64 {
