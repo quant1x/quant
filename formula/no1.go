@@ -26,7 +26,7 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 	f = &index.MA{}
 	f.Load(fullCode)
 
-	N := 3
+	N := MaximumResultDays
 	days := f.Len()
 	if days < 100 {
 		return

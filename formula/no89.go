@@ -27,7 +27,6 @@ func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, r
 	f = &index.K89{}
 	f.Load(fullCode)
 
-	//N := 3
 	days := f.Len()
 	if days < 100 {
 		return
@@ -39,7 +38,7 @@ func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, r
 		//sell := fmt.Sprintf("%.3f", hd.MA10*1.05)
 		now := time.Now()
 		tt, _ := utils.ParseTime(tmp.Date)
-		if utils.DifferDays(now, tt) < 5 {
+		if utils.DifferDays(now, tt) < MaximumResultDays {
 			buy := tmp.Close
 			sell := buy * 1.05
 			result.Put(fullCode, ResultInfo{Code: fullCode,

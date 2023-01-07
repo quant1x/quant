@@ -5,6 +5,11 @@ import (
 	"reflect"
 )
 
+const (
+	// MaximumResultDays 结果最大天数
+	MaximumResultDays int = 3
+)
+
 var (
 	mapTag map[reflect.Type]map[int]string = nil
 )
