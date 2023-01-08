@@ -3,7 +3,7 @@ package qtimg
 import (
 	"fmt"
 	"github.com/mymmsc/gox/encoding"
-	"github.com/quant1x/quant/http"
+	"github.com/quant1x/quant/utils/http"
 	"strconv"
 	"strings"
 )
