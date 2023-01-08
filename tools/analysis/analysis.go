@@ -3,10 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/quant1x/quant/utils/http"
 	"strconv"
 	"strings"
-
-	"github.com/quant1x/quant/http"
 )
 
 /*
