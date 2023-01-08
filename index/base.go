@@ -28,8 +28,8 @@ type FormulaHandler = func(hds []Cache.DayKLine, n int, x int) error
 
 type Formula interface {
 	Len() int
-	Load(code string) error
 	Data() interface{}
+	Load(code string) error
 }
 
 // 引用n周期前的flag整型值

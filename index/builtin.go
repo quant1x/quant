@@ -43,6 +43,8 @@ func slice_quote(slice interface{}, n int) (v reflect.Value, count int, err erro
 }
 
 // 引用n周期前的flag浮点值
+//
+// Deprecated: this function simply calls formula.REF
 func Ref(slice interface{}, flag string, n int) float64 {
 	v, count, err := slice_quote(slice, n)
 	if err != nil {
@@ -60,7 +62,9 @@ func _ref(v reflect.Value, flag string, count int, n int) float64 {
 	return get(hd, flag)
 }
 
-// Deprecated: 旧版本代码不利于复用
+// 引用
+//
+// Deprecated: 废弃, 旧版本代码不利于复用
 func Ref_v1(slice interface{}, flag string, n int) float64 {
 	val := reflect.ValueOf(slice)
 	if val.Kind() != reflect.Slice {
@@ -136,12 +140,16 @@ func SUM_v1(slice interface{}, flag string, n int) float64 {
 // current 当前值
 // EMAtoday = α * Pricetoday + ( 1 - α ) * EMAyesterday
 // α = n + 1
+//
+// Deprecated: this function simply calls formula.EXPMA
 func ExpMA(previous, current float64, n int) float64 {
 	factor := float64(n) + 1
 	return (previous*(factor-EmaWeight) + current*EmaWeight) / factor
 }
 
 // SUM 计算n周期内的flag的总和
+//
+// Deprecated: this function simply calls formula.SUM
 func SUM(slice interface{}, flag string, n int) float64 {
 	return slice_universal(slice, flag, n, func(a, b float64) float64 {
 		return a + b
@@ -149,17 +157,16 @@ func SUM(slice interface{}, flag string, n int) float64 {
 }
 
 // 计算n周期的算术平均值
-func ma(slice interface{}, flag string, n int) float64 {
+//
+// Deprecated: this function simply calls formula.MA
+func MA(slice interface{}, flag string, n int) float64 {
 	v := SUM(slice, flag, n)
 	return v / float64(n)
 }
 
-// SMA(X,N,M)，求X的N日移动平均，M为权重。算法：若Y=SMA(X,N,M) 则 Y=(M*X+(N-M)*Y')/N，其中Y'表示上一周期Y值，N必须大于M。
-func sma(pervious float64, n, m int) float64 {
-	return 0.00
-}
-
 // HHV 计算n周期内的flag的最大值
+//
+// Deprecated: this function simply calls formula.HHV
 func HHV(slice interface{}, flag string, n int) float64 {
 	return slice_universal(slice, flag, n, func(a, b float64) float64 {
 		if a < b {
@@ -170,6 +177,8 @@ func HHV(slice interface{}, flag string, n int) float64 {
 }
 
 // LLV 计算n周期内的flag的最小值
+//
+// Deprecated: this function simply calls formula.LLV
 func LLV(slice interface{}, flag string, n int) float64 {
 	return slice_universal(slice, flag, n, func(a, b float64) float64 {
 		if a > b {
@@ -211,6 +220,8 @@ func slice_ssincen(slice interface{}, flag string, n int, iterator BarHandler) i
 }
 
 // BARSSINCEN N周期内第一次X不为0到现在的周期数,N为常量
+//
+// Deprecated: this function simply calls formula.BARSSINCEN
 func BARSSINCEN(slice interface{}, flag string, n int, iterator BarHandler) int {
 	return slice_ssincen(slice, flag, n, iterator)
 }

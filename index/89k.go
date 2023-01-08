@@ -4,21 +4,26 @@ import (
 	"fmt"
 	"github.com/quant1x/quant/cache"
 	"github.com/quant1x/quant/category"
+	"github.com/quant1x/quant/formula"
+	"github.com/quant1x/quant/models/Cache"
 )
 
 type KNode struct {
-	K float64 `name:"价格" json:"k"`
-	N int     `name:"周期" json:"n"`
+	K    float64 `name:"价格" json:"k"`
+	N    int     `name:"周期" json:"n"`
+	Flag bool    `name:"标记" json:"flag"`
 }
 
 func (this *KNode) Reset() {
 	this.K = 0.00
 	this.N = 0
+	this.Flag = false
 }
 
 func (this *KNode) Set(k float64, n int) {
 	this.K = k
 	this.N = n
+	this.Flag = true
 }
 
 func (this *KNode) Comp(k float64) int {
@@ -43,7 +48,9 @@ func (this *KNode) Gt(k float64) bool {
 }
 
 type K89 struct {
-	data   []MaLine
+	*cache.DataFrame
+	//data   []MaLine
+	Signal Cache.DayKLine
 	P0     KNode
 	P5     KNode
 	P7     KNode
@@ -51,7 +58,6 @@ type K89 struct {
 	P9     KNode
 	P10    KNode
 	P11    KNode
-	Signal MaLine
 }
 
 func (this *K89) Reset() {
@@ -65,7 +71,7 @@ func (this *K89) Reset() {
 }
 
 func (self *K89) Len() int {
-	return len(self.data)
+	return self.Length
 }
 
 func (self *K89) Data() interface{} {
@@ -143,147 +149,168 @@ C2:BARSLAST(CLOSE<ZS_LOW AND N9>N10),NODRAW,COLORLIGRAY;
 C3:N10>0,NODRAW;
 B0:=C1=0 AND C2=1 AND C3;
 B:50*B0,COLORYELLOW;
-
-{筹码锁定因子}
-CM0:=50-LFS;
-CM:CM0,COLORSTICK;
-CM1:EMA(CM0,3);
-
-{斜率}
-XL:(K7-K9)/(N7-N9),NODRAW;
-P0:CLOSE,COLORWHITE;
-P1:-1*XL*N9+K9,COLORCYAN;
 */
 func (self *K89) Load(code string) error {
-	kls := cache.LoadKLine(code)
-	if kls == nil {
+	self.DataFrame = cache.LoadDataFrame(code)
+	if self.DataFrame == nil {
 		return ErrCode
-	} else if len(kls) < 1 {
+	} else if self.Length < 1 {
 		return ErrData
 	}
 
-	count := len(kls)
+	count := self.Length
 	const w = 89
 	var (
 		t        K89
 		ma89             = 0.00
 		zhisun   float64 = 0
 		huicai   bool    = false
-		bConsole         = false
+		bConsole         = true
 	)
-	for i, v := range kls {
+	for i := 0; i < count; i++ {
 		var (
 			price  float64
 			volume int64
 		)
+		start := 0
+		end := i + 1
 
-		tmp := MaLine{DayKLine: v}
+		_date := self.Date[i]
+		_close := self.Close[i]
+		_high := self.High[i]
+		_low := self.Low[i]
+		_volume := self.Volume[i]
 
-		hds := kls[:i+1]
-		//hdlen := len(hds)
 		// 第一步, 计算MA89
-		if i+1 >= w {
-			price = SUM(hds, Close, w) / float64(w)
-			volume = int64(SUM(hds, Volume, w)) / int64(w)
-			tmp.MA30 = price
-			tmp.MA30Volume = volume
+		if i+1 < w {
+			continue
+		} else {
+			price = formula.MA(self.Close[start:end], w)
+			volume = formula.MA(self.Volume[start:end], w)
 			// 重置MA89均线
 			ma89 = price
-		} else {
-			continue
 		}
-		// 第二步, 低于收盘价低于MA89
-		if v.Close < ma89 {
+
+		// 第二步, 低于收盘价低于MA89, 股价开始下行
+		if _close < ma89 {
 			// 重置⑤
-			if t.P5.Gt(v.Low) {
+			if t.P5.Gt(_low) {
 				t.Reset()
 				huicai = false
 				zhisun = 0
-				t.P5.Set(v.Low, i)
+				t.P5.Set(_low, i)
 				if bConsole {
-					fmt.Printf("%s, ⑤: %.2f\n", v.Date, v.Low)
+					fmt.Printf("%s, ⑤: %.2f\n", _date, _low)
 				}
 				continue
 			}
 		}
+		// 2.2 如果P5无效, 终止流程
+		if !t.P5.Flag {
+			continue
+		}
 		// 第三步, 股价不再创新低之后
-		if t.P5.Lt(v.Low) {
+		if t.P5.Lt(_low) {
 			// 找从P5开始的最高价
 			n5 := i - t.P5.N
-			hp := HHV(hds, High, n5)
-			if t.P7.Lt(hp) {
+			hp := formula.HHV(self.High[t.P5.N:end], n5+1)
+			if t.P7.Lt(hp) && hp == _high {
 				t.P7.Set(hp, i)
 				if bConsole {
-					fmt.Printf("%s, ⑦: %.2f\n", v.Date, hp)
+					fmt.Printf("%s, ⑦: %.2f\n", _date, hp)
 				}
 			}
 			// TODO: 打开use89K开关时n5的周期数存在bug, 会引发panic
-			use89k := true
+			// FIXED
+			use89k := false
 
 			if !use89k {
-				hv := HHV(hds, Volume, n5)
-				if int64(hv) == v.Volume {
-					zhisun = v.Low
+				//hv := HHV(hds, Volume, n5)
+				hv := formula.HHV(self.Volume[t.P5.N:end], n5+1)
+				if hv == _volume {
+					zhisun = _low
 					if bConsole {
-						fmt.Printf("%s, 画止损线: %.2f\n", v.Date, zhisun)
+						fmt.Printf("%s, 画止损线: %.2f\n", _date, zhisun)
 					}
 					continue
 				}
 			} else /*if zhisun == 0.00*/ {
-				n := BARSSINCEN(hds, Volume, n5, func(a, b float64) bool {
+				/*n := BARSSINCEN(hds, Volume, n5, func(a, b float64) bool {
 					if a == 0.00 {
 						return false
 					}
 					return b/a >= 2
-				})
-				if n > 0 {
-					v := hds[i-n]
-					zhisun = v.Low
-					if bConsole {
-						fmt.Printf("%s, 画止损线: %.2f\n", v.Date, zhisun)
+				})*/
+
+				n := formula.BARSSINCEN(self.Volume[t.P5.N:end], n5+1, func(a, b int64) bool {
+					if a == 0 {
+						return false
 					}
-					//continue
+					return b/a >= 2
+				})
+				if n >= 0 {
+					zhisun = self.Low[t.P5.N:end][n]
+					if bConsole {
+						fmt.Printf("%s, %d,画止损线: %.2f\n", _date, n, zhisun)
+					}
+					continue
 				}
 			}
 		}
+		// 3.2 如果⑦不存在, 终止流程
+		if !t.P7.Flag {
+			continue
+		}
 		// 第四步, 股价不再创新高之后
-		if t.P7.Gt(v.High) {
+		if t.P7.Gt(_high) {
 			// 开始回落
 			n7 := i - t.P7.N
-			lc := LLV(hds, Close, n7)
-			if lc < zhisun {
+			lc := formula.LLV(self.Close[t.P7.N:end], n7+1)
+			if lc < zhisun && lc == _close {
 				huicai = true
 				if bConsole {
-					fmt.Printf("%s, 跌破止损: %.2f, 收盘: %.2f, 卖出\n", v.Date, zhisun, v.Close)
+					fmt.Printf("%s, 跌破止损: %.2f, 收盘: %.2f, 卖出\n", _date, zhisun, _close)
 				}
+				// TODO 不让当天的最低价作为止损线
 				continue
 			}
 			// 重置⑧
-			if t.P8.Gt(v.Low) {
-				t.P8.Set(v.Low, i)
+			if t.P8.Gt(_low) {
+				t.P8.Set(_low, i)
 				if bConsole {
-					fmt.Printf("%s, ⑧: %.2f\n", v.Date, v.Low)
+					fmt.Printf("%s, ⑧: %.2f\n", _date, _low)
 				}
-				continue
+				//continue
 			}
+		}
+		// 4.2 如果⑧不存在, 终止流程
+		if !t.P8.Flag {
+			continue
 		}
 		// 第五步, 股价第2次不再新低
-		if huicai {
-			if zhisun < v.Close {
+		if t.P8.Lt(_low) {
+			// 判断回踩后突破
+			if huicai && zhisun < _close {
 				if bConsole {
-					fmt.Printf("%s, 回踩止损: %.2f, 突破, 收盘: %.2f, 买入\n", v.Date, zhisun, v.Close)
+					fmt.Printf("%s, 回踩止损: %.2f, 突破, 收盘: %.2f, 买入\n", _date, zhisun, _close)
 				}
 				huicai = false
-				zhisun = 0
+				zhisun = 0.00
 				t.Reset()
-				self.Signal = tmp
+				self.Signal.Date = _date
+				self.Signal.Close = _close
 			}
 		}
-		self.data = append(self.data, tmp)
+
+		if huicai {
+
+		}
+
 		// 输出最后2组数据
 		if category.DEBUG && count < i+3 {
-			//fmt.Printf("day: %s, MA5: %.2f, MA10: %.2f, MA20: %.2f, MA30: %.2f\n", self.data[i].Date, self.data[i].MA5, self.data[i].MA10, self.data[i].MA20, self.data[i].MA30)
+			//
 		}
+		_ = volume
 	}
 	return nil
 }
