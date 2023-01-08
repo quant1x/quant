@@ -31,7 +31,7 @@ func main() {
 		strategy int
 	)
 	flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
-	flag.IntVar(&strategy, "strategy", 1, "formula serial number")
+	flag.IntVar(&strategy, "strategy", 1, "strategy serial number")
 	flag.Parse()
 	cache.Init(path)
 	var api FormulaApi
