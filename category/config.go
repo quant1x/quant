@@ -16,7 +16,7 @@ const (
 	CACHE_FILE_MODE os.FileMode = 0644
 
 	// DEBUG 调试开关
-	DEBUG = true
+	DEBUG = false
 
 	// LOG_ROOT_PATH 日志路径
 	LOG_ROOT_PATH = "/opt/logs/ctp"
