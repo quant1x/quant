@@ -4,6 +4,7 @@ import (
 	"github.com/mymmsc/gox/util/treemap"
 	"github.com/quant1x/quant/data/security"
 	"github.com/quant1x/quant/index"
+	"github.com/quant1x/quant/models/Cache"
 	"github.com/quant1x/quant/utils"
 	"time"
 )
@@ -31,7 +32,7 @@ func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, r
 	if days < 100 {
 		return
 	}
-	tmp := f.Data().(index.MaLine)
+	tmp := f.Data().(Cache.DayKLine)
 	if tmp.Close > 0 {
 		//fmt.Printf("%s, %s, %.02f, %.02f\n", fullCode, hd.Date, hd.MA10, hd.MA10*1.05)
 		//buy := fmt.Sprintf("%.3f", hd.MA10)

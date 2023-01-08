@@ -1,4 +1,5 @@
 package main
+
 /*
 N:=15;
 M:=9;
@@ -30,13 +31,13 @@ S2:=D<REF(D,1) AND CROSS(D,K);
 S3:=BARSSINCEN(S2>0,N);
 S4:=COUNT(S1,S3);
 B:IF(D<REF(D,1) AND S4<7,S4,0),COLORRED,NODRAW;
- */
+*/
 
 /*
 1号策略 5日均线10日均线金叉后的第一个收盘价等于或者低于10日线，MACD红柱。
 金叉后的第一次最低价低于10日线
 2号策略 5日均线小于10日均线，当日收盘小于10日均线
- */
+*/
 
 /*
 短线策略
@@ -55,4 +56,4 @@ YL1:2*ZX-LOW;
 YL2:ZX + PT;
 ZC1:2*ZX-HIGH;
 ZC2:ZX-PT;
- */
+*/
