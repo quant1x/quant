@@ -6,8 +6,8 @@ import (
 	"github.com/mymmsc/gox/api"
 	"github.com/mymmsc/gox/logger"
 	"github.com/quant1x/quant/category"
-	"github.com/quant1x/quant/http"
 	"github.com/quant1x/quant/stock"
+	"github.com/quant1x/quant/utils/http"
 	"strings"
 )
 
