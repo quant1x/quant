@@ -3,9 +3,9 @@ package sina
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/quant1x/quant/http"
-	"github.com/quant1x/quant/stock"
 	"github.com/mymmsc/gox/fastjson"
+	"github.com/quant1x/quant/stock"
+	"github.com/quant1x/quant/utils/http"
 	"testing"
 )
 
@@ -26,6 +26,7 @@ type Transport struct {
 	Id    string
 	Rssid string
 }
+
 func Test1(t *testing.T) {
 	var st []Transport
 	t1 := Transport{Time: "22", MAC: "33", Id: "44", Rssid: "55"}
@@ -68,7 +69,7 @@ func TestHistory4(t *testing.T) {
 	if v.Type() == fastjson.TypeArray {
 		va, err := v.Array()
 		if err != nil {
-			t.Errorf("%+v\n",err)
+			t.Errorf("%+v\n", err)
 		}
 		count := len(va)
 		for i := 0; i < count; i++ {

@@ -6,9 +6,9 @@ import (
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/util"
 	"github.com/quant1x/quant/data/security"
-	"github.com/quant1x/quant/http"
 	"github.com/quant1x/quant/stock"
 	"github.com/quant1x/quant/utils"
+	"github.com/quant1x/quant/utils/http"
 	"strconv"
 	"time"
 )
