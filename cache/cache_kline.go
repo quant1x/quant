@@ -5,7 +5,6 @@ import (
 	"errors"
 	"github.com/mymmsc/gox/logger"
 	"github.com/quant1x/quant/models/Cache"
-	"github.com/quant1x/quant/stock"
 	"os"
 	"strings"
 	"syscall"
@@ -55,12 +54,12 @@ func LoadKLine(fc string) []Cache.DayKLine {
 }
 
 // LoadDataFrame 加载数据帧
-func LoadDataFrame(code string) *stock.DataFrame {
+func LoadDataFrame(code string) *DataFrame {
 	kls := LoadKLine(code)
 	if len(kls) == 0 {
 		return nil
 	}
-	df := new(stock.DataFrame)
+	df := new(DataFrame)
 	df.Length = len(kls)
 	for _, v := range kls {
 		df.Date = append(df.Date, v.Date)
