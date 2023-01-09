@@ -104,7 +104,8 @@ func main() {
 
 func evaluate(bar *progressbar.ProgressBar, api FormulaApi, wg *sync.WaitGroup, code string, info *security.StaticBasic, result *treemap.Map) {
 	defer wg.Done()
-	defer wg.Add(1)
 	defer bar.Add(1)
+
+	wg.Add(1)
 	api.Evaluate(code, info, result)
 }
