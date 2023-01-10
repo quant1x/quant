@@ -4,8 +4,10 @@ go 1.20
 
 require (
 	github.com/TarsCloud/TarsGo v1.1.6
+	github.com/VividCortex/ewma v1.2.0
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/dop251/goja v0.0.0-20221229151140-b95230a9dbad
+	github.com/go-gota/gota v0.12.0
 	github.com/golang/protobuf v1.5.2
 	github.com/mattn/go-runewidth v0.0.14
 	github.com/melman-go/aliopengo v0.0.0-20151127102017-013e7eb1446d
@@ -33,11 +35,12 @@ require (
 	github.com/go-pdf/fpdf v0.6.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
-	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.3 // indirect
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69 // indirect
+	golang.org/x/net v0.0.0-20210423184538-5f58ad60dda6 // indirect
 	golang.org/x/sys v0.4.0 // indirect
+	gonum.org/v1/gonum v0.12.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

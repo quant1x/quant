@@ -16,7 +16,7 @@ func TestCreateUrl(t *testing.T) {
 }
 
 func TestHistory(t *testing.T) {
-	kl, _ := GetHistory("sh000001", 1)
+	kl, _ := GetHistory("sz000002", 1)
 	fmt.Printf("%+v\n", kl)
 }
 
