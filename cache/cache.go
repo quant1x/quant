@@ -20,15 +20,26 @@ const (
 
 var (
 	// CACHE_ROOT_PATH cache路径
-	CACHE_ROOT_PATH           = category.DATA_ROOT_PATH
-	CACHE_TYPE      CacheType = CACHE_CSV
+	CACHE_ROOT_PATH = category.DATA_ROOT_PATH
+	CACHE_TYPE      CacheType
 )
+
+func init() {
+	CACHE_TYPE = CACHE_CSV
+}
 
 // CheckFilepath
 // 检查filename 文件路径, 如果不存在就创建
 func CheckFilepath(filename string) error {
-	dir := filepath.Dir(filename)
-	return os.MkdirAll(dir, category.CACHE_DIR_MODE)
+	path := filepath.Dir(filename)
+	dir, err := os.Stat(path)
+	if err != nil {
+		return err
+	}
+	if dir.IsDir() {
+		return nil
+	}
+	return os.MkdirAll(path, category.CACHE_DIR_MODE)
 }
 
 // Init

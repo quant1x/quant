@@ -1,8 +1,11 @@
 package cache
 
 import (
+	"errors"
+	"github.com/mymmsc/gox/logger"
 	"github.com/quant1x/quant/category"
 	"os"
+	"strings"
 	"syscall"
 )
 
@@ -65,4 +68,36 @@ func (fc *FastCache) Close() {
 		_ = syscall.Munmap(fc.Data)
 		_ = fc.f.Close()
 	}
+}
+
+// GetCacheFilename 获取缓存的文件名
+func GetCacheFilename(fullCode string) string {
+	fullCode = strings.TrimSpace(fullCode)
+	if len(fullCode) != 7 && len(fullCode) != 8 {
+		return fullCode
+	}
+	pos := len(fullCode) - 3
+	fullCode = strings.ToLower(fullCode)
+	// 组织存储路径
+	filename := GetDayPath() + "/" + fullCode[0:pos] + "/" + fullCode
+	if CACHE_TYPE == CACHE_CSV {
+		filename += ".csv"
+	}
+	return filename
+}
+
+func GetCache(fullCode string) *os.File {
+	filename := GetCacheFilename(fullCode)
+	file, err := os.Open(filename)
+	if err != nil {
+		//ENOENT (2)
+		if errors.Is(err, syscall.ENOENT) {
+			logger.Debugf("code[%s]: K线数据文件不存在", fullCode)
+			return nil
+		} else {
+			logger.Errorf("code[%s]: K线数据文件操作失败:%v", fullCode, err)
+			return nil
+		}
+	}
+	return file
 }
