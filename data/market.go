@@ -76,7 +76,7 @@ func GetCodeList() []string {
 			codeEnd   = 999
 		)
 		for i := codeBegin; i <= codeEnd; i++ {
-			fc := fmt.Sprintf("sz000%d", i)
+			fc := fmt.Sprintf("sz000%03d", i)
 			fullCodes = append(fullCodes, fc)
 		}
 	}
@@ -87,7 +87,7 @@ func GetCodeList() []string {
 			codeEnd   = 2999
 		)
 		for i := codeBegin; i <= codeEnd; i++ {
-			fc := fmt.Sprintf("sz00%d", i)
+			fc := fmt.Sprintf("sz00%04d", i)
 			fullCodes = append(fullCodes, fc)
 		}
 	}
@@ -98,7 +98,7 @@ func GetCodeList() []string {
 			codeEnd   = 300999
 		)
 		for i := codeBegin; i <= codeEnd; i++ {
-			fc := fmt.Sprintf("sz%d", i)
+			fc := fmt.Sprintf("sz%06d", i)
 			fullCodes = append(fullCodes, fc)
 		}
 	}
