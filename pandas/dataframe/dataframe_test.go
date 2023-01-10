@@ -10,7 +10,7 @@ import (
 
 	"math"
 
-	"github.com/go-gota/gota/series"
+	"github.com/quant1x/quant/pandas/series"
 )
 
 // compareFloats compares floating point values up to the number of digits specified.

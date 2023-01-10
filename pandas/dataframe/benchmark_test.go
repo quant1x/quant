@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/go-gota/gota/dataframe"
-	"github.com/go-gota/gota/series"
+	"github.com/quant1x/quant/pandas/dataframe"
+	"github.com/quant1x/quant/pandas/series"
 )
 
 func generateSeries(n, rep int) (data []series.Series) {
