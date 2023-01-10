@@ -1,10 +1,10 @@
-package pandas
+package test
 
 import (
 	"fmt"
-	"github.com/go-gota/gota/dataframe"
-	"github.com/go-gota/gota/series"
 	"github.com/quant1x/quant/cache"
+	"github.com/quant1x/quant/pandas/dataframe"
+	"github.com/quant1x/quant/pandas/series"
 	"strings"
 	"testing"
 )

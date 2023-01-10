@@ -1,4 +1,4 @@
-package pandas
+package test
 
 import (
 	"fmt"
