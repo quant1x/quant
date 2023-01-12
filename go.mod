@@ -3,6 +3,7 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
+	gitee.com/quant1x/gotdx v1.0.1
 	github.com/TarsCloud/TarsGo v1.1.6
 	github.com/WinPooh32/math v1.0.5
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
