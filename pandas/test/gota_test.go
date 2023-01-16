@@ -2,9 +2,9 @@ package test
 
 import (
 	"fmt"
+	"gitee.com/quant1x/pandas/dataframe"
+	"gitee.com/quant1x/pandas/series"
 	"github.com/quant1x/quant/cache"
-	"github.com/quant1x/quant/pandas/dataframe"
-	"github.com/quant1x/quant/pandas/series"
 	"strings"
 	"testing"
 )
