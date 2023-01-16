@@ -1,34 +1,27 @@
 package tdx
 
 import (
-	tdx "gitee.com/quant1x/gotdx"
 	"gitee.com/quant1x/gotdx/proto"
+	"gitee.com/quant1x/gotdx/quotes"
 	"strings"
 )
 
-type TdxApi struct {
-	tdx.TcpClient
-}
-
 var (
-	_client *tdx.TcpClient = nil
+	stdApi *quotes.StdApi = nil
 )
 
-func NewApi() *tdx.TcpClient {
-	host := "119.147.212.81"
-	port := 7709
-	_client := tdx.NewClient(&tdx.Opt{Host: host, Port: port})
-	if _client != nil {
-		_client.Connect()
+func prepare() *quotes.StdApi {
+	if stdApi == nil {
+		//srv := quotes.Server{
+		//	Name:      "临时主机",
+		//	Host:      "119.147.212.81",
+		//	Port:      7709,
+		//	CrossTime: 0,
+		//}
+		//stdApi = quotes.NewStdApi(srv)
+		stdApi = quotes.NewStdApi2()
 	}
-	return _client
-}
-
-func prepare() *tdx.TcpClient {
-	if _client == nil {
-		_client = NewApi()
-	}
-	return _client
+	return stdApi
 }
 
 func startsWith(str string, prefixs []string) bool {
@@ -70,13 +63,13 @@ func getStockMarket(symbol string) string {
 
 func getStockMarketId(symbol string) uint8 {
 	market := getStockMarket(symbol)
-	marketId := tdx.MARKET_SH
+	marketId := proto.MarketShangHai
 	if market == "sh" {
-		marketId = tdx.MARKET_SH
+		marketId = proto.MarketShangHai
 	} else if market == "sz" {
-		marketId = tdx.MARKET_SZ
+		marketId = proto.MarketShenZhen
 	} else if market == "bj" {
-		marketId = tdx.MARKET_BJ
+		marketId = proto.MarketBeiJing
 	}
 	//# logger.debug(f"market => {market}")
 
@@ -84,9 +77,10 @@ func getStockMarketId(symbol string) uint8 {
 }
 
 // GetKLine 获取日K线
-func GetKLine(code string, start uint16, count uint16) *proto.SecurityBarsReply {
-	client := prepare()
+func GetKLine(code string, start uint16, count uint16) *quotes.SecurityBarsReply {
+	api := prepare()
+
 	marketId := getStockMarketId(code)
-	data, _ := client.GetSecurityBars(tdx.KLINE_TYPE_RI_K, marketId, code, start, count)
+	data, _ := api.GetKLine(marketId, code, proto.KLINE_TYPE_RI_K, start, count)
 	return data
 }

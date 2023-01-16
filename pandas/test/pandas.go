@@ -2,17 +2,9 @@ package test
 
 import (
 	"fmt"
-	"github.com/quant1x/quant/pandas/dataframe"
-	"github.com/quant1x/quant/pandas/series"
+	"gitee.com/quant1x/pandas/dataframe"
 	"io"
 )
-
-import _ "unsafe"
-
-type Pandas struct {
-	dataframe.DataFrame
-	series.Series
-}
 
 func ReadCSV(r io.Reader, options ...dataframe.LoadOption) dataframe.DataFrame {
 	return dataframe.ReadCSV(r, options...)
