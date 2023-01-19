@@ -5,7 +5,6 @@ go 1.20
 require (
 	gitee.com/quant1x/gotdx v1.0.6
 	gitee.com/quant1x/pandas v0.2.0
-	github.com/TarsCloud/TarsGo v1.3.8
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/dop251/goja v0.0.0-20230116105012-0341fef34b46
 	github.com/golang/protobuf v1.5.2
@@ -38,6 +37,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69 // indirect
 	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sys v0.4.0 // indirect
