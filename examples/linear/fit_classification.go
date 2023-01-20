@@ -12,6 +12,13 @@ import (
 	"gonum.org/v1/plot/vg"
 )
 
+var (
+	ColNames = []string{"feature", "document", "machine", "load_time",
+		"search_time", "reduce_and_save"}
+
+	ResColNames = []string{"feature", "document", "machine", "total"}
+)
+
 // dataPrepare 数据预处理函数
 func dataPrepare(clsDF *dataframe.DataFrame) {
 	// 获取total列

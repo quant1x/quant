@@ -8,13 +8,6 @@ import (
 	"math"
 )
 
-var (
-	ColNames = []string{"feature", "document", "machine", "load_time",
-		"search_time", "reduce_and_save"}
-
-	ResColNames = []string{"feature", "document", "machine", "total"}
-)
-
 // 根据条件修改原先值
 func getTotal(s series.Series) series.Series {
 
