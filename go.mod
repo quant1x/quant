@@ -7,6 +7,7 @@ require (
 	gitee.com/quant1x/pandas v0.2.0
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/dop251/goja v0.0.0-20230116105012-0341fef34b46
+	github.com/erni27/regression v0.3.1
 	github.com/golang/protobuf v1.5.2
 	github.com/mattn/go-runewidth v0.0.14
 	github.com/melman-go/aliopengo v0.0.0-20151127102017-013e7eb1446d
@@ -54,6 +55,7 @@ require (
 	golang.org/x/exp v0.0.0-20220827204233-334a2380cb91 // indirect
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69 // indirect
 	golang.org/x/net v0.5.0 // indirect
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
