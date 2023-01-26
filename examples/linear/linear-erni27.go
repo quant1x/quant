@@ -72,7 +72,7 @@ func LeastSquares(x []float64, y []float64) (slope float64, intercept float64) {
 		if xLen <= window {
 			window = xLen
 		}
-		for i := xLen - window; i < len(x); i++ {
+		for i := xLen - window; i < xLen; i++ {
 			xi += x[i]
 			x2 += x[i] * x[i]
 			yi += y[i]

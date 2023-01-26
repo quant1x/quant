@@ -100,10 +100,15 @@ func TestPredict(t *testing.T) {
 }
 
 func TestPredictStock(t *testing.T) {
-	df := cache.LoadDataFrame("sz002209")
+	df := cache.LoadDataFrame("sz002528")
 	CLOSE := df.Close
+	//CLOSE = []float64{1, 2, 3, 4, 5}
 	data_len := len(CLOSE)
-	y := CLOSE[:data_len-1]
+	fmt.Printf("raw   data length: %d \n", data_len)
+	// 去掉最后1天的数据
+	y := CLOSE[:data_len]
+	y_length := len(y)
+	fmt.Printf("train data length: %d, last data[%d]=%f \n", y_length, (y_length - 1), y[y_length-1])
 	x := make([]float64, len(y))
 	for i, v := range y {
 		x[i] = float64(i)
@@ -111,7 +116,9 @@ func TestPredictStock(t *testing.T) {
 	}
 
 	k, b := LeastSquares(x, y)
-
-	p := Predict(float64(data_len), k, b)
-	fmt.Println(p)
+	// 预测最后1天的下一个交易日的数据
+	no := y_length
+	fmt.Printf("no: %d, predicting...\n", no)
+	p := Predict(float64(no), k, b)
+	fmt.Printf("no: %d, predicted=%f\n", no, p)
 }
