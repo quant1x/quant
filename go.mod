@@ -1,6 +1,6 @@
 module github.com/quant1x/quant
 
-go 1.19
+go 1.20
 
 require (
 	gitee.com/quant1x/gotdx v1.0.6
@@ -12,7 +12,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.14
 	github.com/melman-go/aliopengo v0.0.0-20151127102017-013e7eb1446d
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db
-	github.com/mymmsc/gox v1.2.4
+	github.com/mymmsc/gox v1.2.6
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.9.0
