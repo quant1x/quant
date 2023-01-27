@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	gitee.com/quant1x/gotdx v1.0.6
-	gitee.com/quant1x/pandas v0.2.0
+	gitee.com/quant1x/pandas v0.2.2
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/dop251/goja v0.0.0-20230116105012-0341fef34b46
 	github.com/erni27/regression v0.3.1
