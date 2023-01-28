@@ -2,12 +2,12 @@ package test
 
 import (
 	"fmt"
-	"gitee.com/quant1x/pandas/dataframe"
+	"gitee.com/quant1x/pandas"
 	"io"
 )
 
-func ReadCSV(r io.Reader, options ...dataframe.LoadOption) dataframe.DataFrame {
-	return dataframe.ReadCSV(r, options...)
+func ReadCSV(r io.Reader, options ...pandas.LoadOption) pandas.DataFrame {
+	return pandas.ReadCSV(r, options...)
 }
 
 func EWM(d []float64, span int) []float64 {

@@ -2,8 +2,7 @@ package test
 
 import (
 	"fmt"
-	"gitee.com/quant1x/pandas/dataframe"
-	"gitee.com/quant1x/pandas/series"
+	"gitee.com/quant1x/pandas"
 	"github.com/quant1x/quant/cache"
 	"strings"
 	"testing"
@@ -28,11 +27,11 @@ Spain,2012-02-01,66,555.42,00241
 	fmt.Println(s1)
 
 	fp := cache.GetCache("sz000002")
-	df = dataframe.ReadCSV(fp)
+	df = pandas.ReadCSV(fp)
 	fmt.Println(df)
 	closes := df.Col("Close")
 	closes.Median()
 	ma5 := closes.Rolling(5).Mean()
-	series.New(closes, series.Float, "")
+	pandas.NewSeries(closes, pandas.Float, "")
 	fmt.Println(ma5)
 }

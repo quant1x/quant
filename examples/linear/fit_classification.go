@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"gitee.com/quant1x/pandas/dataframe"
+	"gitee.com/quant1x/pandas"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/plotutil"
@@ -20,7 +20,7 @@ var (
 )
 
 // dataPrepare 数据预处理函数
-func dataPrepare(clsDF *dataframe.DataFrame) {
+func dataPrepare(clsDF *pandas.DataFrame) {
 	// 获取total列
 	*clsDF = clsDF.Select(ColNames)
 	totalSeries := clsDF.Rapply(getTotal)
@@ -64,7 +64,7 @@ func FitClassification() {
 	}
 
 	defer clsData.Close()
-	clsDF := dataframe.ReadCSV(clsData)
+	clsDF := pandas.ReadCSV(clsData)
 	// 数据预处理
 	dataPrepare(&clsDF)
 	// 数据预处理完成

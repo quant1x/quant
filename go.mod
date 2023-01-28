@@ -3,10 +3,10 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/gotdx v1.0.6
-	gitee.com/quant1x/pandas v0.2.2
+	gitee.com/quant1x/gotdx v1.0.8
+	gitee.com/quant1x/pandas v0.5.2
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
-	github.com/dop251/goja v0.0.0-20230116105012-0341fef34b46
+	github.com/dop251/goja v0.0.0-20230128084908-78b980256d04
 	github.com/erni27/regression v0.3.1
 	github.com/golang/protobuf v1.5.2
 	github.com/mattn/go-runewidth v0.0.14
@@ -30,11 +30,13 @@ require (
 
 require (
 	git.sr.ht/~sbinet/gg v0.3.1 // indirect
+	github.com/WinPooh32/math v1.0.5 // indirect
+	github.com/WinPooh32/series v0.6.1 // indirect
 	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
 	github.com/apache/arrow/go/arrow v0.0.0-20210105145422-88aaea5262db // indirect
 	github.com/awalterschulze/gographviz v0.0.0-20190221210632-1e9ccb565bca // indirect
 	github.com/chewxy/hm v1.0.0 // indirect
-	github.com/chewxy/math32 v1.0.8 // indirect
+	github.com/chewxy/math32 v1.10.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.7.0 // indirect
 	github.com/go-fonts/liberation v0.2.0 // indirect
@@ -49,10 +51,11 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/rogpeppe/go-internal v1.8.0 // indirect
+	github.com/viterin/partial v1.0.0 // indirect
+	github.com/viterin/vek v0.4.0 // indirect
 	github.com/xtgo/set v1.0.0 // indirect
 	go4.org/unsafe/assume-no-moving-gc v0.0.0-20220617031537-928513b29760 // indirect
-	golang.org/x/exp v0.0.0-20220827204233-334a2380cb91 // indirect
+	golang.org/x/exp v0.0.0-20220907003533-145caa8ea1d0 // indirect
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69 // indirect
 	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect

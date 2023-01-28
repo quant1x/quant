@@ -1,15 +1,14 @@
 package linear
 
 import (
-	"gitee.com/quant1x/pandas/dataframe"
-	"gitee.com/quant1x/pandas/series"
+	"gitee.com/quant1x/pandas"
 	"gonum.org/v1/gonum/optimize"
 	"gonum.org/v1/plot/plotter"
 	"math"
 )
 
 // 根据条件修改原先值
-func getTotal(s series.Series) series.Series {
+func getTotal(s pandas.Series) pandas.Series {
 
 	loadTime, _ := s.Val(3).(int)
 	searchTime, _ := s.Val(4).(int)
@@ -17,19 +16,19 @@ func getTotal(s series.Series) series.Series {
 
 	res := loadTime + searchTime + rAsTime
 	resF := float64(res) / float64(60)
-	return series.Floats(resF)
+	return pandas.Floats(resF)
 }
 
-func getDoc(s series.Series) series.Series {
+func getDoc(s pandas.Series) pandas.Series {
 	document, _ := s.Val(1).(float64)
 	resF := float64(2*document) / float64(1000)
-	return series.Floats(resF)
+	return pandas.Floats(resF)
 }
 
 // 最小二乘法的线性拟合
 
 // dataOptimize 数据优化和拟合函数
-func dataOptimize(clsDF *dataframe.DataFrame) (actPoints, expPoints plotter.XYs, fa, fb float64) {
+func dataOptimize(clsDF *pandas.DataFrame) (actPoints, expPoints plotter.XYs, fa, fb float64) {
 	// 开始数据拟合
 
 	// 实际观测点
