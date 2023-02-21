@@ -1,56 +1,48 @@
 package main
 
 import (
+	"gitee.com/quant1x/data/cache"
+	"gitee.com/quant1x/data/security"
+	"gitee.com/quant1x/pandas"
 	"github.com/mymmsc/gox/util/treemap"
-	"github.com/quant1x/quant/data/security"
-	"github.com/quant1x/quant/index"
-	"github.com/quant1x/quant/models/Cache"
-	"github.com/quant1x/quant/utils"
-	"time"
 )
 
-// 89K策略
-type FormulaNo89 struct {
-}
+type FormulaNo89 struct{}
 
-func (this *FormulaNo89) Code() int {
-	return 89
-}
-
-func (this *FormulaNo89) Name() string {
+func (this FormulaNo89) Name() string {
 	return "89K策略"
 }
 
-// Evaluate 评估K线数据
-func (this *FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map) {
-	//fmt.Printf("%s\n", fullCode)
-	var f index.Formula
-	f = &index.K89{}
-	f.Load(fullCode)
+func (this FormulaNo89) Code() int {
+	return 89
+}
 
-	days := f.Len()
-	if days < 100 {
+func (this FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map) {
+	//fmt.Println(fullCode)
+	filename := cache.GetKLineFilename(fullCode)
+	df := pandas.ReadCSV(filename)
+	if df.Err != nil {
 		return
 	}
-	tmp := f.Data().(Cache.DayKLine)
-	if tmp.Close > 0 {
-		//fmt.Printf("%s, %s, %.02f, %.02f\n", fullCode, hd.Date, hd.MA10, hd.MA10*1.05)
-		//buy := fmt.Sprintf("%.3f", hd.MA10)
-		//sell := fmt.Sprintf("%.3f", hd.MA10*1.05)
-		now := time.Now()
-		tt, _ := utils.ParseTime(tmp.Date)
-		if utils.DifferDays(now, tt) < MaximumResultDays {
-			buy := tmp.Close
-			sell := buy * 1.05
-			result.Put(fullCode, ResultInfo{Code: fullCode,
-				Name:         info.Name,
-				Date:         tmp.Date,
-				Buy:          buy,
-				Sell:         sell,
-				StrategyCode: this.Code(),
-				StrategyName: this.Name(),
-			})
-		}
+	_ = df.SetNames("date", "open", "high", "low", "close", "volume")
+	N := 89
+	CLOSE := df.Col("close")
+	days := CLOSE.Len()
+	date := df.Col("date").Values().([]string)[days-1]
+	ret := F89K(df, N)
 
+	rLen := ret.Nrow()
+	B := ret.Col("B").Values().([]bool)
+	buy := ret.Col("close").DTypes()
+	if rLen > 1 && B[rLen-1] {
+		buy := buy[rLen-1]
+		sell := buy * 1.05
+		result.Put(fullCode, ResultInfo{Code: fullCode,
+			Name:         info.Name,
+			Date:         date,
+			Buy:          float64(buy),
+			Sell:         float64(sell),
+			StrategyCode: this.Code(),
+			StrategyName: this.Name()})
 	}
 }

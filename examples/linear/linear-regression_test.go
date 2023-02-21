@@ -2,7 +2,7 @@ package linear
 
 import (
 	"fmt"
-	"github.com/quant1x/quant/cache"
+	"gitee.com/quant1x/data/stock"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -100,8 +100,12 @@ func TestPredict(t *testing.T) {
 }
 
 func TestPredictStock(t *testing.T) {
-	df := cache.LoadDataFrame("sz002528")
-	CLOSE := df.Close
+	df := stock.KLine("002528")
+	fmt.Println(df)
+	length := df.Nrow()
+	df1 := df.Subset(0, length)
+	fmt.Println(df1)
+	CLOSE := df1.Col("close").DTypes()
 	//CLOSE = []float64{1, 2, 3, 4, 5}
 	data_len := len(CLOSE)
 	fmt.Printf("raw   data length: %d \n", data_len)

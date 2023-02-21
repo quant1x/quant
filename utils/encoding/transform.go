@@ -1,7 +1,7 @@
 package encoding
 
 import (
-	"github.com/mymmsc/gox/encoding"
+	"github.com/mymmsc/gox/text/encoding"
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
 

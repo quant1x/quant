@@ -15,9 +15,7 @@ var (
 )
 
 func init() {
-	//fmt.Println("reflect_array init...")
 	mapTag = make(map[reflect.Type]map[int]string)
-	//fmt.Println("reflect_array init...OK")
 }
 
 func initTag(t reflect.Type, tagName string) map[int]string {
@@ -44,77 +42,7 @@ func initTag(t reflect.Type, tagName string) map[int]string {
 	return ma
 }
 
-/*
-func Convert(data []string, v interface{}) error {
-	val := reflect.ValueOf(v)
-	//t := reflect.TypeOf(v)
-	//fieldNum := val.NumField()
-	//_ = fieldNum
-	obj := reflect.ValueOf(v)
-	t := val.Type()
-	if val.Kind() == reflect.Ptr {
-		t = t.Elem()
-		obj = obj.Elem()
-	}
-	ma := initTag(t, "name")
-	if ma == nil {
-		return errors.New("can not Convert")
-	}
-	dl := len(data)
-	for i := 0; i < dl; i++ {
-		field, ok := ma[i]
-		if ok {
-			dv := data[i]
-			ov := obj.FieldByName(field.Name)
-			if ov.CanSet() {
-				var value interface{}
-				switch ov.Interface().(type) {
-				case string:
-					value = string(dv)
-				case int8:
-					t := api.ParseInt(dv)
-					value = int8(t)
-				case int16:
-					t := api.ParseInt(dv)
-					value = int16(t)
-				case int32:
-					t := api.ParseInt(dv)
-					value = int32(t)
-				case int64:
-					t := api.ParseInt(dv)
-					value = int64(t)
-				case uint8:
-					t := api.ParseUint(dv)
-					value = uint8(t)
-				case uint16:
-					t := api.ParseUint(dv)
-					value = uint16(t)
-				case uint32:
-					t := api.ParseUint(dv)
-					value = uint32(t)
-				case uint64:
-					t := api.ParseUint(dv)
-					value = t
-				case float32:
-					t := api.ParseFloat(dv)
-					value = float32(t)
-				case float64:
-					t := api.ParseFloat(dv)
-					value = t
-				case bool:
-					t, _ := strconv.ParseBool(dv)
-					value = t
-				default:
-					value = dv
-				}
-				ov.Set(reflect.ValueOf(value))
-			}
-		}
-	}
-	return nil
-}
-*/
-// 策略结果
+// ResultInfo 策略结果
 type ResultInfo struct {
 	Code         string  `name:"证券代码" json:"code" csv:"code" array:"0"`
 	Name         string  `name:"证券名称" json:"name" csv:"name" array:"1"`
