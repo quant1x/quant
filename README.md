@@ -15,13 +15,3 @@
 
 [注意事项]
 - 数学公式查看，只能在chrome上，安装一个插件 [数学插件: MathJax Plugin for Github](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
-- 同步github
-```shell
-git remote set-url origin https://github.com/quant1x/quant.git
-git push --all
-```
-- 同步gitee
-```shell
-git remote set-url origin https://gitee.com/mymmsc/quant.git
-git push --all
-```
