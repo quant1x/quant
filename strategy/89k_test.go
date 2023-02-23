@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"gitee.com/quant1x/data/cache"
+	"gitee.com/quant1x/data/stock"
 	"testing"
 )
 
 func TestF89K(t *testing.T) {
-	df := cache.KLine("sh600090")
+	df := stock.KLine("sh600090")
 	//csv := "~/.quant1x/data/cn/600520.csv"
 	//df = pandas.ReadCSV(csv)
 	////df.SetNames("日期/开盘/收盘/最高/最低/成交量/成交额/振幅/涨跌幅/涨跌额/换手率")
