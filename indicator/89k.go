@@ -1,4 +1,4 @@
-package main
+package indicator
 
 import (
 	"gitee.com/quant1x/pandas"

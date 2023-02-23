@@ -5,6 +5,7 @@ import (
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/pandas"
 	"github.com/mymmsc/gox/util/treemap"
+	"github.com/quant1x/quant/indicator"
 )
 
 type FormulaNo89 struct{}
@@ -29,7 +30,7 @@ func (this FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, re
 	CLOSE := df.Col("close")
 	days := CLOSE.Len()
 	date := df.Col("date").Values().([]string)[days-1]
-	ret := F89K(df, N)
+	ret := indicator.F89K(df, N)
 
 	rLen := ret.Nrow()
 	B := ret.Col("B").Values().([]bool)
