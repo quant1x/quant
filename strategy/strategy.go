@@ -84,15 +84,17 @@ func main() {
 	}
 	wg.Wait()
 	fmt.Println("\n ======= [" + api.Name() + "] progress bar completed ==========\n")
-	elapsedTime := time.Since(mainStart) / time.Millisecond
-	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, float64(count)/(float64(elapsedTime)/1000))
-	logger.Infof("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 平均: %.3f/s", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, float64(count)/(float64(elapsedTime)/1000))
 	table := tableView.NewWriter(os.Stdout)
 	var row ResultInfo
 	table.SetHeader(row.Headers())
 
+	elapsedTime := time.Since(mainStart) / time.Millisecond
+	goals := mapStock.Size()
+	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
+	logger.Infof("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
 	mapStock.Each(func(key interface{}, value interface{}) {
 		row := value.(ResultInfo)
+		row.Predict()
 		table.Append(row.Values())
 	})
 	table.Render() // Send output

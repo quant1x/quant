@@ -1,8 +1,13 @@
 package main
 
 import (
+	"fmt"
+	"gitee.com/quant1x/data/stock"
+	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/api"
+	"github.com/quant1x/quant/labs/linear"
 	"reflect"
+	"sort"
 )
 
 const (
@@ -51,6 +56,11 @@ type ResultInfo struct {
 	Sell         float64 `name:"目标价格" json:"sell" csv:"sell" array:"4"`
 	StrategyCode int     `name:"策略编码" json:"strategy_code" csv:"strategy_code" array:"5"`
 	StrategyName string  `name:"策略名称" json:"strategy_name" csv:"strategy_name" array:"6"`
+	Tendency     string  `name:"短线趋势" json:"tendency" csv:"tendency" array:"7"`
+	Open         float64 `name:"预计开盘" json:"open" csv:"open" array:"8"`
+	CLOSE        float64 `name:"预计收盘" json:"close" csv:"close" array:"9"`
+	High         float64 `name:"预计最高" json:"high" csv:"high" array:"10"`
+	Low          float64 `name:"预计最低" json:"low" csv:"low" array:"11"`
 }
 
 func (this *ResultInfo) Headers() []string {
@@ -100,9 +110,58 @@ func (this *ResultInfo) Values() []string {
 		_, ok := ma[i]
 		if ok {
 			ov := obj.Field(i).Interface()
-			value := api.ToString(ov)
-			sRet = append(sRet, value)
+			var str string
+			switch v := ov.(type) {
+			case float32:
+				str = fmt.Sprintf("%.02f", v)
+			case float64:
+				str = fmt.Sprintf("%.02f", v)
+			default:
+				str = api.ToString(ov)
+			}
+			sRet = append(sRet, str)
 		}
 	}
 	return sRet
+}
+
+// 预测趋势
+func (this *ResultInfo) Predict() {
+	N := 8
+	df := stock.KLine(this.Code)
+	limit := stat.RangeFinite(-N)
+	OPEN := df.Col("open").Select(limit)
+	CLOSE := df.Col("close").Select(limit)
+	HIGH := df.Col("high").Select(limit)
+	LOW := df.Col("low").Select(limit)
+	lastClose := stat.DType(CLOSE.IndexOf(-1).(float32))
+	po := linear.CurveRegression(OPEN).IndexOf(-1).(stat.DType)
+	pc := linear.CurveRegression(CLOSE).IndexOf(-1).(stat.DType)
+	ph := linear.CurveRegression(HIGH).IndexOf(-1).(stat.DType)
+	pl := linear.CurveRegression(LOW).IndexOf(-1).(stat.DType)
+	if po > lastClose {
+		this.Tendency = "高开"
+	} else if po == lastClose {
+		this.Tendency = "平开"
+	} else {
+		this.Tendency = "低开"
+	}
+	if pl > ph {
+		this.Tendency += ",冲高回落"
+	} else if pl > pc {
+		this.Tendency += ",探底回升"
+	} else if pc < pl {
+		this.Tendency += ",趋势向下"
+	} else {
+		this.Tendency += ",短线向好"
+	}
+
+	fs := []float64{float64(po), float64(pc), float64(ph), float64(pl)}
+	sort.Float64s(fs)
+	this.Open = fs[1]
+	this.CLOSE = fs[2]
+	this.High = fs[3]
+	this.Low = fs[0]
+
+	_ = lastClose
 }

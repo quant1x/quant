@@ -2,12 +2,13 @@ package num
 
 import "gitee.com/quant1x/pandas/stat"
 
-// C_ Translates slice objects to concatenation along the second axis.
+// Concat1D
 //
+//	Translates slice objects to concatenation along the second axis.
 //	沿第二个轴将切片对象转换为串联
-func C_[T stat.Number](a, b, c []T) [][]T {
+func Concat1D[T stat.Number](a, b, c []T) [][]T {
 	length := len(a)
-	cLen := 3 // a,b,c
+	cLen := 3 // a,b,c TODO:这个位置需要扩展, 如果传入的是2或者3个以上的数组怎么处理?
 	rows := make([][]T, length)
 	for i := 0; i < length; i++ {
 		col := make([]T, cLen)
@@ -19,8 +20,8 @@ func C_[T stat.Number](a, b, c []T) [][]T {
 	return rows
 }
 
-// T_ 矩阵转置
-func T_[T stat.Number](x [][]T) [][]T {
+// Transpose2D 矩阵转置
+func Transpose2D[T stat.Number](x [][]T) [][]T {
 	length := len(x[0])
 	cLen := len(x)
 	rows := make([][]T, length)
@@ -34,13 +35,13 @@ func T_[T stat.Number](x [][]T) [][]T {
 	return rows
 }
 
-// 计算矩阵的（乘法）逆
+// Inverse 计算矩阵的（乘法）逆
 //
 //	Compute the (multiplicative) inverse of a matrix.
 //
 //	Given a square matrix `a`, return the matrix `ainv` satisfying
 //	``dot(a, ainv) = dot(ainv, a) = eye(a.shape[0])``.
-func __inv(a [][]float64) [][]float64 {
+func Inverse(a [][]float64) [][]float64 {
 	var n = len(a)
 
 	// Create augmented matrix
