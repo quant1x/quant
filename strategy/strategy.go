@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"gitee.com/quant1x/data/cache"
 	"gitee.com/quant1x/data/category"
 	"gitee.com/quant1x/data/security"
+	"gitee.com/quant1x/pandas"
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/progressbar"
@@ -92,11 +94,14 @@ func main() {
 	goals := mapStock.Size()
 	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
 	logger.Infof("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
+	rs := make([]ResultInfo, 0)
 	mapStock.Each(func(key interface{}, value interface{}) {
 		row := value.(ResultInfo)
 		row.Predict()
+		rs = append(rs, row)
 		table.Append(row.Values())
 	})
+	output(api.Code(), rs)
 	table.Render() // Send output
 }
 
@@ -104,4 +109,12 @@ func evaluate(api Strategy, wg *sync.WaitGroup, code string, info *security.Stat
 	defer wg.Done()
 	wg.Add(1)
 	api.Evaluate(code, info, result)
+}
+
+func output(strategyNo int, v []ResultInfo) {
+	df := pandas.LoadStructs(v)
+	filename := fmt.Sprintf("%s/%s/%s-%d.csv", cache.CACHE_ROOT_PATH, CACHE_STRATEGY_PATH, cache.Today(), strategyNo)
+	_ = cache.CheckFilepath(filename)
+	_ = df.WriteCSV(filename)
+
 }

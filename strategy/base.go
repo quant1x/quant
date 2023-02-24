@@ -13,6 +13,8 @@ import (
 const (
 	// MaximumResultDays 结果最大天数
 	MaximumResultDays int = 3
+	// CACHE_STRATEGY_PATH 策略文件存储路径
+	CACHE_STRATEGY_PATH = "strategy"
 )
 
 var (
