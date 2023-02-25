@@ -50,10 +50,9 @@ func TestDot2D1(t *testing.T) {
 	w2 := Dot2D(w1, T)
 	fmt.Println("w2 =", w2)
 
-	w3 := Dot2D1[float64](w2, y)
-	fmt.Println("w3 =", w3)
+	W := Dot2D1[float64](w2, y)
+	fmt.Println("W =", W)
 
-	W := w3
 	d1 := Arange[float64](1, float64(N)+2, 1)
 	fmt.Println("d1 =", d1)
 
@@ -64,4 +63,14 @@ func TestDot2D1(t *testing.T) {
 
 	D := d2.Add(d3)
 	fmt.Println("D =", D)
+}
+
+func TestDot(t *testing.T) {
+	A := [][]int{{1, 4, 9}, {1, 2, 3}, {1, 1, 1}}
+	A = [][]int{{1, 4, 9, 16, 25}, {1, 2, 3, 4, 5}, {1, 1, 1, 1, 1}}
+	B := Transpose2D(A)
+	fmt.Println("A =", A)
+	fmt.Println("B =", B)
+	C := Dot(A, B)
+	fmt.Println("C =", C)
 }

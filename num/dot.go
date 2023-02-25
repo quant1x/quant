@@ -86,8 +86,90 @@ func Dot2D[T stat.Number](a, b [][]T) [][]T {
 	return x
 }
 
+// Dot 二维点积
+func Dot[T stat.Number](a, b [][]T) [][]T {
+	m, n := Shape[T](a)
+	k, l := Shape[T](b)
+	if n != k {
+		panic("dot 2d a.rows<>b.cols")
+	}
+	//fmt.Println("m, n:", m, n)
+	//fmt.Println("k, l:", k, l)
+	x := make([][]T, m)
+	// 行
+	for i := 0; i < m; i++ {
+		col := make([]T, l)
+		// 列
+		for c := 0; c < l; c++ {
+			for r := 0; r < k; r++ {
+				col[c] += a[i][r] * b[r][c]
+			}
+		}
+		x[i] = col
+	}
+	return x
+}
+
+func Dot_v1[T stat.Number](a, b [][]T) [][]T {
+	m, n := Shape[T](a)
+	k, l := Shape[T](b)
+	if n != k {
+		panic("dot 2d vs 1d a.rows<>b.cols")
+	}
+	//fmt.Println("m, n:", m, n)
+	//fmt.Println("k, l:", k, l)
+	x := make([][]T, m)
+	// 行
+	for i := 0; i < m; i++ {
+		col := make([]T, l)
+		// 列
+		for c := 0; c < l; c++ {
+			for r := 0; r < k; r++ {
+				col[c] += a[i][r] * b[r][c]
+			}
+		}
+		x[i] = col
+	}
+	return x
+}
+
 // Dot2D1 二维矩阵和一维矩阵计算点积
 func Dot2D1[T stat.Number](a [][]T, b []T) []T {
+	B := [][]T{b}
+	b1 := Transpose2D(B)
+	//fmt.Println("Dot2D1: b1 =", b1)
+	x1 := Dot[T](a, b1)
+	//fmt.Println("Dot2D1: x1 =", x1)
+	x2 := Transpose2D(x1)
+	//fmt.Println("Dot2D1: x2 =", x2)
+	return x2[0]
+}
+
+func Dot2D1_v2[T stat.Number](a [][]T, b []T) []T {
+	m, n := Shape[T](a)
+	k, l := Shape[T](b)
+	if l < 1 {
+		l = 1
+	}
+
+	fmt.Println("m, n:", m, n)
+	fmt.Println("k, l:", k, l)
+	x := make( /*[]*/ []T, m)
+	// 行
+	for i := 0; i < m; i++ {
+		col := T(0)
+		// 列
+		for c := 0; c < l; c++ {
+			for r := 0; r < k; r++ {
+				col += a[i][r] * b[r]
+			}
+		}
+		x[i] = col
+	}
+	return x
+}
+
+func Dot2D1_v1[T stat.Number](a [][]T, b []T) []T {
 	A := a
 	B := b
 	rLen := len(A)
