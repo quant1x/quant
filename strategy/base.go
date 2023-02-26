@@ -91,6 +91,7 @@ func (this *ResultInfo) Headers() []string {
 	return sRet
 }
 
+// Values 输出表格的行和列
 func (this *ResultInfo) Values() []string {
 	val := reflect.ValueOf(this)
 	//t := reflect.TypeOf(v)
@@ -127,9 +128,9 @@ func (this *ResultInfo) Values() []string {
 	return sRet
 }
 
-// 预测趋势
+// Predict 预测趋势
 func (this *ResultInfo) Predict() {
-	N := 8
+	N := 3
 	df := stock.KLine(this.Code)
 	limit := stat.RangeFinite(-N)
 	OPEN := df.Col("open").Select(limit)
