@@ -3,8 +3,8 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v0.7.21
-	gitee.com/quant1x/pandas v0.7.1
+	gitee.com/quant1x/data v0.7.22
+	gitee.com/quant1x/pandas v0.7.2
 	github.com/erni27/regression v0.3.1
 	github.com/mymmsc/gox v1.3.9
 	github.com/olekukonko/tablewriter v0.0.5
@@ -21,7 +21,6 @@ require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/google/btree v1.0.0 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
-	github.com/huandu/go-clone v1.4.1 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
