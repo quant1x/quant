@@ -137,7 +137,7 @@ func (this *ResultInfo) Predict() {
 	CLOSE := df.Col("close").Select(limit)
 	HIGH := df.Col("high").Select(limit)
 	LOW := df.Col("low").Select(limit)
-	lastClose := stat.DType(CLOSE.IndexOf(-1).(float32))
+	lastClose := stat.AnyToFloat64(CLOSE.IndexOf(-1))
 	po := linear.CurveRegression(OPEN).IndexOf(-1).(stat.DType)
 	pc := linear.CurveRegression(CLOSE).IndexOf(-1).(stat.DType)
 	ph := linear.CurveRegression(HIGH).IndexOf(-1).(stat.DType)
@@ -167,4 +167,17 @@ func (this *ResultInfo) Predict() {
 	this.Low = fs[0]
 
 	_ = lastClose
+}
+
+// Cross 预测趋势
+func (this *ResultInfo) Cross() bool {
+	N := 1
+	df := stock.KLine(this.Code)
+	df = linear.CrossTrend(df)
+	cross := df.Col("cross").IndexOf(-N).(bool)
+	cross1 := df.Col("cross").IndexOf(-N - 1).(bool)
+	if cross && !cross1 {
+		return true
+	}
+	return false
 }

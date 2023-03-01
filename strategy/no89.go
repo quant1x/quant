@@ -4,6 +4,7 @@ import (
 	"gitee.com/quant1x/data/cache"
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/pandas"
+	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/util/treemap"
 	"github.com/quant1x/quant/indicator"
 )
@@ -19,19 +20,30 @@ func (this FormulaNo89) Code() int {
 }
 
 func (this FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map) {
+	defer func() {
+		// 解析失败以后输出日志, 以备检查
+		if err := recover(); err != nil {
+			logger.Errorf("FormulaNo89.Evaluate code=%s, error=%+v\n", fullCode, err)
+		}
+	}()
 	//fmt.Println(fullCode)
-	filename := cache.GetKLineFilename(fullCode)
+	N := 89
+	filename := cache.KLineFilename(fullCode)
 	df := pandas.ReadCSV(filename)
 	if df.Err != nil {
 		return
 	}
+	if df.Nrow() < N {
+		return
+	}
 	_ = df.SetNames("date", "open", "high", "low", "close", "volume")
-	N := 89
 	CLOSE := df.Col("close")
 	days := CLOSE.Len()
 	date := df.Col("date").Values().([]string)[days-1]
 	ret := indicator.F89K(df, N)
-
+	if ret.Nrow() < 1 {
+		return
+	}
 	rLen := ret.Nrow()
 	B := ret.Col("B").Values().([]bool)
 	buy := ret.Col("close").DTypes()

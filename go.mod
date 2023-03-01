@@ -3,13 +3,12 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v0.7.17
-	gitee.com/quant1x/pandas v0.7.0
+	gitee.com/quant1x/data v0.7.21
+	gitee.com/quant1x/pandas v0.7.1
 	github.com/erni27/regression v0.3.1
-	github.com/mymmsc/gox v1.3.8
+	github.com/mymmsc/gox v1.3.9
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/shirou/gopsutil/v3 v3.23.1
-	github.com/skelterjohn/go.matrix v0.0.0-20130517144113-daa59528eefd
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/text v0.6.0
 	gonum.org/v1/gonum v0.12.0
@@ -17,7 +16,7 @@ require (
 )
 
 require (
-	gitee.com/quant1x/gotdx v1.2.3 // indirect
+	gitee.com/quant1x/gotdx v1.2.5 // indirect
 	github.com/frankban/quicktest v1.11.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/google/btree v1.0.0 // indirect

@@ -5,7 +5,7 @@ p0=`pwd`
 p1=$(cd $(dirname $0);pwd)
 
 # windows amd64
-env GOOS=windows GOARCH=amd64 go build -o bin/strategy-win-amd64.exe github.com/quant1x/quant/strategy
+env GOOS=windows GOARCH=amd64 go build -o bin/quant-win-amd64.exe github.com/quant1x/quant/strategy
 # darwin amd64
-env GOOS=darwin GOARCH=amd64 go build -o bin/strategy-mac-amd64 github.com/quant1x/quant/strategy
+env GOOS=darwin GOARCH=amd64 go build -o bin/quant-mac-amd64 github.com/quant1x/quant/strategy
 cd $p0

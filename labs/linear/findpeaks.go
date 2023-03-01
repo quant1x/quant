@@ -1,0 +1,5 @@
+package linear
+
+func FindPeaks() {
+
+}
