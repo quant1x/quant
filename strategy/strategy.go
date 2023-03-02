@@ -51,7 +51,6 @@ func main() {
 		api = new(FormulaNo1)
 	}
 	stat.SetAvx2Enabled(avx2)
-	//numCPU := runtime.NumCPU() / 2
 	runtime.GOMAXPROCS(cpuNum)
 	// 获取全部证券代码
 	ss := category.GetCodeList()
