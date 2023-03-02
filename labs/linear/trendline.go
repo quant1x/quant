@@ -81,6 +81,9 @@ func TrendLine(raw pandas.DataFrame) pandas.DataFrame {
 
 // CrossTrend 原则上是不抄底, 当底部上移时, 观察压力线和支撑线的相对关系
 func CrossTrend(raw pandas.DataFrame) pandas.DataFrame {
+	if raw.Nrow() < MaximumTrendPeriod {
+		return pandas.DataFrame{}
+	}
 	df := raw.Subset(raw.Nrow()-MaximumTrendPeriod, raw.Nrow())
 	//fmt.Println(df)
 	vh := df.Col("high")

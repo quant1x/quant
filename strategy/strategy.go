@@ -95,7 +95,10 @@ func main() {
 	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
 	logger.Infof("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
 	rs := make([]ResultInfo, 0)
+	fmt.Println("")
+	bar = progressbar.NewBar(1, "执行[曲线回归策略]", goals)
 	mapStock.Each(func(key interface{}, value interface{}) {
+		bar.Add(1)
 		row := value.(ResultInfo)
 		row.Predict()
 		rs = append(rs, row)
@@ -104,12 +107,11 @@ func main() {
 	output(api.Code(), rs)
 	table.Render() // Send output
 
-	fmt.Println("")
-
 	// 过滤未有效突破的信号
 	table = tableView.NewWriter(os.Stdout)
 	count = mapStock.Size()
-	bar = progressbar.NewBar(1, "执行[检测趋势突破]", count)
+	fmt.Println("")
+	bar = progressbar.NewBar(2, "执行[检测趋势突破]", count)
 	rsCross := make([]ResultInfo, 0)
 	mainStart = time.Now()
 	for _, v := range rs {
@@ -125,7 +127,7 @@ func main() {
 	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
 	table.SetHeader(row.Headers())
 	table.Render()
-	output(api.Code(), rs)
+	output(api.Code()+10000, rsCross)
 }
 
 func evaluate(api Strategy, wg *sync.WaitGroup, code string, info *security.StaticBasic, result *treemap.Map) {

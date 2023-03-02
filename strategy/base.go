@@ -171,9 +171,13 @@ func (this *ResultInfo) Predict() {
 
 // Cross 预测趋势
 func (this *ResultInfo) Cross() bool {
+	//fmt.Println(this.Code)
 	N := 1
 	df := stock.KLine(this.Code)
 	df = linear.CrossTrend(df)
+	if df.Nrow() < 2 {
+		return false
+	}
 	cross := df.Col("cross").IndexOf(-N).(bool)
 	cross1 := df.Col("cross").IndexOf(-N - 1).(bool)
 	if cross && !cross1 {
