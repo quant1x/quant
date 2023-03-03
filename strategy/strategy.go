@@ -47,6 +47,8 @@ func main() {
 	switch strategy {
 	case 89:
 		api = new(FormulaNo89)
+	case 84:
+		api = new(FormulaNo84)
 	default:
 		api = new(FormulaNo1)
 	}
@@ -110,12 +112,22 @@ func main() {
 	table = tableView.NewWriter(os.Stdout)
 	count = mapStock.Size()
 	fmt.Println("")
-	bar = progressbar.NewBar(2, "执行[检测趋势突破]", count)
+	//bar = progressbar.NewBar(2, "执行[检测趋势突破]", count)
+	//rsCross := make([]ResultInfo, 0)
+	//mainStart = time.Now()
+	//for _, v := range rs {
+	//	bar.Add(1)
+	//	if v.Cross() {
+	//		rsCross = append(rsCross, v)
+	//		table.Append(v.Values())
+	//	}
+	//}
+	bar = progressbar.NewBar(2, "执行[检测能量转强]", count)
 	rsCross := make([]ResultInfo, 0)
 	mainStart = time.Now()
 	for _, v := range rs {
 		bar.Add(1)
-		if v.Cross() {
+		if v.DetectVolume() {
 			rsCross = append(rsCross, v)
 			table.Append(v.Values())
 		}
