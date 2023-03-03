@@ -3,7 +3,7 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v0.8.0
+	gitee.com/quant1x/data v0.8.1
 	gitee.com/quant1x/pandas v0.7.3
 	github.com/erni27/regression v0.3.1
 	github.com/mymmsc/gox v1.3.9
@@ -16,7 +16,7 @@ require (
 )
 
 require (
-	gitee.com/quant1x/gotdx v1.2.5 // indirect
+	gitee.com/quant1x/gotdx v1.2.6 // indirect
 	github.com/frankban/quicktest v1.11.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/google/btree v1.0.0 // indirect
