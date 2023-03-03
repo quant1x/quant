@@ -185,3 +185,21 @@ func (this *ResultInfo) Cross() bool {
 	}
 	return false
 }
+
+// DetectVolume 检测量能变化
+func (this *ResultInfo) DetectVolume() bool {
+	N := 10
+	df := stock.KLine(this.Code)
+	dates := df.Col("date").Select(stat.RangeFinite(-N)).Values().([]string)
+	df = stock.Tick(this.Code, dates)
+	if df.Nrow() < 2 {
+		return false
+	}
+	bv := df.Col("bv").IndexOf(-1).(float64)
+	sv := df.Col("sv").IndexOf(-1).(float64)
+	bs := df.Col("bs").IndexOf(-1).(float64)
+	if bv > sv && bs < 0 {
+		return true
+	}
+	return false
+}
