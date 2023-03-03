@@ -43,6 +43,7 @@ func TestCrossTrend(t *testing.T) {
 	//code = "sz002322"
 	code = "sh600018"
 	code = "sh603130"
+	code = "sz002209"
 	df := stock.KLine(code)
 	df = CrossTrend(df)
 	fmt.Println(df)
