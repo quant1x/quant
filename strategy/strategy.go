@@ -123,22 +123,36 @@ func main() {
 	//	}
 	//}
 	bar = progressbar.NewBar(2, "执行[检测能量转强]", count)
-	rsCross := make([]ResultInfo, 0)
+	rsValue := make([]ResultInfo, 0)
 	mainStart = time.Now()
 	for _, v := range rs {
 		bar.Add(1)
 		if v.DetectVolume() {
-			rsCross = append(rsCross, v)
+			rsValue = append(rsValue, v)
+			table.Append(v.Values())
+		}
+	}
+	fmt.Println("")
+	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
+	table = tableView.NewWriter(os.Stdout)
+	count = len(rsValue)
+	bar = progressbar.NewBar(3, "执行[置信区间检测]", count)
+	rsCib := make([]ResultInfo, 0)
+	mainStart = time.Now()
+	for _, v := range rsValue {
+		bar.Add(1)
+		if v.Sample() {
+			rsCib = append(rsCib, v)
 			table.Append(v.Values())
 		}
 	}
 	elapsedTime = time.Since(mainStart) / time.Millisecond
-	goals = len(rsCross)
+	goals = len(rsCib)
 	fmt.Println("")
 	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
 	table.SetHeader(row.Headers())
 	table.Render()
-	output(api.Code()+10000, rsCross)
+	output(api.Code()+10000, rsCib)
 }
 
 func evaluate(api Strategy, wg *sync.WaitGroup, code string, info *security.StaticBasic, result *treemap.Map) {

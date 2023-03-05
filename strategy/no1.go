@@ -33,7 +33,7 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 	if df.Err != nil {
 		return
 	}
-	df.SetNames("date", "open", "high", "low", "close", "volume")
+	_ = df.SetNames("date", "open", "high", "low", "close", "volume")
 	// 收盘价序列
 	CLOSE := df.Col("close")
 	days := CLOSE.Len()

@@ -23,7 +23,7 @@ func (this FormulaNo84) Evaluate(fullCode string, info *security.StaticBasic, re
 	defer func() {
 		// 解析失败以后输出日志, 以备检查
 		if err := recover(); err != nil {
-			logger.Errorf("FormulaNo89.Evaluate code=%s, error=%+v\n", fullCode, err)
+			logger.Errorf("FormulaNo84.Evaluate code=%s, error=%+v\n", fullCode, err)
 		}
 	}()
 	//fmt.Println(fullCode)

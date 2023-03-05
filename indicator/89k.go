@@ -149,19 +149,10 @@ func F89K(df pandas.DataFrame, N int) pandas.DataFrame {
 	B0 := AND(B03, C3)
 	//B:50*B0,COLORYELLOW;
 	OB := pandas.NewSeries(stat.SERIES_TYPE_BOOL, "B", B0)
-	ON9 := pandas.NewSeries(stat.SERIES_TYPE_INT64, "N9", N9)
-	OK9 := pandas.NewSeries(stat.SERIES_TYPE_DTYPE, "K9", K9)
-	ON10 := pandas.NewSeries(stat.SERIES_TYPE_INT64, "N10", N10)
-	OK10 := pandas.NewSeries(stat.SERIES_TYPE_DTYPE, "K10", K10)
 	OZS := pandas.NewSeries(stat.SERIES_TYPE_DTYPE, "ZS", ZS_LOW)
 	//ODT := pandas.NewSeries(stat.SERIES_TYPE_STRING, "date", DATE.Values().([]string))
 	//return pandas.NewDataFrame(ODT, ON9, OK9, ON10, OK10, OB)
-	ODN := pandas.NewSeries(stat.SERIES_TYPE_INT64, "DN", DN)
-	OC1C := pandas.NewSeries(stat.SERIES_TYPE_BOOL, "C1C", c1c)
-	OC1 := pandas.NewSeries(stat.SERIES_TYPE_INT64, "C1", C1)
-	//OC11 := pandas.NewSeries(stat.SERIES_TYPE_BOOL, "C11", c11)
-	//OC12 := pandas.NewSeries(stat.SERIES_TYPE_BOOL, "C12", c12)
-	OC2 := pandas.NewSeries(stat.SERIES_TYPE_INT64, "C2", C2)
-	OC3 := pandas.NewSeries(stat.SERIES_TYPE_BOOL, "C3", C3)
-	return pandas.NewDataFrame(df.Col("date"), ON9, OK9, ON10, OK10, df.Col("close"), OZS, OB, ODN, OC1C, OC1, OC2, OC3)
+	ODN := pandas.NewSeries(stat.SERIES_TYPE_INT64, "N", DN)
+	_ = K9
+	return pandas.NewDataFrame(df.Col("date"), df.Col("open"), df.Col("close"), df.Col("high"), df.Col("low"), OZS, OB, ODN)
 }

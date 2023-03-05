@@ -5,7 +5,9 @@ import (
 	"gitee.com/quant1x/data/stock"
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/api"
+	"github.com/quant1x/quant/indicator"
 	"github.com/quant1x/quant/labs/linear"
+	"github.com/quant1x/quant/labs/sample"
 	"reflect"
 	"sort"
 )
@@ -199,6 +201,29 @@ func (this *ResultInfo) DetectVolume() bool {
 	sv := df.Col("sv").IndexOf(-1).(float64)
 	bs := df.Col("bs").IndexOf(-1).(float64)
 	if bv > sv && bs < 0 {
+		return true
+	}
+	return false
+}
+
+// Sample 处理结果的置信区间
+func (this *ResultInfo) Sample() bool {
+	//fmt.Println(this.Code)
+	N := 89
+	df := stock.KLine(this.Code)
+	if df.Err != nil {
+		return false
+	}
+	if df.Nrow() < N {
+		return false
+	}
+	ret := indicator.F89K(df, N)
+	if ret.Nrow() < 1 {
+		return false
+	}
+	df = sample.ConfidenceInterval(ret)
+	ci := df.Col("cib").IndexOf(-1).(bool)
+	if ci {
 		return true
 	}
 	return false
