@@ -7,7 +7,7 @@ import (
 )
 
 func TestConfidenceInterval(t *testing.T) {
-	code := "002528.sz"
+	code := "000001.sh"
 	df := stock.KLine(code)
 	df = ConfidenceInterval(df, 5)
 	fmt.Println(df)
