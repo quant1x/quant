@@ -30,19 +30,29 @@ type Strategy interface {
 	Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map)
 }
 
+var (
+	MinVersion string
+)
+
 func main() {
 	var (
 		//path     string // 数据路径
 		strategy int  // 策略编号
 		avx2     bool // AVX2加速状态
 		cpuNum   int  // cpu数量
+		version  bool // 显示版本号
 	)
-	//flag.StringVar(&path, "path", category.DATA_ROOT_PATH, "stock history data path")
 	flag.IntVar(&strategy, "strategy", 1, "strategy serial number")
 	flag.BoolVar(&avx2, "avx2", false, "Avx2 acceleration")
 	flag.IntVar(&cpuNum, "cpu", runtime.NumCPU()/2, "sets the maximum number of CPUs")
+	flag.BoolVar(&version, "version", false, "print quant version")
 	flag.Parse()
-	//cache.Init(path)
+
+	if version {
+		fmt.Println(MinVersion)
+		os.Exit(0)
+	}
+
 	var api Strategy
 	switch strategy {
 	case 89:
@@ -58,7 +68,7 @@ func main() {
 	ss := category.GetCodeList()
 	count := len(ss)
 	var wg = sync.WaitGroup{}
-	fmt.Println("Quant1X 预警系统: " + api.Name())
+	fmt.Printf("Quant1X 预警系统 %s: %s", MinVersion, api.Name())
 	infos, _ := cpu.Info()
 	cpuInfo := infos[0]
 	memory, _ := mem.VirtualMemory()
