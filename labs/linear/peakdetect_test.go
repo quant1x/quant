@@ -13,6 +13,7 @@ func TestPeakDetect(t *testing.T) {
 	code := "sh000905"
 	code = "sz002528"
 	//code = "sz002951"
+	code = "sh600602"
 	length := 89
 	df := stock.KLine(code)
 	df = df.Subset(df.Nrow()-length, df.Nrow())
