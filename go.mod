@@ -3,8 +3,8 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v0.8.8
-	gitee.com/quant1x/pandas v0.8.3
+	gitee.com/quant1x/data v0.8.10
+	gitee.com/quant1x/pandas v0.8.8
 	github.com/erni27/regression v0.3.1
 	github.com/mymmsc/gox v1.3.9
 	github.com/olekukonko/tablewriter v0.0.5
@@ -39,6 +39,7 @@ require (
 
 require (
 	git.sr.ht/~sbinet/gg v0.3.1 // indirect
+	gitee.com/quant1x/vek v0.5.5 // indirect
 	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
 	github.com/chewxy/math32 v1.10.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -52,7 +53,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.3 // indirect
 	github.com/viterin/partial v1.0.0 // indirect
-	github.com/viterin/vek v0.4.0 // indirect
 	golang.org/x/exp v0.0.0-20220907003533-145caa8ea1d0 // indirect
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
