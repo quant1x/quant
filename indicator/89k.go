@@ -155,10 +155,10 @@ func F89K(df pandas.DataFrame, N int) pandas.DataFrame {
 	//B02 := EQ2(C2, 1)
 	B02 := C2.Eq(1)
 	//B03 := AND(B01, B02)
-	B03 := B01.Add(B02)
+	B03 := B01.And(B02)
 	//AND C3
 	//B0 := AND(B03, C3)
-	B0 := B03.Add(C3)
+	B0 := B03.And(C3)
 	//B:50*B0,COLORYELLOW;
 	OB := pandas.NewSeries(stat.SERIES_TYPE_BOOL, "B", B0)
 	OZS := pandas.NewSeries(stat.SERIES_TYPE_DTYPE, "ZS", ZS_LOW)
