@@ -36,14 +36,14 @@ func MA4X(df pandas.DataFrame, N int) pandas.DataFrame {
 	zj3 := zj1.Add(zj2)
 	ZJ := WMA(zj3, N3)
 	//B:CROSS(SJ,ZJ) AND SJ<30,COLORRED,NODRAW;
-	b1 := CROSS(SJ.DTypes(), ZJ.DTypes())
+	b1 := CROSS(SJ, ZJ)
 	//fmt.Println(b1)
 	b2 := SJ.Lt(30)
 	//fmt.Println(b2)
 	B := b2.And(b1)
 	//DRAWTEXT(B,L-0.1,'←低吸'),COLOR00FF00;
 	//S:CROSS(ZJ,SJ) AND SJ>70,COLORGREEN,NODRAW;
-	s1 := CROSS(ZJ.DTypes(), SJ.DTypes())
+	s1 := CROSS(ZJ, SJ)
 	s2 := SJ.Gt(70)
 	S := s2.And(s1)
 	//DRAWTEXT(S,H+0.1,'←高抛'),COLOR0077FF;
@@ -51,7 +51,6 @@ func MA4X(df pandas.DataFrame, N int) pandas.DataFrame {
 	OS := pandas.NewSeries(stat.SERIES_TYPE_BOOL, "S", S)
 	//df := pandas.NewDataFrame(OB, OS)
 	df = pandas.NewDataFrame(df.Col("date"), df.Col("close"))
-	df = df.Join(ZX).Join(SJ).Join(ZJ)
-	df = df.Join(OB).Join(OS)
+	df = df.Join(ZX, SJ, ZJ, OB, OS)
 	return df
 }

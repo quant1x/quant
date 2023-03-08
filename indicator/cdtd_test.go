@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-func TestPlatform(t *testing.T) {
-	code := "600703.sh"
+func TestCDTD(t *testing.T) {
+	code := "002528.sz"
 	df := stock.KLine(code)
-	df1 := Platform(df)
+	fmt.Println(df)
+	df1 := CDTD(df)
 	fmt.Println(df1)
-	df1.WriteCSV("t.csv")
 }
