@@ -59,6 +59,8 @@ func main() {
 		api = new(FormulaNo89)
 	case 84:
 		api = new(FormulaNo84)
+	case 3:
+		api = new(FormulaNo3)
 	default:
 		api = new(FormulaNo1)
 	}
@@ -68,7 +70,7 @@ func main() {
 	ss := category.GetCodeList()
 	count := len(ss)
 	var wg = sync.WaitGroup{}
-	fmt.Printf("Quant1X 预警系统 %s: %s", MinVersion, api.Name())
+	fmt.Printf("Quant1X 预警系统 %s: %s\n", MinVersion, api.Name())
 	infos, _ := cpu.Info()
 	cpuInfo := infos[0]
 	memory, _ := mem.VirtualMemory()

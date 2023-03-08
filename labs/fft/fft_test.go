@@ -3,7 +3,6 @@ package fft
 import (
 	"fmt"
 	"gitee.com/quant1x/data/stock"
-	fft2 "github.com/ledyba/go-fft/fft"
 	"math"
 	"testing"
 	"time"
@@ -39,7 +38,7 @@ func Test_FFT(t *testing.T) {
 		data[i] = complex(float64(i*2)/float64(32), 0)
 	}
 	fmt.Println(data)
-	fft2.Fft(data)
+	Fft(data)
 	fmt.Println(data)
 }
 
