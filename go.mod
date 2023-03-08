@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	gitee.com/quant1x/data v0.8.8
-	gitee.com/quant1x/pandas v0.8.1
+	gitee.com/quant1x/pandas v0.8.3
 	github.com/erni27/regression v0.3.1
 	github.com/mymmsc/gox v1.3.9
 	github.com/olekukonko/tablewriter v0.0.5

@@ -15,6 +15,7 @@ func TestW(t *testing.T) {
 	//code = "sz002951"
 	//code = "sh000001"
 	code = "sh600703"
+	code = "sh688358"
 	df := stock.KLine(code)
 	//df = df.SelectRows(stat.RangeFinite(0, -5))
 	fmt.Println(df)

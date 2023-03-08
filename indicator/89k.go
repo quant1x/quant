@@ -55,25 +55,32 @@ func F89K(df pandas.DataFrame, N int) pandas.DataFrame {
 	//T9:=HHV(HIGH,N8);
 	T9 := HHV(HIGH, N8)
 	//N9X:=BARSLAST(T9=HIGH AND N7>N8);
-	x91 := EQ(T9, HIGH)
-	x92 := CompareGt(N7, N8)
-	x9 := AND(x91, x92)
-	N9X := BARSLAST(stat.NDArray[bool](x9))
+	//x91 := EQ(T9, HIGH)
+	x91 := T9.Eq(HIGH)
+	//x92 := CompareGt(N7, N8)
+	x92 := N7.Gt(N8)
+	//x9 := AND(x91, x92)
+	x9 := x91.And(x92)
+	N9X := BARSLAST(x9)
 	//N9:IFF(N9X=0,N9X+1,N9X),NODRAW,COLORLIGRAY;
-	x911 := EQ2(N9X, 0)
-	var n9x stat.Series
-	n9x = stat.NDArray[stat.DType](N9X)
-	N9 := IFF(stat.NDArray[bool](x911), n9x.Add(1), n9x)
+	//x911 := EQ2(N9X, 0)
+	x911 := N9X.Eq(0)
+	//var n9x stat.Series
+	//n9x = stat.NDArray[stat.DType](N9X)
+	N9 := IFF(x911, N9X.Add(1), N9X)
 	//K9:REF(HIGH,N9X),NODRAW,COLORRED;
 	K9 := REF(HIGH, N9X)
 	//{确定⑩}
 	//K10:LLV(LOW,N9),NODRAW,COLORGREEN;
 	K10 := LLV(LOW, N9)
 	//N10:BARSLAST(K10=LOW AND N8>N9),NODRAW,COLORLIGRAY;
-	x101 := EQ(K10, LOW)
-	x102 := CompareGt(N8, N9)
-	x10 := AND(x101, x102)
-	N10 := BARSLAST(stat.NDArray[bool](x10))
+	//x101 := EQ(K10, LOW)
+	x101 := K10.Eq(LOW)
+	//x102 := CompareGt(N8, N9)
+	x102 := N8.Gt(N9)
+	//x10 := AND(x101, x102)
+	x10 := x101.And(x102)
+	N10 := BARSLAST(x10)
 	//
 	//{比对周期长度}
 	//C_N:=5;
@@ -140,13 +147,18 @@ func F89K(df pandas.DataFrame, N int) pandas.DataFrame {
 	c22 := N9.Gt(N10)
 	C2 := BARSLAST(c21.And(c22))
 	//C3:N10>0,NODRAW;
-	C3 := CompareGt(N10, 0)
+	//C3 := CompareGt(N10, 0)
+	C3 := N10.Gt(0)
 	//B0:=C1=0 AND C2=1 AND C3;
-	B01 := EQ2(C1, 0)
-	B02 := EQ2(C2, 1)
-	B03 := AND(B01, B02)
+	//B01 := EQ2(C1, 0)
+	B01 := C1.Eq(0)
+	//B02 := EQ2(C2, 1)
+	B02 := C2.Eq(1)
+	//B03 := AND(B01, B02)
+	B03 := B01.Add(B02)
 	//AND C3
-	B0 := AND(B03, C3)
+	//B0 := AND(B03, C3)
+	B0 := B03.Add(C3)
 	//B:50*B0,COLORYELLOW;
 	OB := pandas.NewSeries(stat.SERIES_TYPE_BOOL, "B", B0)
 	OZS := pandas.NewSeries(stat.SERIES_TYPE_DTYPE, "ZS", ZS_LOW)
