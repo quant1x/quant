@@ -13,8 +13,8 @@ func Platform(df pandas.DataFrame) pandas.DataFrame {
 		CLOSE = df.ColAsNDArray("close") // 收盘价
 		//HIGH    = df.ColAsNDArray("high")   // 最高价
 		//LOW     = df.ColAsNDArray("low")    // 最低价
-		VOL     = df.ColAsNDArray("volume") // 成交量
-		DATALEN = df.Nrow()                 // 数据长度
+		VOL = df.ColAsNDArray("volume") // 成交量
+		//DATALEN = df.Nrow()                 // 数据长度
 	)
 	//{T02: 平台, V1.0.0 2023-03-08}
 	//BL1:=VOL/REF(VOL,1);
@@ -48,8 +48,9 @@ func Platform(df pandas.DataFrame) pandas.DataFrame {
 	SL21 := BARSLASTCOUNT(SL.Lte(0.50))
 	//{为REF修复SL21,需要-1}
 	//SL2:=IFF(SL21>0,SL21-1,DRAWNULL),NODRAW;
-	sl22 := stat.Repeat[stat.DType](stat.DTypeNaN, DATALEN)
-	SL2 := IFF(SL21.Gt(0), SL21.Sub(1), stat.NewSeries[stat.DType](sl22...))
+	//sl22 := stat.Repeat[stat.DType](stat.DTypeNaN, DATALEN)
+	//SL2 := IFF(SL21.Gt(0), SL21.Sub(1), SL21)
+	SL2 := SL21.Sub(1)
 	//SL3:=REF(VOL,SL2);
 	SL3 := REF(VOL, SL2)
 	//SLN:=BARSLAST(SL3=VOL);
