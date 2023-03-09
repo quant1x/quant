@@ -46,8 +46,8 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 		logger.Errorf("均线, 数据没对齐")
 	}
 	// 两个金叉
-	c1 := CROSS(ma5, ma10)
-	c2 := CROSS(ma10, ma20)
+	c1 := V2CROSS(ma5, ma10)
+	c2 := V2CROSS(ma10, ma20)
 	if len(c1) != days || len(c2) != days {
 		logger.Errorf("金叉, 数据没对齐")
 	}
