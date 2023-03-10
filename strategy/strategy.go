@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"gitee.com/quant1x/data/cache"
-	"gitee.com/quant1x/data/category"
 	"gitee.com/quant1x/data/security"
+	"gitee.com/quant1x/data/stock"
 	"gitee.com/quant1x/pandas"
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/logger"
@@ -67,7 +67,7 @@ func main() {
 	stat.SetAvx2Enabled(avx2)
 	runtime.GOMAXPROCS(cpuNum)
 	// 获取全部证券代码
-	ss := category.GetCodeList()
+	ss := stock.GetCodeList()
 	count := len(ss)
 	var wg = sync.WaitGroup{}
 	fmt.Printf("Quant1X 预警系统 %s: %s\n", MinVersion, api.Name())
