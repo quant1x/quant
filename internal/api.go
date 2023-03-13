@@ -1,4 +1,4 @@
-package stock
+package internal
 
 import "time"
 
@@ -56,7 +56,7 @@ type StockApi interface {
 	RealTime(code string) (*RealTime, error)
 }
 
-//DayKLine struct implement
+// DayKLine struct implement
 type DayKLine struct {
 	Date   string  `json:"date"`
 	Open   float64 `json:"open"`

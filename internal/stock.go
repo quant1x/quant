@@ -1,4 +1,4 @@
-package stock
+package internal
 
 // 东方财富
 // 字段分析
@@ -27,7 +27,6 @@ package stock
 // 22  0.00        涨速?
 // 23  上市日期
 // 24  最新有效日期
-//
 type StockInfo struct {
 	// 1-上证sh, 2-深圳sz
 	Market string `json:"market" array:"0"`

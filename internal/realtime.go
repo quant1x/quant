@@ -1,4 +1,14 @@
-package stock
+package internal
+
+import (
+	"gitee.com/quant1x/data/category"
+	"gitee.com/quant1x/data/category/date"
+	"gitee.com/quant1x/gotdx/proto"
+	"gitee.com/quant1x/gotdx/quotes"
+	"github.com/mymmsc/gox/api"
+	"github.com/mymmsc/gox/logger"
+	"time"
+)
 
 // RealTime 最新数据
 type RealTime struct {
@@ -101,4 +111,116 @@ type RealTime struct {
 	LimitUp string `json:"limit_up" array:"47"`
 	//48: "跌停价",
 	LimitDown string `json:"limit_down" array:"48"`
+}
+
+var (
+	stdApi *quotes.StdApi = nil
+)
+
+func prepare() *quotes.StdApi {
+	if stdApi == nil {
+		api_, err := quotes.NewStdApi()
+		if err != nil {
+			return nil
+		}
+		stdApi = api_
+	}
+	return stdApi
+}
+
+type QuoteSnapshot struct {
+	Market         uint8   // 市场
+	Code           string  // 代码
+	Name           string  // 证券名称
+	Active1        uint16  // 活跃度
+	Price          float64 // 现价
+	LastClose      float64 // 昨收
+	Open           float64 // 开盘
+	High           float64 // 最高
+	Low            float64 // 最低
+	ServerTime     string  // 时间
+	ReversedBytes0 int     // 保留(时间 ServerTime)
+	ReversedBytes1 int     // 保留
+	Vol            int     // 总量
+	CurVol         int     // 现量
+	Amount         float64 // 总金额
+	SVol           int     // 内盘
+	BVol           int     // 外盘
+	ReversedBytes2 int     // 保留
+	ReversedBytes3 int     // 保留
+	//BidLevels      []quotes.Level
+	//AskLevels      []quotes.Level
+	Bid1           float64
+	Ask1           float64
+	BidVol1        int
+	AskVol1        int
+	Bid2           float64
+	Ask2           float64
+	BidVol2        int
+	AskVol2        int
+	Bid3           float64
+	Ask3           float64
+	BidVol3        int
+	AskVol3        int
+	Bid4           float64
+	Ask4           float64
+	BidVol4        int
+	AskVol4        int
+	Bid5           float64
+	Ask5           float64
+	BidVol5        int
+	AskVol5        int
+	ReversedBytes4 uint16  // 保留
+	ReversedBytes5 int     // 保留
+	ReversedBytes6 int     // 保留
+	ReversedBytes7 int     // 保留
+	ReversedBytes8 int     // 保留
+	Rate           float64 // 涨速
+	Active2        uint16  // 活跃度
+	TopNo          int     // 板块排名
+	TopCode        string  // 领涨个股
+	TopName        string  // 领涨个股名称
+	TopRate        float64 // 领涨个股涨幅
+	ZhanTing       int     // 涨停数
+	Ling           int     // 平盘数
+	Count          int     // 总数
+}
+
+// BatchSnapShot 批量获取即时行情数据快照
+func BatchSnapShot(codes []string) []QuoteSnapshot {
+	marketIds := []proto.Market{}
+	symbols := []string{}
+	for _, code := range codes {
+		id, _, symbol := category.DetectMarket(code)
+		if len(symbol) == 6 {
+			marketIds = append(marketIds, id)
+			symbols = append(symbols, symbol)
+		}
+	}
+	tdxApi := prepare()
+	list := []QuoteSnapshot{}
+	hq, err := tdxApi.GetSecurityQuotes(marketIds, symbols)
+	if err != nil {
+		logger.Errorf("获取即时行情数据失败", err)
+		return list
+	}
+	//fmt.Printf("%+v\n", hq)
+	lastTradeday := time.Now().Format(category.INDEX_DATE)
+	td := date.TradeRange("2023-01-01", lastTradeday)
+	lastTradeday = td[len(td)-1]
+	for _, v := range hq.List {
+		snapshot := QuoteSnapshot{}
+		_ = api.Copy(&snapshot, &v)
+		if snapshot.LastClose == float64(0) {
+			continue
+		}
+		if api.StartsWith(snapshot.Code, []string{"88"}) {
+			snapshot.Code = "sh" + snapshot.Code
+		} else {
+			_, mname, mcode := category.DetectMarket(snapshot.Code)
+			snapshot.Code = mname + mcode
+		}
+		list = append(list, snapshot)
+	}
+	return list
 }
