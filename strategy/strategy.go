@@ -68,6 +68,8 @@ func main() {
 	switch strategy {
 	case 89:
 		api = new(FormulaNo89)
+	case 85:
+		api = new(FormulaNo85)
 	case 84:
 		api = new(FormulaNo84)
 	case 3:
