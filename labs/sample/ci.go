@@ -22,7 +22,7 @@ func ConfidenceInterval(df pandas.DataFrame, argv ...int) pandas.DataFrame {
 		__n := argv[0]
 		N = stat.Repeat[stat.DType](stat.DType(__n), LEN)
 	}
-	mid := MA2(CLOSE, N)
+	mid := MA(CLOSE, N)
 	variance := STD(CLOSE, N)
 	Z := stat.ConfidenceIntervalToZscore(CI)
 	sd := variance.Mul(Z)

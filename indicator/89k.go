@@ -107,11 +107,11 @@ func F89K(df pandas.DataFrame, N int) pandas.DataFrame {
 	//{高股价或指数的计算方法, 比MAVOL5高出C_S/10且比前一日方法}
 	//X_INDEX:=VOL>=MA(VOL, VOL_PERIOD)*(1 + C_S/10);
 	bl := 1.00 + C_S/10.00
-	x_ma := MA2(VOL, VOL_PERIOD).Mul(bl)
+	x_ma := MA(VOL, VOL_PERIOD).Mul(bl)
 	X_INDEX := VOL.Gte(x_ma)
 	//{一般股价的计算方法}
 	//X_GENERAL:=VOL>=MA(VOL, VOL_PERIOD)*VOLSCALE;
-	X_GENERAL := VOL.Gte(MA2(VOL, VOL_PERIOD).Mul(VOLSCALE))
+	X_GENERAL := VOL.Gte(MA(VOL, VOL_PERIOD).Mul(VOLSCALE))
 	//{指数类或者高股价类的成交量不太可能像个股那样成倍放量, 这里做一个降级处理}
 	//X:=IFF(CLOSE>=100, X_INDEX, X_GENERAL) AND C_ISMALE AND C_VOL;
 	xx1 := IFF(CLOSE.Gte(100), X_INDEX, X_GENERAL)

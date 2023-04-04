@@ -5,6 +5,7 @@ import (
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/pandas"
 	. "gitee.com/quant1x/pandas/formula"
+	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/util/treemap"
 )
@@ -42,31 +43,32 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 	ma5 := MA(CLOSE, 5)
 	ma10 := MA(CLOSE, 10)
 	ma20 := MA(CLOSE, 20)
-	if len(ma5) != days || len(ma10) != days || len(ma20) != days {
+	if ma5.Len() != days || ma10.Len() != days || ma20.Len() != days {
 		logger.Errorf("均线, 数据没对齐")
 	}
 	// 两个金叉
-	c1 := V2CROSS(ma5, ma10)
-	c2 := V2CROSS(ma10, ma20)
-	if len(c1) != days || len(c2) != days {
+	c1 := CROSS(ma5, ma10)
+	c2 := CROSS(ma10, ma20)
+	if c1.Len() != days || c2.Len() != days {
 		logger.Errorf("金叉, 数据没对齐")
 	}
 	// 两个统计
-	r1 := COUNT(c1, N)
-	r2 := COUNT(c2, N)
-	if len(r1) != days || len(r2) != days {
+	r1 := COUNT(c1.Bools(), N)
+	r2 := COUNT(c2.Bools(), N)
+	if r1.Len() != days || r2.Len() != days {
 		logger.Errorf("统计, 数据没对齐")
 	}
 	// 横向对比
-	d := AND(r1, r2)
-	if len(d) != days {
+	d := r1.And(r2)
+	if d.Len() != days {
 		logger.Errorf("横向对比, 数据没对齐")
 	}
 
 	//cc1 := CompareGte(r1, 1)
-	rLen := len(d)
-	if rLen > 1 && d[rLen-1] {
-		buy := ma10[days-1]
+	rLen := d.Len()
+	b := d.IndexOf(rLen - 1).(bool)
+	if rLen > 1 && b {
+		buy := stat.Any2DType(ma10.IndexOf(days - 1))
 		sell := buy * 1.05
 		date := df.Col("date").Values().([]string)[days-1]
 		result.Put(fullCode, ResultInfo{Code: fullCode,
