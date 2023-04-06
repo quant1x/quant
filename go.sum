@@ -1,11 +1,11 @@
 git.sr.ht/~sbinet/gg v0.3.1 h1:LNhjNn8DerC8f9DHLz6lS0YYul/b602DUxDgGkd/Aik=
 git.sr.ht/~sbinet/gg v0.3.1/go.mod h1:KGYtlADtqsqANL9ueOFkWymvzUvLMQllU5Ixo+8v3pc=
-gitee.com/quant1x/data v0.9.27 h1:Ha0oPrUpMJcnHyaDKziX5/QhO1JiWGJnLUkB/omui90=
-gitee.com/quant1x/data v0.9.27/go.mod h1:hBbLnhzShwx2+t1+jguhbnibp6KQlpvzouqjaYhWDoA=
+gitee.com/quant1x/data v1.0.4 h1:wrdWKWn3hiwNG27Dxti8AeksOh/sMVXVPGtaJdSoWrM=
+gitee.com/quant1x/data v1.0.4/go.mod h1:hBbLnhzShwx2+t1+jguhbnibp6KQlpvzouqjaYhWDoA=
 gitee.com/quant1x/gotdx v1.5.3 h1:9BKN7wT02XNfU8/kN+HekxXRXiVYsRty2BATFvjynAg=
 gitee.com/quant1x/gotdx v1.5.3/go.mod h1:CZgiBLIFyJlF0jj2XcrpYslX/7q1Yjs3DKAeA/wgzj4=
-gitee.com/quant1x/pandas v0.9.11 h1:EZuS6PEDLdZ7r6i+2GQemV9bhV8xfKB8yz1KirOIZ8E=
-gitee.com/quant1x/pandas v0.9.11/go.mod h1:dTRPhtX9WJO0umWQQ8P01sTY1mFc5WfPH6rkI/x/ii8=
+gitee.com/quant1x/pandas v0.9.13 h1:nn60DtRpOLfOFddXWUs5pt4RlDBQKs+G2WP724yG+HA=
+gitee.com/quant1x/pandas v0.9.13/go.mod h1:2S1HZP2tYYJNjZdRNadAeDFdTK79RlsAo8EGLnGTGak=
 gitee.com/quant1x/vek v0.5.5 h1:3/VJ2N2EHNwNabrCh26vRQ+4SV9oyBmPMV/Pr9gGlXg=
 gitee.com/quant1x/vek v0.5.5/go.mod h1:Ap27ODpuce5KAMg0X8abkGMzKxly0CSJKoYLTf8oUWM=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
@@ -110,6 +110,7 @@ github.com/shoenig/go-m1cpu v0.1.4 h1:SZPIgRM2sEF9NJy50mRHu9PKGwxyyTTJIWvCtgVboz
 github.com/shoenig/go-m1cpu v0.1.4/go.mod h1:Wwvst4LR89UxjeFtLRMrpgRiyY4xPsejnVZym39dbAQ=
 github.com/shoenig/test v0.6.3 h1:GVXWJFk9PiOjN0KoJ7VrJGH6uLPnqxR7/fe3HUPfE0c=
 github.com/shoenig/test v0.6.3/go.mod h1:byHiCGXqrVaflBLAMq/srcZIHynQPQgeyvkvXnjqq0k=
+github.com/shopspring/decimal v1.3.1 h1:2Usl1nmF/WZucqkFZhnfFYxxxu8LG21F6nPQBE5gKV8=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
