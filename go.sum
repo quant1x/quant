@@ -1,7 +1,7 @@
 git.sr.ht/~sbinet/gg v0.3.1 h1:LNhjNn8DerC8f9DHLz6lS0YYul/b602DUxDgGkd/Aik=
 git.sr.ht/~sbinet/gg v0.3.1/go.mod h1:KGYtlADtqsqANL9ueOFkWymvzUvLMQllU5Ixo+8v3pc=
-gitee.com/quant1x/data v1.0.4 h1:wrdWKWn3hiwNG27Dxti8AeksOh/sMVXVPGtaJdSoWrM=
-gitee.com/quant1x/data v1.0.4/go.mod h1:hBbLnhzShwx2+t1+jguhbnibp6KQlpvzouqjaYhWDoA=
+gitee.com/quant1x/data v1.0.5 h1:ZlnM/mIEtuzEaOd97wd7X7oBYnRZc6RC+WfU/NQHlAw=
+gitee.com/quant1x/data v1.0.5/go.mod h1:hBbLnhzShwx2+t1+jguhbnibp6KQlpvzouqjaYhWDoA=
 gitee.com/quant1x/gotdx v1.5.3 h1:9BKN7wT02XNfU8/kN+HekxXRXiVYsRty2BATFvjynAg=
 gitee.com/quant1x/gotdx v1.5.3/go.mod h1:CZgiBLIFyJlF0jj2XcrpYslX/7q1Yjs3DKAeA/wgzj4=
 gitee.com/quant1x/pandas v0.9.13 h1:nn60DtRpOLfOFddXWUs5pt4RlDBQKs+G2WP724yG+HA=
