@@ -26,7 +26,7 @@ func (this FormulaNo84) Evaluate(fullCode string, info *security.StaticBasic, re
 			logger.Errorf("FormulaNo84.Evaluate code=%s, error=%+v\n", fullCode, err)
 		}
 	}()
-	//fmt.Println(fullCode)
+
 	N := 6
 	filename := cache.KLineFilename(fullCode)
 	df := pandas.ReadCSV(filename)

@@ -24,7 +24,6 @@ func (this FormulaNo85) Evaluate(fullCode string, info *security.StaticBasic, re
 		return
 	}
 	df1 := indicator.CDTD(df)
-	//fmt.Println(df1)
 
 	rLen := df.Nrow()
 	b := df1.Col("B").IndexOf(-1).(bool)
