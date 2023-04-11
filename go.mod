@@ -3,7 +3,7 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v1.0.5
+	gitee.com/quant1x/data v1.0.10
 	gitee.com/quant1x/gotdx v1.5.3
 	gitee.com/quant1x/pandas v0.9.13
 	github.com/erni27/regression v0.3.1
@@ -11,7 +11,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/shirou/gopsutil/v3 v3.23.3
 	github.com/stretchr/testify v1.8.2
-	golang.org/x/text v0.8.0
+	golang.org/x/text v0.9.0
 	gonum.org/v1/gonum v0.12.0
 	gonum.org/v1/plot v0.12.0
 )
