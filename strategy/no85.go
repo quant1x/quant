@@ -23,11 +23,12 @@ func (this FormulaNo85) Evaluate(fullCode string, info *security.StaticBasic, re
 	if df.Nrow() < N {
 		return
 	}
+	days := df.Nrow()
+	zf := df.Col("zf").DTypes()[days-1]
+
 	df1 := indicator.CDTD(df)
 
-	days := df.Nrow()
 	b := df1.Col("B").IndexOf(-1).(bool)
-	zf := df.Col("zf").DTypes()[days-1]
 	if b {
 		date := df.Col("date").Values().([]string)[days-1]
 		closes := df.Col("close").DTypes()

@@ -38,6 +38,7 @@ func (this FormulaNo84) Evaluate(fullCode string, info *security.StaticBasic, re
 	CLOSE := df.Col("close")
 	days := CLOSE.Len()
 	date := df.Col("date").Values().([]string)[days-1]
+	zf := df.Col("zf").DTypes()[days-1]
 	ret := indicator.MA4X(df, N)
 	if ret.Nrow() < 1 {
 		return
@@ -45,7 +46,6 @@ func (this FormulaNo84) Evaluate(fullCode string, info *security.StaticBasic, re
 	rLen := ret.Nrow()
 	B := ret.Col("B").Values().([]bool)
 	buy := ret.Col("close").DTypes()
-	zf := df.Col("zf").DTypes()[days-1]
 	if rLen > 1 && B[rLen-1] {
 		buy := buy[rLen-1]
 		sell := buy * 1.05
