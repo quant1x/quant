@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.30] - 2023-04-12
+### Changed
+- 调整代码.
+
 ## [1.3.29] - 2023-04-12
 ### Changed
 - 调整涨幅.
@@ -281,7 +285,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.3.29...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.3.30...HEAD
+[1.3.30]: https://gitee.com/mymmsc/quant/compare/v1.3.29...v1.3.30
 [1.3.29]: https://gitee.com/mymmsc/quant/compare/v1.3.28...v1.3.29
 [1.3.28]: https://gitee.com/mymmsc/quant/compare/v1.3.27...v1.3.28
 [1.3.27]: https://gitee.com/mymmsc/quant/compare/v1.3.26...v1.3.27
