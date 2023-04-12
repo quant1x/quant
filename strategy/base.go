@@ -208,6 +208,10 @@ func (this *ResultInfo) DetectVolume() bool {
 	if df.Nrow() < N {
 		return false
 	}
+	lb := df.Col("lb").IndexOf(-1).(float64)
+	if lb < 1.5 {
+		return false
+	}
 	dates := df.Col("date").Select(stat.RangeFinite(-N)).Values().([]string)
 	df = stock.Tick(this.Code, dates)
 	if df.Nrow() < 2 {
@@ -224,7 +228,6 @@ func (this *ResultInfo) DetectVolume() bool {
 
 // Sample 处理结果的置信区间
 func (this *ResultInfo) Sample() bool {
-	//fmt.Println(this.Code)
 	N := 89
 	df := stock.KLine(this.Code)
 	if df.Err != nil {
