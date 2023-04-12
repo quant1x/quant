@@ -1,9 +1,8 @@
 package main
 
 import (
-	"gitee.com/quant1x/data/cache"
 	"gitee.com/quant1x/data/security"
-	"gitee.com/quant1x/pandas"
+	"gitee.com/quant1x/data/stock"
 	"github.com/mymmsc/gox/util/treemap"
 	"github.com/quant1x/quant/labs/linear"
 )
@@ -20,14 +19,15 @@ func (this FormulaNo3) Code() int {
 
 func (this FormulaNo3) Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map) {
 	N := 89
-	filename := cache.KLineFilename(fullCode)
-	df := pandas.ReadCSV(filename)
+	df := stock.KLine(fullCode)
 	if df.Err != nil {
 		return
 	}
 	if df.Nrow() < N {
 		return
 	}
+	days := df.Nrow()
+	zf := df.Col("zf").DTypes()[days-1]
 	if p, ok := linear.W(df); ok {
 		rLen := df.Nrow()
 		date := df.Col("date").Values().([]string)[rLen-1]
@@ -37,6 +37,7 @@ func (this FormulaNo3) Evaluate(fullCode string, info *security.StaticBasic, res
 		result.Put(fullCode, ResultInfo{Code: fullCode,
 			Name:         info.Name,
 			Date:         date,
+			Rate:         zf,
 			Buy:          buy,
 			Sell:         sell,
 			StrategyCode: this.Code(),

@@ -56,6 +56,7 @@ type ResultInfo struct {
 	Code         string  `name:"证券代码" json:"code" csv:"code" array:"0"`
 	Name         string  `name:"证券名称" json:"name" csv:"name" array:"1"`
 	Date         string  `name:"信号日期" json:"date" csv:"date" array:"2"`
+	Rate         float64 `name:"涨跌幅%" json:"rate" csv:""`
 	Buy          float64 `name:"委托价格" json:"buy" csv:"buy" array:"3"`
 	Sell         float64 `name:"目标价格" json:"sell" csv:"sell" array:"4"`
 	StrategyCode int     `name:"策略编码" json:"strategy_code" csv:"strategy_code" array:"5"`

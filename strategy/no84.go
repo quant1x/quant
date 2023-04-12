@@ -1,9 +1,8 @@
 package main
 
 import (
-	"gitee.com/quant1x/data/cache"
 	"gitee.com/quant1x/data/security"
-	"gitee.com/quant1x/pandas"
+	"gitee.com/quant1x/data/stock"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/util/treemap"
 	"github.com/quant1x/quant/indicator"
@@ -28,8 +27,7 @@ func (this FormulaNo84) Evaluate(fullCode string, info *security.StaticBasic, re
 	}()
 
 	N := 6
-	filename := cache.KLineFilename(fullCode)
-	df := pandas.ReadCSV(filename)
+	df := stock.KLine(fullCode)
 	if df.Err != nil {
 		return
 	}
@@ -40,6 +38,7 @@ func (this FormulaNo84) Evaluate(fullCode string, info *security.StaticBasic, re
 	CLOSE := df.Col("close")
 	days := CLOSE.Len()
 	date := df.Col("date").Values().([]string)[days-1]
+	zf := df.Col("zf").DTypes()[days-1]
 	ret := indicator.MA4X(df, N)
 	if ret.Nrow() < 1 {
 		return
@@ -53,6 +52,7 @@ func (this FormulaNo84) Evaluate(fullCode string, info *security.StaticBasic, re
 		result.Put(fullCode, ResultInfo{Code: fullCode,
 			Name:         info.Name,
 			Date:         date,
+			Rate:         zf,
 			Buy:          float64(buy),
 			Sell:         float64(sell),
 			StrategyCode: this.Code(),

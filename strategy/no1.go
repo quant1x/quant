@@ -1,9 +1,8 @@
 package main
 
 import (
-	"gitee.com/quant1x/data/cache"
 	"gitee.com/quant1x/data/security"
-	"gitee.com/quant1x/pandas"
+	"gitee.com/quant1x/data/stock"
 	. "gitee.com/quant1x/pandas/formula"
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/logger"
@@ -28,9 +27,7 @@ func (this *FormulaNo1) Name() string {
 func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map) {
 	N := MaximumResultDays
 
-	//fmt.Printf("%s\n", fullCode)
-	filename := cache.GetKLineFilename(fullCode)
-	df := pandas.ReadCSV(filename)
+	df := stock.KLine(fullCode)
 	if df.Err != nil {
 		return
 	}
@@ -41,7 +38,7 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 	if days < 1 {
 		return
 	}
-
+	zf := df.Col("zf").DTypes()[days-1]
 	// 取5、10、20日均线
 	ma5 := MA(CLOSE, 5)
 	ma10 := MA(CLOSE, 10)
@@ -78,6 +75,7 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 		result.Put(fullCode, ResultInfo{Code: fullCode,
 			Name:         info.Name,
 			Date:         date,
+			Rate:         zf,
 			Buy:          buy,
 			Sell:         sell,
 			StrategyCode: this.Code(),

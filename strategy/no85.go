@@ -26,6 +26,7 @@ func (this FormulaNo85) Evaluate(fullCode string, info *security.StaticBasic, re
 	df1 := indicator.CDTD(df)
 
 	rLen := df.Nrow()
+	zf := df.Col("zf").DTypes()[rLen-1]
 	b := df1.Col("B").IndexOf(-1).(bool)
 	if b {
 		date := df.Col("date").Values().([]string)[rLen-1]
@@ -35,6 +36,7 @@ func (this FormulaNo85) Evaluate(fullCode string, info *security.StaticBasic, re
 		result.Put(fullCode, ResultInfo{Code: fullCode,
 			Name:         info.Name,
 			Date:         date,
+			Rate:         zf,
 			Buy:          buy,
 			Sell:         sell,
 			StrategyCode: this.Code(),
