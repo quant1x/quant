@@ -25,13 +25,13 @@ func (this FormulaNo85) Evaluate(fullCode string, info *security.StaticBasic, re
 	}
 	df1 := indicator.CDTD(df)
 
-	rLen := df.Nrow()
-	zf := df.Col("zf").DTypes()[rLen-1]
+	days := df.Nrow()
 	b := df1.Col("B").IndexOf(-1).(bool)
+	zf := df.Col("zf").DTypes()[days-1]
 	if b {
-		date := df.Col("date").Values().([]string)[rLen-1]
+		date := df.Col("date").Values().([]string)[days-1]
 		closes := df.Col("close").DTypes()
-		buy := closes[rLen-1]
+		buy := closes[days-1]
 		sell := buy * 1.05
 		result.Put(fullCode, ResultInfo{Code: fullCode,
 			Name:         info.Name,
