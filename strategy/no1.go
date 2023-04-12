@@ -38,6 +38,9 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 	// 收盘价序列
 	CLOSE := df.Col("close")
 	days := CLOSE.Len()
+	if days < 1 {
+		return
+	}
 
 	// 取5、10、20日均线
 	ma5 := MA(CLOSE, 5)
@@ -66,6 +69,7 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 
 	//cc1 := CompareGte(r1, 1)
 	rLen := d.Len()
+	//fmt.Printf("%s, len = %d\n", fullCode, rLen)
 	b := d.IndexOf(rLen - 1).(bool)
 	if rLen > 1 && b {
 		buy := stat.Any2DType(ma10.IndexOf(days - 1))
