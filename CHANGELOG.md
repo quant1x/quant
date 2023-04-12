@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.27] - 2023-04-12
+### Changed
+- 增加数据校验.
+- 量比小于1.5的过滤掉.
+- 更新data版本.
+
 ## [1.3.26] - 2023-04-06
 ### Changed
 - 修正data版本号.
@@ -267,7 +273,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.3.26...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.3.27...HEAD
+[1.3.27]: https://gitee.com/mymmsc/quant/compare/v1.3.26...v1.3.27
 [1.3.26]: https://gitee.com/mymmsc/quant/compare/v1.3.25...v1.3.26
 [1.3.25]: https://gitee.com/mymmsc/quant/compare/v1.3.24...v1.3.25
 [1.3.24]: https://gitee.com/mymmsc/quant/compare/v1.3.23...v1.3.24
