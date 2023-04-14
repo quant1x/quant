@@ -409,6 +409,7 @@ func main() {
 		}
 	}
 	fmt.Println("")
+	goals = len(rsValue)
 	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
 	table = tableView.NewWriter(os.Stdout)
 	count = len(rsValue)
