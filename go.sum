@@ -1,11 +1,11 @@
 git.sr.ht/~sbinet/gg v0.3.1 h1:LNhjNn8DerC8f9DHLz6lS0YYul/b602DUxDgGkd/Aik=
 git.sr.ht/~sbinet/gg v0.3.1/go.mod h1:KGYtlADtqsqANL9ueOFkWymvzUvLMQllU5Ixo+8v3pc=
-gitee.com/quant1x/data v1.0.17 h1:978xqWUePFtpu1mFhCwNzFaZyo+8iZhYOCkIlHs3+iA=
-gitee.com/quant1x/data v1.0.17/go.mod h1:5V7BCkBwAbt2GECnOEm06vgrfQ/CETejJA3pZSY5piI=
+gitee.com/quant1x/data v1.0.18 h1:NA2P2AmB3FdxAjFraTGWTgrM9v44ChzE8doaxTTZvC8=
+gitee.com/quant1x/data v1.0.18/go.mod h1:UQrmrdBtGAvLU9DUm6tDMRmGdQjpZ8T/bxZjbCJAPHs=
 gitee.com/quant1x/gotdx v1.5.5 h1:5lqrciuxZZpwiyx4E7XkPj09a/OXetalQFM5sDv8T3o=
 gitee.com/quant1x/gotdx v1.5.5/go.mod h1:CZgiBLIFyJlF0jj2XcrpYslX/7q1Yjs3DKAeA/wgzj4=
-gitee.com/quant1x/pandas v0.9.13 h1:nn60DtRpOLfOFddXWUs5pt4RlDBQKs+G2WP724yG+HA=
-gitee.com/quant1x/pandas v0.9.13/go.mod h1:2S1HZP2tYYJNjZdRNadAeDFdTK79RlsAo8EGLnGTGak=
+gitee.com/quant1x/pandas v0.9.14 h1:er9lg6knVkdJ6kUsvDbxZvPze1Vcs1lzrW8aGlimVPs=
+gitee.com/quant1x/pandas v0.9.14/go.mod h1:cqnM8Q/rpG/QiVvEXgznLTWnkrBWxhJ/6xwf+igR0l8=
 gitee.com/quant1x/vek v0.5.5 h1:3/VJ2N2EHNwNabrCh26vRQ+4SV9oyBmPMV/Pr9gGlXg=
 gitee.com/quant1x/vek v0.5.5/go.mod h1:Ap27ODpuce5KAMg0X8abkGMzKxly0CSJKoYLTf8oUWM=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
