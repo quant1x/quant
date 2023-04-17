@@ -330,6 +330,7 @@ func main() {
 			continue
 		}
 		bar.Add(1)
+		wg.Add(1)
 		go evaluate(api, &wg, fullCode, basicInfo, mapStock)
 		_ = i
 	}
@@ -438,7 +439,6 @@ func main() {
 
 func evaluate(api Strategy, wg *sync.WaitGroup, code string, info *security.StaticBasic, result *treemap.Map) {
 	defer wg.Done()
-	wg.Add(1)
 	api.Evaluate(code, info, result)
 }
 
