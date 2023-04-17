@@ -3,7 +3,7 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v1.0.18
+	gitee.com/quant1x/data v1.0.19
 	gitee.com/quant1x/gotdx v1.5.5
 	gitee.com/quant1x/pandas v0.9.14
 	github.com/erni27/regression v0.3.1
