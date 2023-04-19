@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.39] - 2023-04-19
+### Changed
+- 更新date版本.
+
 ## [1.3.38] - 2023-04-19
 ### Changed
 - 修改判断量比的条件.
@@ -320,7 +324,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.3.38...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.3.39...HEAD
+[1.3.39]: https://gitee.com/mymmsc/quant/compare/v1.3.38...v1.3.39
 [1.3.38]: https://gitee.com/mymmsc/quant/compare/v1.3.37...v1.3.38
 [1.3.37]: https://gitee.com/mymmsc/quant/compare/v1.3.36...v1.3.37
 [1.3.36]: https://gitee.com/mymmsc/quant/compare/v1.3.35...v1.3.36
