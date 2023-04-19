@@ -16,3 +16,9 @@ func TestResultInfo_Headers(t *testing.T) {
 	t1.Sell = 2.1
 	fmt.Println(t1.Values())
 }
+
+func TestResultInfo_DetectVolume(t *testing.T) {
+	result := ResultInfo{Code: "sh600641"}
+	ok := result.DetectVolume()
+	fmt.Println(ok)
+}

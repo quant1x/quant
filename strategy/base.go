@@ -210,7 +210,7 @@ func (this *ResultInfo) DetectVolume() bool {
 		return false
 	}
 	lb := df.Col("lb").IndexOf(-1).(float64)
-	if lb < 1.5 {
+	if lb > 1.0 {
 		return false
 	}
 	dates := df.Col("date").Select(stat.RangeFinite(-N)).Values().([]string)
