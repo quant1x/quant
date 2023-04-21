@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.1] - 2023-04-21
+### Changed
+- 更新data版本.
+
 ## [1.5.0] - 2023-04-21
 ### Changed
 - 更新data版本号, 优化内外盘的计算方式, 对齐通达信的算法.
@@ -332,7 +336,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.0...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.1...HEAD
+[1.5.1]: https://gitee.com/mymmsc/quant/compare/v1.5.0...v1.5.1
 [1.5.0]: https://gitee.com/mymmsc/quant/compare/v1.3.40...v1.5.0
 [1.3.40]: https://gitee.com/mymmsc/quant/compare/v1.3.39...v1.3.40
 [1.3.39]: https://gitee.com/mymmsc/quant/compare/v1.3.38...v1.3.39
