@@ -1,7 +1,6 @@
 package main
 
 import (
-	"gitee.com/quant1x/data/category/trading"
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/data/stock"
 	"gitee.com/quant1x/gotdx/quotes"
@@ -65,7 +64,6 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 	pbarIndex++
 	snapshots := []internal.QuoteSnapshot{}
 	mapBlockName := make(map[string]string)
-	lastTradeDate := trading.LastTradeDate()
 	for start := 0; start < blockCount; start += quotes.TDX_SECURITY_QUOTES_MAX {
 		codes := []string{}
 		length := blockCount - start
@@ -107,15 +105,13 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 			v.Name = mapBlockName[v.Code]
 			v.LiuTongPan = stock.GetLiuTongPan(v.Code)
 			v.FreeGuBen = stock.GetFreeGuBen(v.Code)
-			dfTick := stock.TickByDate(v.Code, lastTradeDate)
-			if dfTick.Nrow() > 0 {
-				VOL := dfTick.Col("vol").DTypes()
-				kpVol := VOL[0] * 100
-				if strings.HasPrefix(v.Code, "sh88") {
-					kpVol *= 100
-				}
-				v.TurnZ = kpVol / v.FreeGuBen * 100
+			kpVol := stock.GetKaipanVol(v.Code)
+			kpVol = kpVol * 100
+			if strings.HasPrefix(v.Code, "sh88") {
+				kpVol *= 100
 			}
+			v.TurnZ = kpVol / v.FreeGuBen * 100
+
 			snapshots = append(snapshots, v)
 		}
 	}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"gitee.com/quant1x/data/category/trading"
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/data/stock"
 	"github.com/mymmsc/gox/util/treemap"
@@ -30,21 +29,16 @@ func (this *FormulaNo0) Evaluate(fullCode string, info *security.StaticBasic, re
 		//fmt.Println(fullCode)
 		return
 	}
-	lastTradeDate := trading.LastTradeDate()
 	freeGuBen := stock.GetFreeGuBen(fullCode)
-	dfTick := stock.TickByDate(fullCode, lastTradeDate)
 	turnZ := float64(0)
-	kpVol := float64(0)
-	if dfTick.Nrow() > 0 {
-		VOL := dfTick.Col("vol").DTypes()
-		if len(VOL) > 0 {
-			kpVol = VOL[0] * 100
-			if strings.HasPrefix(fullCode, "sh88") {
-				kpVol *= 100
-			}
-			turnZ = kpVol / freeGuBen * 100
-		}
+	kpVol := stock.GetKaipanVol(fullCode)
+
+	kpVol = kpVol * 100
+	if strings.HasPrefix(fullCode, "sh88") {
+		kpVol *= 100
 	}
+	turnZ = kpVol / freeGuBen * 100
+
 	//fmt.Println(fullCode, turnZ, kpVol, freeGuBen)
 
 	CLOSE := df.ColAsNDArray("close")

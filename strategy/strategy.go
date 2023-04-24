@@ -20,6 +20,7 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 	"os"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 )
@@ -238,6 +239,17 @@ func main() {
 			if len(stockShots) == 0 {
 				continue
 			}
+			for k := 0; k < len(stockShots); k++ {
+				shot := stockShots[k]
+				freeGuBen := stock.GetFreeGuBen(shot.Code)
+				kpVol := stock.GetKaipanVol(shot.Code)
+				kpVol = kpVol * 100
+				if strings.HasPrefix(shot.Code, "sh88") {
+					kpVol *= 100
+				}
+				shot.TurnZ = kpVol / freeGuBen * 100
+
+			}
 			stockSnapshots = append(stockSnapshots, stockShots...)
 		}
 		if len(stockSnapshots) == 0 {
@@ -247,10 +259,8 @@ func main() {
 			aZf := a.Price / a.LastClose
 			bZf := b.Price / b.LastClose
 			zf := aZf > bZf
-			aSpeed := a.Rate
-			bSpeed := b.Rate
-			speed := aSpeed > bSpeed
-			return speed && zf
+			kphs := a.TurnZ > b.TurnZ
+			return kphs && zf
 		}).Pointer().([]internal.QuoteSnapshot)
 		stockList := []string{}
 		for j := 0; j < len(tops) && j < StockTopN; j++ {
