@@ -54,7 +54,7 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 		}
 		blockCodes = append(blockCodes, bc)
 	}
-	//blockCodes := dfBlock.Col("code").Strings()
+
 	blockCount := len(blockCodes)
 	bar := progressbar.NewBar(pbarIndex, "执行[扫描板块指数]", blockCount)
 	pbarIndex++
