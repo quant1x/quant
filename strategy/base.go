@@ -8,6 +8,7 @@ import (
 	"github.com/quant1x/quant/indicator"
 	"github.com/quant1x/quant/labs/linear"
 	"github.com/quant1x/quant/labs/sample"
+	"math"
 	"reflect"
 	"sort"
 )
@@ -25,6 +26,10 @@ var (
 
 func init() {
 	mapTag = make(map[reflect.Type]map[int]string)
+}
+
+func Decimal(value float64) float64 {
+	return math.Trunc(value*1e2+0.5) * 1e-2
 }
 
 func initTag(t reflect.Type, tagName string) map[int]string {
@@ -56,12 +61,14 @@ type ResultInfo struct {
 	Code         string  `name:"证券代码" json:"code" csv:"code" array:"0"`
 	Name         string  `name:"证券名称" json:"name" csv:"name" array:"1"`
 	Date         string  `name:"信号日期" json:"date" csv:"date" array:"2"`
+	TurnZ        float64 `name:"开盘换手Z" json:"turn_z" csv:"turn_z" arrar:"3"`
 	Rate         float64 `name:"涨跌幅%" json:"rate" csv:""`
 	Buy          float64 `name:"委托价格" json:"buy" csv:"buy" array:"3"`
 	Sell         float64 `name:"目标价格" json:"sell" csv:"sell" array:"4"`
 	StrategyCode int     `name:"策略编码" json:"strategy_code" csv:"strategy_code" array:"5"`
 	StrategyName string  `name:"策略名称" json:"strategy_name" csv:"strategy_name" array:"6"`
 	//BlockCode    string  `name:"板块代码" json:"block_code" csv:"block_code" array:"7"`
+	BlockType      string  `name:"板块类型"`
 	BlockName      string  `name:"板块名称" json:"block_name" csv:"block_name" array:"7"`
 	BlockRate      float64 `name:"板块涨幅%" json:"block_rate" csv:"block_rate" array:"8"`
 	BlockTop       int     `name:"板块排名" json:"block_top" csv:"block_top" array:"9"`
@@ -72,10 +79,10 @@ type ResultInfo struct {
 	BlockTopName string  `name:"领涨股名称" json:"block_top_name" csv:"block_top_name" array:"13"`
 	BlockTopRate float64 `name:"领涨股涨幅%" json:"block_top_rate" csv:"block_top_rate" array:"14"`
 	Tendency     string  `name:"短线趋势" json:"tendency" csv:"tendency" array:"15"`
-	Open         float64 `name:"预计开盘" json:"open" csv:"open" array:"16"`
-	CLOSE        float64 `name:"预计收盘" json:"close" csv:"close" array:"17"`
-	High         float64 `name:"预计最高" json:"high" csv:"high" array:"18"`
-	Low          float64 `name:"预计最低" json:"low" csv:"low" array:"19"`
+	//Open         float64 `name:"预计开盘" json:"open" csv:"open" array:"16"`
+	//CLOSE        float64 `name:"预计收盘" json:"close" csv:"close" array:"17"`
+	//High         float64 `name:"预计最高" json:"high" csv:"high" array:"18"`
+	//Low          float64 `name:"预计最低" json:"low" csv:"low" array:"19"`
 }
 
 func (this *ResultInfo) Headers() []string {
@@ -177,17 +184,16 @@ func (this *ResultInfo) Predict() {
 
 	fs := []float64{float64(po), float64(pc), float64(ph), float64(pl)}
 	sort.Float64s(fs)
-	this.Open = fs[1]
-	this.CLOSE = fs[2]
-	this.High = fs[3]
-	this.Low = fs[0]
+	//this.Open = fs[1]
+	//this.CLOSE = fs[2]
+	//this.High = fs[3]
+	//this.Low = fs[0]
 
 	_ = lastClose
 }
 
 // Cross 预测趋势
 func (this *ResultInfo) Cross() bool {
-	//fmt.Println(this.Code)
 	N := 1
 	df := stock.KLine(this.Code)
 	df = linear.CrossTrend(df)
@@ -203,14 +209,10 @@ func (this *ResultInfo) Cross() bool {
 }
 
 // DetectVolume 检测量能变化
-func (this *ResultInfo) DetectVolume() bool {
+func (this *ResultInfo) V1DetectVolume() bool {
 	N := 10
 	df := stock.KLine(this.Code)
 	if df.Nrow() < N {
-		return false
-	}
-	lb := df.Col("lb").IndexOf(-1).(float64)
-	if lb > 1.0 {
 		return false
 	}
 	dates := df.Col("date").Select(stat.RangeFinite(-N)).Values().([]string)
@@ -222,6 +224,30 @@ func (this *ResultInfo) DetectVolume() bool {
 	sv := df.Col("sv").IndexOf(-1).(float64)
 	bs := df.Col("bs").IndexOf(-1).(float64)
 	if bv > sv && bs < 0 {
+		return true
+	}
+	return false
+}
+
+// DetectVolume 检测量能变化
+func (this *ResultInfo) DetectVolume() bool {
+	N := 10
+	df := stock.KLine(this.Code)
+	if df.Nrow() < N {
+		return false
+	}
+	lb := df.Col("lb").IndexOf(-1).(float64)
+	if lb > 1.00 {
+		return false
+	}
+	df = indicator.Platform(df)
+	if df.Nrow() < 1 {
+		return false
+	}
+	b1 := df.Col("B1").IndexOf(-1).(bool)
+	b2 := df.Col("B2").IndexOf(-1).(bool)
+	b3 := df.Col("B3").IndexOf(-1).(bool)
+	if b1 || b2 || b3 {
 		return true
 	}
 	return false
@@ -241,7 +267,7 @@ func (this *ResultInfo) Sample() bool {
 	if ret.Nrow() < 1 {
 		return false
 	}
-	df = sample.ConfidenceInterval(ret)
+	df = sample.ConfidenceInterval(ret, 20)
 	ci := df.Col("cib").IndexOf(-1).(bool)
 	if ci {
 		return true

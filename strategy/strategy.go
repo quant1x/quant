@@ -74,8 +74,10 @@ func main() {
 		api = new(FormulaNo84)
 	case 3:
 		api = new(FormulaNo3)
-	default:
+	case 1:
 		api = new(FormulaNo1)
+	default:
+		api = new(FormulaNo0)
 	}
 	stat.SetAvx2Enabled(avx2)
 	runtime.GOMAXPROCS(cpuNum)
@@ -90,8 +92,7 @@ func main() {
 	pbarIndex := 0
 
 	// 执行板块指数的检测
-	dfBlock := stock.BlockList()
-	blockCodes := dfBlock.Col("code").Strings()
+	blockCodes := getBlockList()
 	blockCount := len(blockCodes)
 	bar := progressbar.NewBar(pbarIndex, "执行[扫描板块指数]", blockCount)
 	pbarIndex++
@@ -137,14 +138,21 @@ func main() {
 		snapshots = append(snapshots, shots...)
 	}
 
-	blocks := lambda.LambdaArray(snapshots).Sort(func(a internal.QuoteSnapshot, b internal.QuoteSnapshot) bool {
+	blocks := lambda.LambdaArray(snapshots).Sort(func(a, b internal.QuoteSnapshot) bool {
 		aZf := a.Price / a.LastClose
 		bZf := b.Price / b.LastClose
 		aSpeed := a.Rate
 		bSpeed := b.Rate
-		zf := aZf > bZf
 		speed := aSpeed > bSpeed
-		return zf && speed || zf
+		//return zf && speed || zf
+		vol := a.BVol > b.BVol
+		amt := a.Amount > b.Amount
+		active := a.Active1 > b.Active1
+		zf := (aZf > bZf) && (aZf > 0.00) && (bZf > 0.00)
+		_ = speed
+		_ = active
+		_ = vol
+		return (amt && zf)
 	}).Pointer().([]internal.QuoteSnapshot)
 	// 涨幅榜前N
 	mapBlockData := make(map[string]internal.QuoteSnapshot)
@@ -171,6 +179,7 @@ func main() {
 	fmt.Println("")
 	bar = progressbar.NewBar(pbarIndex, "执行[板块个股涨幅扫描]", blockCount)
 	pbarIndex++
+	block2Top := make(map[string][]string)
 	for _, blockCode := range codes {
 		bar.Add(1)
 		name, ok := mapBlockName[blockCode]
@@ -234,15 +243,25 @@ func main() {
 		if len(stockSnapshots) == 0 {
 			continue
 		}
-		tops := lambda.LambdaArray(stockSnapshots).Sort(func(a internal.QuoteSnapshot, b internal.QuoteSnapshot) bool {
+		tops := lambda.LambdaArray(stockSnapshots).Sort(func(a, b internal.QuoteSnapshot) bool {
 			aZf := a.Price / a.LastClose
 			bZf := b.Price / b.LastClose
+			zf := aZf > bZf
 			aSpeed := a.Rate
 			bSpeed := b.Rate
-			zf := aZf > bZf
 			speed := aSpeed > bSpeed
-			return zf && speed || zf
+			return speed && zf
 		}).Pointer().([]internal.QuoteSnapshot)
+		stockList := []string{}
+		for j := 0; j < len(tops) && j < StockTopN; j++ {
+			si := tops[j]
+			stockCode := si.Code
+			if stock.IsNeedIgnore(stockCode) {
+				continue
+			}
+			stockList = append(stockList, stockCode)
+		}
+		block2Top[blockCode] = stockList
 		topCode = tops[0].Code
 		info, err := security.GetBasicInfo(topCode)
 		if err == nil {
@@ -260,14 +279,16 @@ func main() {
 		for j := 0; j < len(tops); j++ {
 			gp := tops[j]
 			total += 1
-			zf := gp.Price/gp.LastClose - 1.00
 			zfLimit := category.MarketLimit(gp.Code)
-			if zf >= zfLimit {
+			lastClode := Decimal(gp.LastClose)
+			zhangting := Decimal(lastClode * float64(1.000+zfLimit))
+			price := Decimal(gp.Price)
+			if price >= zhangting {
 				limits += 1
 			}
-			if zf > 0.0000 {
+			if price > lastClode {
 				up++
-			} else if zf < 0.0000 {
+			} else if price < lastClode {
 				down++
 			} else {
 				ling += 1
@@ -294,29 +315,31 @@ func main() {
 			}
 		}
 	}
-	//oc := ssdf.Col("Code")
-	//op := ssdf.Col("Price")
-	//olc := ssdf.Col("LastClose")
-	//or := ssdf.Col("Rate")
-	//on := pandas.NewSeries(stat.SERIES_TYPE_STRING, "Name", names)
-	//tmpZf := ssdf.Col("Price").Div(ssdf.Col("LastClose")).Sub(1.00)
-	//ozf := pandas.NewSeries(stat.SERIES_TYPE_FLOAT64, "ZhangFu", tmpZf)
-	//osc := pandas.NewSeries(stat.SERIES_TYPE_STRING, "Top1Code", topCodes)
-	//osn := pandas.NewSeries(stat.SERIES_TYPE_STRING, "Top1Name", topNames)
-	//osr := pandas.NewSeries(stat.SERIES_TYPE_FLOAT64, "Top1ZF", topRates)
-	//ssdf = pandas.NewDataFrame(oc, on, op, olc, ozf, or, osc, osn, osr)
-	//fmt.Println(ssdf)
 	// 执行策略
 	// 获取全部证券代码
-	ss := stock.GetCodeList()
-	count := len(ss)
+	stockCodes := []string{}
+	if strategy == 0 {
+		pbarIndex++
+		tb := TopBlock(pbarIndex)
+		for _, v := range tb {
+			bc := v.BlockCode
+			sl, ok := block2Top[bc]
+			if ok {
+				stockCodes = append(stockCodes, sl...)
+			}
+		}
+
+	} else {
+		stockCodes = stock.GetCodeList()
+	}
+	count := len(stockCodes)
 	fmt.Println("")
 	bar = progressbar.NewBar(pbarIndex, "执行["+api.Name()+"]", count)
 	pbarIndex++
 	var mapStock *treemap.Map
 	mapStock = treemap.NewWithStringComparator()
 	mainStart := time.Now()
-	for i, v := range ss {
+	for i, v := range stockCodes {
 		fullCode := v
 		basicInfo, err := security.GetBasicInfo(fullCode)
 		if err == security.ErrCodeNotExist {
@@ -347,6 +370,7 @@ func main() {
 	rs := make([]ResultInfo, 0)
 	fmt.Println("")
 	// 执行曲线回归
+	wg = sync.WaitGroup{}
 	bar = progressbar.NewBar(pbarIndex, "执行[曲线回归策略]", goals)
 	pbarIndex++
 	mapStock.Each(func(key interface{}, value interface{}) {
@@ -359,6 +383,7 @@ func main() {
 			shot, ok1 := mapBlockData[btop]
 			if ok1 {
 				//row.BlockCode = shot.Code
+				row.BlockType = blockTypeName(shot.Code)
 				row.BlockName = shot.Name
 				row.BlockRate = (shot.Price/shot.LastClose - 1.00) * 100
 				//row.BlockTopCode = shot.TopCode
@@ -373,28 +398,23 @@ func main() {
 				row.BlockRank = shot.TopNo
 			}
 		}
-		row.Predict()
-		rs = append(rs, row)
-		table.Append(row.Values())
+		predict := func(info ResultInfo, rs *[]ResultInfo, tbl *tableView.Table) {
+			defer wg.Done()
+			wg.Add(1)
+			info.Predict()
+			*rs = append(*rs, info)
+			tbl.Append(info.Values())
+		}
+		predict(row, &rs, table)
 	})
+	wg.Wait()
+	fmt.Println("")
 	output(api.Code(), rs)
 	table.Render() // Send output
 
 	// 过滤未有效突破的信号
 	table = tableView.NewWriter(os.Stdout)
 	count = mapStock.Size()
-	fmt.Println("")
-	// 执行检测趋势突破
-	//bar = progressbar.NewBar(2, "执行[检测趋势突破]", count)
-	//rsCross := make([]ResultInfo, 0)
-	//mainStart = time.Now()
-	//for _, v := range rs {
-	//	bar.Add(1)
-	//	if v.Cross() {
-	//		rsCross = append(rsCross, v)
-	//		table.Append(v.Values())
-	//	}
-	//}
 
 	// 执行检测能量转强
 	fmt.Println("")
@@ -439,6 +459,7 @@ func main() {
 
 func evaluate(api Strategy, wg *sync.WaitGroup, code string, info *security.StaticBasic, result *treemap.Map) {
 	defer wg.Done()
+	//wg.Add(1)
 	api.Evaluate(code, info, result)
 }
 
