@@ -48,7 +48,6 @@ var (
 // 策略入口
 func main() {
 	var (
-		//path     string // 数据路径
 		strategy int  // 策略编号
 		avx2     bool // AVX2加速状态
 		cpuNum   int  // cpu数量
@@ -248,7 +247,6 @@ func main() {
 					kpVol *= 100
 				}
 				shot.TurnZ = kpVol / freeGuBen * 100
-
 			}
 			stockSnapshots = append(stockSnapshots, stockShots...)
 		}

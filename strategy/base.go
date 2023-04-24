@@ -159,7 +159,6 @@ func (this *ResultInfo) Predict() {
 	freeGuBen := stock.GetFreeGuBen(this.Code)
 	turnZ := float64(0)
 	kpVol := stock.GetKaipanVol(this.Code)
-
 	kpVol = kpVol * 100
 	if strings.HasPrefix(this.Code, "sh88") {
 		kpVol *= 100
