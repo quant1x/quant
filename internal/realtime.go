@@ -2,7 +2,7 @@ package internal
 
 import (
 	"gitee.com/quant1x/data/category"
-	"gitee.com/quant1x/data/category/date"
+	"gitee.com/quant1x/data/category/trading"
 	"gitee.com/quant1x/gotdx/proto"
 	"gitee.com/quant1x/gotdx/quotes"
 	"github.com/mymmsc/gox/api"
@@ -206,7 +206,7 @@ func BatchSnapShot(codes []string) []QuoteSnapshot {
 	}
 	//fmt.Printf("%+v\n", hq)
 	lastTradeday := time.Now().Format(category.INDEX_DATE)
-	td := date.TradeRange("2023-01-01", lastTradeday)
+	td := trading.TradeRange("2023-01-01", lastTradeday)
 	lastTradeday = td[len(td)-1]
 	for _, v := range hq.List {
 		snapshot := QuoteSnapshot{}

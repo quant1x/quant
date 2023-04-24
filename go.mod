@@ -3,11 +3,11 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v1.1.3
-	gitee.com/quant1x/gotdx v1.5.7
-	gitee.com/quant1x/pandas v0.9.15
+	gitee.com/quant1x/data v1.1.8
+	gitee.com/quant1x/gotdx v1.5.11
+	gitee.com/quant1x/pandas v0.9.16
 	github.com/erni27/regression v0.3.1
-	github.com/mymmsc/gox v1.3.18
+	github.com/mymmsc/gox v1.3.23
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/shirou/gopsutil/v3 v3.23.3
 	github.com/stretchr/testify v1.8.2
@@ -51,7 +51,7 @@ require (
 	github.com/tklauser/numcpus v0.6.0 // indirect
 	github.com/viterin/partial v1.0.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	golang.org/x/exp v0.0.0-20230419192730-864b3d6c5c2c // indirect
+	golang.org/x/exp v0.0.0-20230420155640-133eef4313cb // indirect
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.6.0 // indirect
