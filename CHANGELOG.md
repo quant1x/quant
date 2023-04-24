@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.4] - 2023-04-24
+### Changed
+- 调整开盘换手z代码.
+- 增加开盘换手z.
+- 增加开盘换手z.
+
 ## [1.5.3] - 2023-04-24
 ### Changed
 - 新增0号策略.
@@ -346,7 +352,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.3...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.4...HEAD
+[1.5.4]: https://gitee.com/mymmsc/quant/compare/v1.5.3...v1.5.4
 [1.5.3]: https://gitee.com/mymmsc/quant/compare/v1.5.2...v1.5.3
 [1.5.2]: https://gitee.com/mymmsc/quant/compare/v1.5.1...v1.5.2
 [1.5.1]: https://gitee.com/mymmsc/quant/compare/v1.5.0...v1.5.1
