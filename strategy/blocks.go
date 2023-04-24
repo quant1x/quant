@@ -18,10 +18,6 @@ const (
 	StockTopN = 3 // 板块个股前几名
 )
 
-//var (
-//	BlockFields = []string{"1"}
-//)
-
 // BlockInfo 板块信息
 type BlockInfo struct {
 	BlockCode  string   // 板块代码
