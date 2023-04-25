@@ -4,7 +4,6 @@ import (
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/data/stock"
 	"github.com/mymmsc/gox/util/treemap"
-	"strings"
 )
 
 // FormulaNo0 0号策略
@@ -29,16 +28,7 @@ func (this *FormulaNo0) Evaluate(fullCode string, info *security.StaticBasic, re
 		//fmt.Println(fullCode)
 		return
 	}
-	freeGuBen := stock.GetFreeGuBen(fullCode)
-	turnZ := float64(0)
-	kpVol := stock.GetKaipanVol(fullCode)
-
-	kpVol = kpVol * 100
-	if strings.HasPrefix(fullCode, "sh88") {
-		kpVol *= 100
-	}
-	turnZ = kpVol / freeGuBen * 100
-
+	turnZ := stock.GetTurnZ(fullCode)
 	//fmt.Println(fullCode, turnZ, kpVol, freeGuBen)
 
 	CLOSE := df.ColAsNDArray("close")

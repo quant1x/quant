@@ -12,7 +12,6 @@ import (
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/progressbar"
-	"github.com/mymmsc/gox/util/lambda"
 	"github.com/mymmsc/gox/util/treemap"
 	tableView "github.com/olekukonko/tablewriter"
 	"github.com/quant1x/quant/internal"
@@ -20,6 +19,7 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 	"os"
 	"runtime"
+	"sort"
 	"sync"
 	"time"
 )
@@ -95,7 +95,7 @@ func main() {
 	blockCount := len(blockCodes)
 	bar := progressbar.NewBar(pbarIndex, "执行[扫描板块指数]", blockCount)
 	pbarIndex++
-	snapshots := []internal.QuoteSnapshot{}
+	blockSnapshots := []internal.QuoteSnapshot{}
 	mapBlockName := make(map[string]string)
 	for start := 0; start < blockCount; start += batchMax {
 		codes := []string{}
@@ -134,10 +134,12 @@ func main() {
 		if len(shots) == 0 {
 			continue
 		}
-		snapshots = append(snapshots, shots...)
+		blockSnapshots = append(blockSnapshots, shots...)
 	}
 
-	blocks := lambda.LambdaArray(snapshots).Sort(func(a, b internal.QuoteSnapshot) bool {
+	sort.Slice(blockSnapshots, func(i, j int) bool {
+		a := blockSnapshots[i]
+		b := blockSnapshots[j]
 		aZf := a.Price / a.LastClose
 		bZf := b.Price / b.LastClose
 		aSpeed := a.Rate
@@ -152,18 +154,18 @@ func main() {
 		_ = active
 		_ = vol
 		return (amt && zf)
-	}).Pointer().([]internal.QuoteSnapshot)
+	})
 	// 涨幅榜前N
 	mapBlockData := make(map[string]internal.QuoteSnapshot)
-	for i := 0; i < len(blocks); i++ {
-		block := blocks[i]
-		bc := blocks[i].Code
+	for i := 0; i < len(blockSnapshots); i++ {
+		block := blockSnapshots[i]
+		bc := blockSnapshots[i].Code
 		bn := mapBlockName[bc]
 		block.Name = bn
 		mapBlockData[bc] = block
 	}
 	//ssdf := pandas.LoadStructs(blocks[:TopN])
-	ssdf := pandas.LoadStructs(blocks)
+	ssdf := pandas.LoadStructs(blockSnapshots)
 	ssdf = ssdf.Select([]string{"Code", "Price", "LastClose", "Rate"})
 	codes := ssdf.Col("Code").Strings()
 	names := []string{}
@@ -239,26 +241,27 @@ func main() {
 			}
 			for k := 0; k < len(stockShots); k++ {
 				shot := stockShots[k]
-				freeGuBen := stock.GetFreeGuBen(shot.Code)
-				kpVol := stock.GetKaipanVol(shot.Code)
-				kpVol = kpVol * 100
-				shot.TurnZ = kpVol / freeGuBen * 100
+				shot.TurnZ = stock.GetTurnZ(shot.Code)
 			}
 			stockSnapshots = append(stockSnapshots, stockShots...)
 		}
 		if len(stockSnapshots) == 0 {
 			continue
 		}
-		tops := lambda.LambdaArray(stockSnapshots).Sort(func(a, b internal.QuoteSnapshot) bool {
+
+		sort.Slice(stockSnapshots, func(i, j int) bool {
+			a := stockSnapshots[i]
+			b := stockSnapshots[i]
 			aZf := a.Price / a.LastClose
 			bZf := b.Price / b.LastClose
 			zf := aZf > bZf
 			kphs := a.TurnZ > b.TurnZ
 			return kphs && zf
-		}).Pointer().([]internal.QuoteSnapshot)
+		})
+
 		stockList := []string{}
-		for j := 0; j < len(tops) && j < StockTopN; j++ {
-			si := tops[j]
+		for j := 0; j < len(stockSnapshots) && j < StockTopN; j++ {
+			si := stockSnapshots[j]
 			stockCode := si.Code
 			if stock.IsNeedIgnore(stockCode) {
 				continue
@@ -266,12 +269,12 @@ func main() {
 			stockList = append(stockList, stockCode)
 		}
 		block2Top[blockCode] = stockList
-		topCode = tops[0].Code
+		topCode = stockSnapshots[0].Code
 		info, err := security.GetBasicInfo(topCode)
 		if err == nil {
 			topName = info.Name
 		}
-		topRate = (tops[0].Price/tops[0].LastClose - 1.00) * 100.00
+		topRate = (stockSnapshots[0].Price/stockSnapshots[0].LastClose - 1.00) * 100.00
 		topCodes = append(topCodes, topCode)
 		topNames = append(topNames, topName)
 		topRates = append(topRates, topRate)
@@ -280,8 +283,8 @@ func main() {
 		ling := 0
 		up := 0
 		down := 0
-		for j := 0; j < len(tops); j++ {
-			gp := tops[j]
+		for j := 0; j < len(stockSnapshots); j++ {
+			gp := stockSnapshots[j]
 			total += 1
 			zfLimit := category.MarketLimit(gp.Code)
 			lastClode := Decimal(gp.LastClose)
@@ -303,19 +306,19 @@ func main() {
 				stock2Rank[gp.Code] = gp
 			}
 		}
-		for j, v := range blocks {
+		for j, v := range blockSnapshots {
 			if v.Code == blockCode {
-				blocks[j].Name = name
-				blocks[j].TopCode = topCode
-				blocks[j].TopName = topName
-				blocks[j].TopRate = topRate
-				blocks[j].TopNo = j
-				blocks[j].Count = total
-				blocks[j].ZhanTing = limits
-				blocks[j].BidVol1 = up
-				blocks[j].Ling = ling
-				blocks[j].AskVol1 = down
-				mapBlockData[blockCode] = blocks[j]
+				blockSnapshots[j].Name = name
+				blockSnapshots[j].TopCode = topCode
+				blockSnapshots[j].TopName = topName
+				blockSnapshots[j].TopRate = topRate
+				blockSnapshots[j].TopNo = j
+				blockSnapshots[j].Count = total
+				blockSnapshots[j].ZhanTing = limits
+				blockSnapshots[j].BidVol1 = up
+				blockSnapshots[j].Ling = ling
+				blockSnapshots[j].AskVol1 = down
+				mapBlockData[blockCode] = blockSnapshots[j]
 			}
 		}
 	}

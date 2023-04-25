@@ -11,7 +11,6 @@ import (
 	"math"
 	"reflect"
 	"sort"
-	"strings"
 )
 
 const (
@@ -156,15 +155,7 @@ func (this *ResultInfo) Predict() {
 	if df.Nrow() < N+1 {
 		return
 	}
-	freeGuBen := stock.GetFreeGuBen(this.Code)
-	turnZ := float64(0)
-	kpVol := stock.GetKaipanVol(this.Code)
-	kpVol = kpVol * 100
-	if strings.HasPrefix(this.Code, "sh88") {
-		kpVol *= 100
-	}
-	turnZ = kpVol / freeGuBen * 100
-	this.TurnZ = turnZ
+	this.TurnZ = stock.GetTurnZ(this.Code)
 
 	limit := stat.RangeFinite(-N)
 	OPEN := df.Col("open").Select(limit)

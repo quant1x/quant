@@ -1,14 +1,15 @@
 package main
 
 import (
+	"gitee.com/quant1x/data/cache"
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/data/stock"
 	"gitee.com/quant1x/gotdx/quotes"
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/progressbar"
-	"github.com/mymmsc/gox/util/lambda"
 	"github.com/quant1x/quant/internal"
+	"sort"
 )
 
 // 板块常量
@@ -98,17 +99,19 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 		}
 		for _, v := range shots {
 			v.Name = mapBlockName[v.Code]
-			v.LiuTongPan = stock.GetLiuTongPan(v.Code)
-			v.FreeGuBen = stock.GetFreeGuBen(v.Code)
-			kpVol := stock.GetKaipanVol(v.Code)
+			v.LiuTongPan = cache.GetLiuTongPan(v.Code)
+			v.FreeGuBen = cache.GetFreeGuBen(v.Code)
+			kpVol := cache.GetKaipanVol(v.Code)
 			kpVol = kpVol * 100
 			v.TurnZ = kpVol / v.FreeGuBen * 100
 
 			snapshots = append(snapshots, v)
 		}
 	}
+	sort.Slice(snapshots, func(i, j int) bool {
+		a := snapshots[i]
+		b := snapshots[j]
 
-	blocks := lambda.LambdaArray(snapshots).Sort(func(a internal.QuoteSnapshot, b internal.QuoteSnapshot) bool {
 		vol := a.BVol > b.BVol
 		amt := a.Amount > b.Amount
 		active := a.Active1 > b.Active1
@@ -123,8 +126,9 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 		_ = vol
 		_ = amt
 		return (zf)
-	}).Pointer().([]internal.QuoteSnapshot)
-	return blocks
+	})
+
+	return snapshots
 }
 
 // TopBlock 板块排行
