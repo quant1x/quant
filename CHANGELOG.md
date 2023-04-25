@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.7] - 2023-04-25
+### Changed
+- 优化turnz的计算方法.
+- 更新data版本.
+- Update data version.
+- 更新data版本.
+- 调整板块指数的成交量, 放大100倍.
+- 更新版本号.
+
 ## [1.5.6] - 2023-04-25
 ### Changed
 - 更新data版本号.
@@ -360,7 +369,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.6...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.7...HEAD
+[1.5.7]: https://gitee.com/mymmsc/quant/compare/v1.5.6...v1.5.7
 [1.5.6]: https://gitee.com/mymmsc/quant/compare/v1.5.5...v1.5.6
 [1.5.5]: https://gitee.com/mymmsc/quant/compare/v1.5.4...v1.5.5
 [1.5.4]: https://gitee.com/mymmsc/quant/compare/v1.5.3...v1.5.4
