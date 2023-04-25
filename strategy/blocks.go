@@ -9,7 +9,6 @@ import (
 	"github.com/mymmsc/gox/progressbar"
 	"github.com/mymmsc/gox/util/lambda"
 	"github.com/quant1x/quant/internal"
-	"strings"
 )
 
 // 板块常量
@@ -103,9 +102,6 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 			v.FreeGuBen = stock.GetFreeGuBen(v.Code)
 			kpVol := stock.GetKaipanVol(v.Code)
 			kpVol = kpVol * 100
-			if strings.HasPrefix(v.Code, "sh88") {
-				kpVol *= 100
-			}
 			v.TurnZ = kpVol / v.FreeGuBen * 100
 
 			snapshots = append(snapshots, v)

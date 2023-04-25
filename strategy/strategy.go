@@ -20,7 +20,6 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 	"os"
 	"runtime"
-	"strings"
 	"sync"
 	"time"
 )
@@ -243,9 +242,6 @@ func main() {
 				freeGuBen := stock.GetFreeGuBen(shot.Code)
 				kpVol := stock.GetKaipanVol(shot.Code)
 				kpVol = kpVol * 100
-				if strings.HasPrefix(shot.Code, "sh88") {
-					kpVol *= 100
-				}
 				shot.TurnZ = kpVol / freeGuBen * 100
 			}
 			stockSnapshots = append(stockSnapshots, stockShots...)
