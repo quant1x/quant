@@ -238,7 +238,7 @@ func main() {
 
 		sort.Slice(stockSnapshots, func(i, j int) bool {
 			a := stockSnapshots[i]
-			b := stockSnapshots[i]
+			b := stockSnapshots[j]
 			return stockSort(a, b)
 		})
 
