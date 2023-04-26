@@ -27,6 +27,31 @@ type BlockInfo struct {
 	StockCodes []string // 股票代码
 }
 
+// 板块排序
+func blockSort(a, b internal.QuoteSnapshot) bool {
+	if a.ZhangDieFu > b.ZhangDieFu {
+		return true
+	}
+	if a.ZhangDieFu == b.ZhangDieFu && a.Amount > b.Amount {
+		return true
+	}
+	if a.ZhangDieFu == b.ZhangDieFu && a.Amount == b.Amount && a.TurnZ > b.TurnZ {
+		return true
+	}
+	return false
+}
+
+// 个股排序
+func stockSort(a, b internal.QuoteSnapshot) bool {
+	if a.ZhangDieFu > b.ZhangDieFu {
+		return true
+	}
+	if a.ZhangDieFu == b.ZhangDieFu && a.TurnZ > b.TurnZ {
+		return true
+	}
+	return false
+}
+
 func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 	// 执行板块指数的检测
 	dfBlock := stock.BlockList()
@@ -112,20 +137,7 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 		a := snapshots[i]
 		b := snapshots[j]
 
-		vol := a.BVol > b.BVol
-		amt := a.Amount > b.Amount
-		active := a.Active1 > b.Active1
-		aZf := a.Price / a.LastClose
-		bZf := b.Price / b.LastClose
-		aSpeed := a.Rate
-		bSpeed := b.Rate
-		zf := (aZf > bZf) && (aZf > 0.00) && (bZf > 0.00)
-		speed := aSpeed > bSpeed
-		_ = speed
-		_ = active
-		_ = vol
-		_ = amt
-		return (zf)
+		return blockSort(a, b)
 	})
 
 	return snapshots

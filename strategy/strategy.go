@@ -140,20 +140,7 @@ func main() {
 	sort.Slice(blockSnapshots, func(i, j int) bool {
 		a := blockSnapshots[i]
 		b := blockSnapshots[j]
-		aZf := a.Price / a.LastClose
-		bZf := b.Price / b.LastClose
-		aSpeed := a.Rate
-		bSpeed := b.Rate
-		speed := aSpeed > bSpeed
-		//return zf && speed || zf
-		vol := a.BVol > b.BVol
-		amt := a.Amount > b.Amount
-		active := a.Active1 > b.Active1
-		zf := (aZf > bZf) && (aZf > 0.00) && (bZf > 0.00)
-		_ = speed
-		_ = active
-		_ = vol
-		return (amt && zf)
+		return blockSort(a, b)
 	})
 	// 涨幅榜前N
 	mapBlockData := make(map[string]internal.QuoteSnapshot)
@@ -252,11 +239,7 @@ func main() {
 		sort.Slice(stockSnapshots, func(i, j int) bool {
 			a := stockSnapshots[i]
 			b := stockSnapshots[i]
-			aZf := a.Price / a.LastClose
-			bZf := b.Price / b.LastClose
-			zf := aZf > bZf
-			kphs := a.TurnZ > b.TurnZ
-			return kphs && zf
+			return stockSort(a, b)
 		})
 
 		stockList := []string{}
