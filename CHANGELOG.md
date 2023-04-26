@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.11] - 2023-04-26
+### Changed
+- Update data version.
+- 更新data版本号.
+- 更新data版本号.
+- 统一快照排序函数.
+
 ## [1.5.10] - 2023-04-26
 ### Changed
 - 更新相关依赖库的最新版本.
@@ -381,7 +388,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.10...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.11...HEAD
+[1.5.11]: https://gitee.com/mymmsc/quant/compare/v1.5.10...v1.5.11
 [1.5.10]: https://gitee.com/mymmsc/quant/compare/v1.5.9...v1.5.10
 [1.5.9]: https://gitee.com/mymmsc/quant/compare/v1.5.8...v1.5.9
 [1.5.8]: https://gitee.com/mymmsc/quant/compare/v1.5.7...v1.5.8
