@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.10] - 2023-04-26
+### Changed
+- 更新相关依赖库的最新版本.
+
 ## [1.5.9] - 2023-04-25
 ### Changed
 - Update data version.
@@ -377,7 +381,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.9...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.10...HEAD
+[1.5.10]: https://gitee.com/mymmsc/quant/compare/v1.5.9...v1.5.10
 [1.5.9]: https://gitee.com/mymmsc/quant/compare/v1.5.8...v1.5.9
 [1.5.8]: https://gitee.com/mymmsc/quant/compare/v1.5.7...v1.5.8
 [1.5.7]: https://gitee.com/mymmsc/quant/compare/v1.5.6...v1.5.7
