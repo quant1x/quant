@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"gitee.com/quant1x/data/cache"
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/data/stock"
 	"gitee.com/quant1x/gotdx/quotes"
+	"gitee.com/quant1x/pandas"
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/progressbar"
@@ -14,7 +16,7 @@ import (
 
 // 板块常量
 const (
-	BlockTopN = 5 // 板块排行前几名
+	BlockTopN = 3 // 板块排行前几名
 	StockTopN = 3 // 板块个股前几名
 )
 
@@ -24,7 +26,20 @@ type BlockInfo struct {
 	BlockName  string   // 板块名称
 	BlockType  string   // 板块类型
 	ZhangDieFu float64  // 板块涨幅
-	StockCodes []string // 股票代码
+	BlockTop   int      // 板块排名
+	TopCode    string   // 领涨个股
+	TopName    string   // 领涨个股名称
+	TopRate    float64  // 领涨个股涨幅
+	ZhanTing   int      // 涨停数
+	Ling       int      // 平盘数
+	Count      int      // 总数
+	Up         int      // 上涨家数
+	Down       int      // 下定家数
+	LiuTongPan float64  // 流通盘
+	FreeGuBen  float64  // 自由流通股本
+	TurnZ      float64  // 开盘换手
+	StockCodes []string `dataframe:"-"` // 股票代码
+
 }
 
 // 板块排序
@@ -52,7 +67,7 @@ func stockSort(a, b internal.QuoteSnapshot) bool {
 	return false
 }
 
-func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
+func scanBlock(pbarIndex int, blockType security.BlockType) []internal.QuoteSnapshot {
 	// 执行板块指数的检测
 	dfBlock := stock.BlockList()
 	var blockCodes []string
@@ -67,7 +82,7 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 		}
 		// 只保留行业和概念
 		//if bt != security.BK_HANGYE && bt != security.BK_GAINIAN && bt != security.BK_YJHY {
-		if bt != security.BK_GAINIAN {
+		if bt != blockType {
 			continue
 		}
 		var bc string
@@ -81,7 +96,12 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 	}
 
 	blockCount := len(blockCodes)
-	bar := progressbar.NewBar(pbarIndex, "执行[扫描板块指数]", blockCount)
+	fmt.Println()
+	btn, ok := security.BlockTypeNameByTypeCode(blockType)
+	if !ok {
+		btn = stat.AnyToString(blockType)
+	}
+	bar := progressbar.NewBar(pbarIndex, "执行[扫描"+btn+"板块指数]", blockCount)
 	pbarIndex++
 	snapshots := []internal.QuoteSnapshot{}
 	mapBlockName := make(map[string]string)
@@ -139,29 +159,58 @@ func scanBlock(pbarIndex int) []internal.QuoteSnapshot {
 
 		return blockSort(a, b)
 	})
-
 	return snapshots
 }
 
-// TopBlock 板块排行
-func TopBlock(pbarIndex int) []BlockInfo {
-	blocks := scanBlock(pbarIndex)
-	// 涨幅榜前N
+func getBlockByType(pbarIndex int, blockType security.BlockType) []BlockInfo {
 	bs := []BlockInfo{}
+	blocks := scanBlock(pbarIndex, blockType)
+	// 涨幅榜前N
+	top := 0
 	for i := 0; i < len(blocks) && i < BlockTopN; i++ {
 		v := blocks[i]
+		// 获取板块内个股列表
+		fn := cache.BlockFilename(v.Code[2:])
+		dfStock := pandas.ReadCSV(fn)
+		stockCount := dfStock.Nrow()
+		if stockCount == 0 {
+			continue
+		}
+		top++
+		stockCodes := dfStock.Col("code").Strings()
 		bi := BlockInfo{
-			BlockCode: v.Code,
-			BlockName: v.Name,
+			BlockCode:  v.Code,
+			BlockName:  v.Name,
+			BlockType:  blockTypeName(v.Code),
+			ZhangDieFu: v.ZhangDieFu,
+			BlockTop:   top,
+			StockCodes: stockCodes,
 		}
 		bs = append(bs, bi)
 	}
 	return bs
 }
 
+// TopBlock 板块排行
+func TopBlock(pbarIndex int) []BlockInfo {
+	bs := []BlockInfo{}
+	blockTypes := []security.BlockType{security.BK_HANGYE, security.BK_GAINIAN}
+	for _, bt := range blockTypes {
+		pbarIndex += 1
+		blocks := getBlockByType(pbarIndex, bt)
+		bs = append(bs, blocks...)
+	}
+	fmt.Println()
+	return bs
+}
+
 var (
 	kMapBlockType = map[string]string{}
 )
+
+func init() {
+	_ = getBlockList()
+}
 
 func getBlockList() []string {
 	// 执行板块指数的检测
