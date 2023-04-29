@@ -3,8 +3,8 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v1.2.5
-	gitee.com/quant1x/gotdx v1.6.1
+	gitee.com/quant1x/data v1.2.6
+	gitee.com/quant1x/gotdx v1.6.3
 	gitee.com/quant1x/pandas v0.9.17
 	github.com/erni27/regression v0.3.1
 	github.com/mymmsc/gox v1.3.25
@@ -23,7 +23,7 @@ require (
 	github.com/chewxy/math32 v1.10.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.7.0 // indirect
-	github.com/dop251/goja v0.0.0-20230402114112-623f9dda9079 // indirect
+	github.com/dop251/goja v0.0.0-20230427124612-428fc442ff5f // indirect
 	github.com/frankban/quicktest v1.11.2 // indirect
 	github.com/go-fonts/liberation v0.2.0 // indirect
 	github.com/go-latex/latex v0.0.0-20210823091927-c0d11ff05a81 // indirect

@@ -1,9 +1,9 @@
 git.sr.ht/~sbinet/gg v0.3.1 h1:LNhjNn8DerC8f9DHLz6lS0YYul/b602DUxDgGkd/Aik=
 git.sr.ht/~sbinet/gg v0.3.1/go.mod h1:KGYtlADtqsqANL9ueOFkWymvzUvLMQllU5Ixo+8v3pc=
-gitee.com/quant1x/data v1.2.5 h1:XEYEl0ZLVe/xJG/bj8y/F/c+x3xDSujlwE7pmZxOl7w=
-gitee.com/quant1x/data v1.2.5/go.mod h1:2sTDc5zWXmQdbSJaJctzkXcTv9yXkcc/1DyhOJ2Dabc=
-gitee.com/quant1x/gotdx v1.6.1 h1:7vUBC+zsWjEBVOXZbC3IiiT8HZAo3WatOm+2yidNlyY=
-gitee.com/quant1x/gotdx v1.6.1/go.mod h1:vtrNIhkT3PadVLtrm7YxgUzeNCOKs+vIdfidzLd8Ikw=
+gitee.com/quant1x/data v1.2.6 h1:rGGWeKLwRQN9aLs+rVQ8HOTWuabsWT5KBixNez6iEIE=
+gitee.com/quant1x/data v1.2.6/go.mod h1:P5V55tHdGivjqBv8+yJFU5zR0j8b4N5zxNp3C2m84fg=
+gitee.com/quant1x/gotdx v1.6.3 h1:VBrHnXSBf5lo+4doGrgXRUoJcm2in3rq9f53+S1aAPs=
+gitee.com/quant1x/gotdx v1.6.3/go.mod h1:vtrNIhkT3PadVLtrm7YxgUzeNCOKs+vIdfidzLd8Ikw=
 gitee.com/quant1x/pandas v0.9.17 h1:JWHsjq+h0Hv2gtIv6gBzgPuPrmNjncelDxL3ClW/anE=
 gitee.com/quant1x/pandas v0.9.17/go.mod h1:plb98ahenDv0WXqKSEm5uPbrHzzMGevBDT25SkQFP4Q=
 gitee.com/quant1x/vek v0.5.5 h1:3/VJ2N2EHNwNabrCh26vRQ+4SV9oyBmPMV/Pr9gGlXg=
@@ -28,8 +28,8 @@ github.com/dlclark/regexp2 v1.4.1-0.20201116162257-a2a8dda75c91/go.mod h1:2pZnwu
 github.com/dlclark/regexp2 v1.7.0 h1:7lJfhqlPssTb1WQx4yvTHN0uElPEv52sbaECrAQxjAo=
 github.com/dlclark/regexp2 v1.7.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/dop251/goja v0.0.0-20211022113120-dc8c55024d06/go.mod h1:R9ET47fwRVRPZnOGvHxxhuZcbrMCuiqOz3Rlrh4KSnk=
-github.com/dop251/goja v0.0.0-20230402114112-623f9dda9079 h1:xkbJGxVnk5sM8/LXeTKaBOfAZrI+iqvIPyH8oK1c6CQ=
-github.com/dop251/goja v0.0.0-20230402114112-623f9dda9079/go.mod h1:QMWlm50DNe14hD7t24KEqZuUdC9sOTy8W6XbCU1mlw4=
+github.com/dop251/goja v0.0.0-20230427124612-428fc442ff5f h1:3Z9NjtffvA8Qoh8xjgUpPmyKawJw/mDRcJlR9oPCvqI=
+github.com/dop251/goja v0.0.0-20230427124612-428fc442ff5f/go.mod h1:QMWlm50DNe14hD7t24KEqZuUdC9sOTy8W6XbCU1mlw4=
 github.com/dop251/goja_nodejs v0.0.0-20210225215109-d91c329300e7/go.mod h1:hn7BA7c8pLvoGndExHudxTDKZ84Pyvv+90pbBjbTz0Y=
 github.com/dop251/goja_nodejs v0.0.0-20211022123610-8dd9abb0616d/go.mod h1:DngW8aVqWbuLRMHItjPUyqdj+HWPvnQe8V8y1nDpIbM=
 github.com/erni27/regression v0.3.1 h1:+THsThmQUFoGJ8lKIxEbD7Vm0rVvyqp8Zs+NkIw/8Bw=
