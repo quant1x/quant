@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.14] - 2023-05-01
+### Changed
+- 更新data版本号.
+
 ## [1.5.13] - 2023-04-29
 ### Changed
 - Update data version.
@@ -396,7 +400,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.13...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.14...HEAD
+[1.5.14]: https://gitee.com/mymmsc/quant/compare/v1.5.13...v1.5.14
 [1.5.13]: https://gitee.com/mymmsc/quant/compare/v1.5.12...v1.5.13
 [1.5.12]: https://gitee.com/mymmsc/quant/compare/v1.5.11...v1.5.12
 [1.5.11]: https://gitee.com/mymmsc/quant/compare/v1.5.10...v1.5.11
