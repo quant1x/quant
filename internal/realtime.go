@@ -89,7 +89,7 @@ type QuoteSnapshot struct {
 
 // BatchSnapShot 批量获取即时行情数据快照
 func BatchSnapShot(codes []string) []QuoteSnapshot {
-	marketIds := []proto.Market{}
+	marketIds := []proto.MarketType{}
 	symbols := []string{}
 	for _, code := range codes {
 		id, _, symbol := category.DetectMarket(code)
