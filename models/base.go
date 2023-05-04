@@ -87,9 +87,6 @@ func (this *ResultInfo) Headers() []string {
 // Values 输出表格的行和列
 func (this *ResultInfo) Values() []string {
 	val := reflect.ValueOf(this)
-	//t := reflect.TypeOf(v)
-	//fieldNum := val.NumField()
-	//_ = fieldNum
 	obj := reflect.ValueOf(this)
 	t := val.Type()
 	if val.Kind() == reflect.Ptr {
