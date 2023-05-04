@@ -3,9 +3,9 @@ module github.com/quant1x/quant
 go 1.20
 
 require (
-	gitee.com/quant1x/data v1.3.3
+	gitee.com/quant1x/data v1.3.4
 	gitee.com/quant1x/gotdx v1.6.13
-	gitee.com/quant1x/pandas v0.9.19
+	gitee.com/quant1x/pandas v0.9.20
 	github.com/erni27/regression v0.3.1
 	github.com/mymmsc/gox v1.3.25
 	github.com/olekukonko/tablewriter v0.0.5
