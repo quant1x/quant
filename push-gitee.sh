@@ -4,6 +4,6 @@ set -e
 
 git remote set-url origin https://gitee.com/mymmsc/quant.git
 git checkout master
-git push
-git push --tags
+git fetch --all
+git pull --all
 git remote -vv
