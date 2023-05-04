@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.23] - 2023-05-04
+### Changed
+- 添加同步脚本.
+
 ## [1.5.22] - 2023-05-04
 ### Changed
 - 调整板块代码.
@@ -470,7 +474,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.22...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.23...HEAD
+[1.5.23]: https://gitee.com/mymmsc/quant/compare/v1.5.22...v1.5.23
 [1.5.22]: https://gitee.com/mymmsc/quant/compare/v1.5.21...v1.5.22
 [1.5.21]: https://gitee.com/mymmsc/quant/compare/v1.5.20...v1.5.21
 [1.5.20]: https://gitee.com/mymmsc/quant/compare/v1.5.19...v1.5.20
