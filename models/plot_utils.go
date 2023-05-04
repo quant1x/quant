@@ -1,4 +1,4 @@
-package utils
+package models
 
 import "gonum.org/v1/plot/plotter"
 

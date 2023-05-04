@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gitee.com/quant1x/pandas"
 	"gitee.com/quant1x/pandas/stat"
-	"gitee.com/quant1x/t89k/labs/linear"
+	"github.com/quant1x/quant/labs/linear"
 )
 
 func MAX_GO[T stat.Ordered](a, b T) (x, y T) {

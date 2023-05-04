@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/progressbar"
-	"github.com/quant1x/quant/internal"
+	"github.com/quant1x/quant/labs/trade"
 	"sort"
 )
 
@@ -43,7 +43,7 @@ type BlockInfo struct {
 }
 
 // 板块排序
-func blockSort(a, b internal.QuoteSnapshot) bool {
+func BlockSort(a, b trade.QuoteSnapshot) bool {
 	if a.ZhangDieFu > b.ZhangDieFu {
 		return true
 	}
@@ -57,7 +57,7 @@ func blockSort(a, b internal.QuoteSnapshot) bool {
 }
 
 // 个股排序
-func stockSort(a, b internal.QuoteSnapshot) bool {
+func StockSort(a, b trade.QuoteSnapshot) bool {
 	if a.ZhangDieFu > b.ZhangDieFu {
 		return true
 	}
@@ -67,7 +67,7 @@ func stockSort(a, b internal.QuoteSnapshot) bool {
 	return false
 }
 
-func scanBlock(pbarIndex int, blockType security.BlockType) []internal.QuoteSnapshot {
+func scanBlock(pbarIndex int, blockType security.BlockType) []trade.QuoteSnapshot {
 	// 执行板块指数的检测
 	dfBlock := stock.BlockList()
 	var blockCodes []string
@@ -103,7 +103,7 @@ func scanBlock(pbarIndex int, blockType security.BlockType) []internal.QuoteSnap
 	}
 	bar := progressbar.NewBar(pbarIndex, "执行[扫描"+btn+"板块指数]", blockCount)
 	pbarIndex++
-	snapshots := []internal.QuoteSnapshot{}
+	snapshots := []trade.QuoteSnapshot{}
 	mapBlockName := make(map[string]string)
 	for start := 0; start < blockCount; start += quotes.TDX_SECURITY_QUOTES_MAX {
 		codes := []string{}
@@ -138,7 +138,7 @@ func scanBlock(pbarIndex int, blockType security.BlockType) []internal.QuoteSnap
 		if len(codes) == 0 {
 			continue
 		}
-		shots := internal.BatchSnapShot(codes)
+		shots := trade.BatchSnapShot(codes)
 		if len(shots) == 0 {
 			continue
 		}
@@ -157,7 +157,7 @@ func scanBlock(pbarIndex int, blockType security.BlockType) []internal.QuoteSnap
 		a := snapshots[i]
 		b := snapshots[j]
 
-		return blockSort(a, b)
+		return BlockSort(a, b)
 	})
 	return snapshots
 }
@@ -181,7 +181,7 @@ func getBlockByType(pbarIndex int, blockType security.BlockType) []BlockInfo {
 		bi := BlockInfo{
 			BlockCode:  v.Code,
 			BlockName:  v.Name,
-			BlockType:  blockTypeName(v.Code),
+			BlockType:  BlockTypeName(v.Code),
 			ZhangDieFu: v.ZhangDieFu,
 			BlockTop:   top,
 			StockCodes: stockCodes,
@@ -209,10 +209,10 @@ var (
 )
 
 func init() {
-	_ = getBlockList()
+	_ = GetBlockList()
 }
 
-func getBlockList() []string {
+func GetBlockList() []string {
 	// 执行板块指数的检测
 	dfBlock := stock.BlockList()
 	var blockCodes []string
@@ -246,7 +246,7 @@ func getBlockList() []string {
 	return blockCodes
 }
 
-func blockTypeName(blockCode string) string {
+func BlockTypeName(blockCode string) string {
 	name, _ := kMapBlockType[blockCode]
 	return name
 }

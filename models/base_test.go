@@ -1,10 +1,9 @@
-package main
+package models
 
 import (
 	"fmt"
 	"gitee.com/quant1x/data/stock"
 	"gitee.com/quant1x/pandas/stat"
-	"github.com/quant1x/quant/utils"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
@@ -51,9 +50,9 @@ func TestVolume(t *testing.T) {
 	length := N
 	df2 := df.Subset(df.Nrow()-length, df.Nrow())
 	err2 := plotutil.AddLinePoints(plt,
-		"buy.inflow", utils.SliceToPoints(df2.Col("iv").DTypes()),
-		"buy.incr", utils.SliceToPoints(df2.Col("bv").DTypes()),
-		"sell.incr", utils.SliceToPoints(df2.Col("sv").DTypes()))
+		"buy.inflow", SliceToPoints(df2.Col("iv").DTypes()),
+		"buy.incr", SliceToPoints(df2.Col("bv").DTypes()),
+		"sell.incr", SliceToPoints(df2.Col("sv").DTypes()))
 	if err2 != nil {
 		log.Fatal(err2)
 	}

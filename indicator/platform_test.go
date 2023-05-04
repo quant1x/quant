@@ -22,7 +22,11 @@ func TestPlatform(t *testing.T) {
 	code = "sh600105"
 	code = "sz002292"
 	code = "sh600354"
+	code = "sh605577"
+	code = "sh688662"
+	code = "sz300678"
 	df := stock.KLine(code)
+	fmt.Println(df)
 	df1 := Platform(df)
 	fmt.Println(df1)
 	_ = df1.WriteCSV("t02.csv")

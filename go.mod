@@ -11,7 +11,6 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/shirou/gopsutil/v3 v3.23.4
 	github.com/stretchr/testify v1.8.2
-	golang.org/x/text v0.9.0
 	gonum.org/v1/gonum v0.13.0
 	gonum.org/v1/plot v0.12.0
 )
@@ -55,5 +54,6 @@ require (
 	golang.org/x/image v0.6.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

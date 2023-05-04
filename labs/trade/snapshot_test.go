@@ -1,4 +1,4 @@
-package internal
+package trade
 
 import (
 	tableView "github.com/olekukonko/tablewriter"

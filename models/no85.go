@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"gitee.com/quant1x/data/security"

@@ -1,14 +1,16 @@
-package main
+package models
 
 import (
 	"fmt"
+	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/data/stock"
+	"gitee.com/quant1x/data/util"
 	"gitee.com/quant1x/pandas/stat"
 	"github.com/mymmsc/gox/api"
+	"github.com/mymmsc/gox/util/treemap"
 	"github.com/quant1x/quant/indicator"
 	"github.com/quant1x/quant/labs/linear"
 	"github.com/quant1x/quant/labs/sample"
-	"math"
 	"reflect"
 	"sort"
 )
@@ -20,41 +22,51 @@ const (
 	CACHE_STRATEGY_PATH = "strategy"
 )
 
-var (
-	mapTag map[reflect.Type]map[int]string = nil
-)
-
-func init() {
-	mapTag = make(map[reflect.Type]map[int]string)
+// Strategy 策略/公式指标(features)接口
+type Strategy interface {
+	// Name 策略名称
+	Name() string
+	// Code 策略编号
+	Code() int
+	// Evaluate 评估 日线数据
+	Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map)
 }
 
-func Decimal(value float64) float64 {
-	return math.Trunc(value*1e2+0.5) * 1e-2
-}
-
-func initTag(t reflect.Type, tagName string) map[int]string {
-	ma, mok := mapTag[t]
-	if mok {
-		return ma
-	}
-	ma = nil
-	fieldNum := t.NumField()
-	for i := 0; i < fieldNum; i++ {
-		field := t.Field(i)
-		tag := field.Tag
-		if len(tag) > 0 {
-			tv, ok := tag.Lookup(tagName)
-			if ok {
-				if ma == nil {
-					ma = make(map[int]string)
-					mapTag[t] = ma
-				}
-				ma[i] = tv
-			}
-		}
-	}
-	return ma
-}
+//var (
+//	mapTag map[reflect.Type]map[int]string = nil
+//)
+//
+//func init() {
+//	mapTag = make(map[reflect.Type]map[int]string)
+//}
+//
+//func Decimal(value float64) float64 {
+//	return math.Trunc(value*1e2+0.5) * 1e-2
+//}
+//
+//func initTag(t reflect.Type, tagName string) map[int]string {
+//	ma, mok := mapTag[t]
+//	if mok {
+//		return ma
+//	}
+//	ma = nil
+//	fieldNum := t.NumField()
+//	for i := 0; i < fieldNum; i++ {
+//		field := t.Field(i)
+//		tag := field.Tag
+//		if len(tag) > 0 {
+//			tv, ok := tag.Lookup(tagName)
+//			if ok {
+//				if ma == nil {
+//					ma = make(map[int]string)
+//					mapTag[t] = ma
+//				}
+//				ma[i] = tv
+//			}
+//		}
+//	}
+//	return ma
+//}
 
 // ResultInfo 策略结果
 type ResultInfo struct {
@@ -96,7 +108,7 @@ func (this *ResultInfo) Headers() []string {
 		t = t.Elem()
 		obj = obj.Elem()
 	}
-	ma := initTag(t, "name")
+	ma := util.InitTag(t, "name")
 	var sRet []string
 	if ma == nil {
 		return sRet
@@ -123,7 +135,7 @@ func (this *ResultInfo) Values() []string {
 		t = t.Elem()
 		obj = obj.Elem()
 	}
-	ma := initTag(t, "name")
+	ma := util.InitTag(t, "name")
 	var sRet []string
 	if ma == nil {
 		return sRet

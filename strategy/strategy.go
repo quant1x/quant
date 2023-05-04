@@ -7,6 +7,7 @@ import (
 	"gitee.com/quant1x/data/category"
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/data/stock"
+	"gitee.com/quant1x/data/util"
 	"gitee.com/quant1x/gotdx/quotes"
 	"gitee.com/quant1x/pandas"
 	"gitee.com/quant1x/pandas/stat"
@@ -14,7 +15,8 @@ import (
 	"github.com/mymmsc/gox/progressbar"
 	"github.com/mymmsc/gox/util/treemap"
 	tableView "github.com/olekukonko/tablewriter"
-	"github.com/quant1x/quant/internal"
+	"github.com/quant1x/quant/labs/trade"
+	"github.com/quant1x/quant/models"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/mem"
 	"os"
@@ -23,16 +25,6 @@ import (
 	"sync"
 	"time"
 )
-
-// Strategy 策略/公式指标(features)接口
-type Strategy interface {
-	// Name 策略名称
-	Name() string
-	// Code 策略编号
-	Code() int
-	// Evaluate 评估 日线数据
-	Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map)
-}
 
 const (
 	batchMax = quotes.TDX_SECURITY_QUOTES_MAX // 批量最大80条
@@ -63,20 +55,20 @@ func main() {
 		os.Exit(0)
 	}
 
-	var api Strategy
+	var api models.Strategy
 	switch strategy {
 	case 89:
-		api = new(FormulaNo89)
+		api = new(models.FormulaNo89)
 	case 85:
-		api = new(FormulaNo85)
+		api = new(models.FormulaNo85)
 	case 84:
-		api = new(FormulaNo84)
+		api = new(models.FormulaNo84)
 	case 3:
-		api = new(FormulaNo3)
+		api = new(models.FormulaNo3)
 	case 1:
-		api = new(FormulaNo1)
+		api = new(models.FormulaNo1)
 	default:
-		api = new(FormulaNo0)
+		api = new(models.FormulaNo0)
 	}
 	stat.SetAvx2Enabled(avx2)
 	runtime.GOMAXPROCS(cpuNum)
@@ -91,11 +83,11 @@ func main() {
 	pbarIndex := 0
 
 	// 执行板块指数的检测
-	blockCodes := getBlockList()
+	blockCodes := models.GetBlockList()
 	blockCount := len(blockCodes)
 	bar := progressbar.NewBar(pbarIndex, "执行[扫描板块指数]", blockCount)
 	pbarIndex++
-	blockSnapshots := []internal.QuoteSnapshot{}
+	blockSnapshots := []trade.QuoteSnapshot{}
 	mapBlockName := make(map[string]string)
 	for start := 0; start < blockCount; start += batchMax {
 		codes := []string{}
@@ -130,7 +122,7 @@ func main() {
 		if len(codes) == 0 {
 			continue
 		}
-		shots := internal.BatchSnapShot(codes)
+		shots := trade.BatchSnapShot(codes)
 		if len(shots) == 0 {
 			continue
 		}
@@ -140,10 +132,10 @@ func main() {
 	sort.Slice(blockSnapshots, func(i, j int) bool {
 		a := blockSnapshots[i]
 		b := blockSnapshots[j]
-		return blockSort(a, b)
+		return models.BlockSort(a, b)
 	})
 	// 涨幅榜前N
-	mapBlockData := make(map[string]internal.QuoteSnapshot)
+	mapBlockData := make(map[string]trade.QuoteSnapshot)
 	for i := 0; i < len(blockSnapshots); i++ {
 		block := blockSnapshots[i]
 		bc := blockSnapshots[i].Code
@@ -162,7 +154,7 @@ func main() {
 	// 板块代码映射板块数据
 	// 个股到板块的映射
 	stock2Block := make(map[string][]string)
-	stock2Rank := make(map[string]internal.QuoteSnapshot)
+	stock2Rank := make(map[string]trade.QuoteSnapshot)
 	blockCount = len(codes)
 	fmt.Println("")
 	bar = progressbar.NewBar(pbarIndex, "执行[板块个股涨幅扫描]", blockCount)
@@ -185,7 +177,7 @@ func main() {
 		topName := kUnknown
 		topRate := float64(0.00)
 		stockCodes := dfStock.Col("code").Strings()
-		stockSnapshots := []internal.QuoteSnapshot{}
+		stockSnapshots := []trade.QuoteSnapshot{}
 		for start := 0; start < stockCount; start += batchMax {
 			codes := []string{}
 			length := stockCount - start
@@ -222,7 +214,7 @@ func main() {
 			if len(codes) == 0 {
 				continue
 			}
-			stockShots := internal.BatchSnapShot(codes)
+			stockShots := trade.BatchSnapShot(codes)
 			if len(stockShots) == 0 {
 				continue
 			}
@@ -239,11 +231,11 @@ func main() {
 		sort.Slice(stockSnapshots, func(i, j int) bool {
 			a := stockSnapshots[i]
 			b := stockSnapshots[j]
-			return stockSort(a, b)
+			return models.StockSort(a, b)
 		})
 
 		stockList := []string{}
-		for j := 0; j < len(stockSnapshots) && j < StockTopN; j++ {
+		for j := 0; j < len(stockSnapshots) && j < models.StockTopN; j++ {
 			si := stockSnapshots[j]
 			stockCode := si.Code
 			if stock.IsNeedIgnore(stockCode) {
@@ -270,9 +262,9 @@ func main() {
 			gp := stockSnapshots[j]
 			total += 1
 			zfLimit := category.MarketLimit(gp.Code)
-			lastClode := Decimal(gp.LastClose)
-			zhangting := Decimal(lastClode * float64(1.000+zfLimit))
-			price := Decimal(gp.Price)
+			lastClode := util.Decimal(gp.LastClose)
+			zhangting := util.Decimal(lastClode * float64(1.000+zfLimit))
+			price := util.Decimal(gp.Price)
 			if price >= zhangting {
 				limits += 1
 			}
@@ -310,7 +302,7 @@ func main() {
 	stockCodes := []string{}
 	if strategy == 0 {
 		pbarIndex++
-		tb := TopBlock(pbarIndex)
+		tb := models.TopBlock(pbarIndex)
 		for _, v := range tb {
 			bc := v.BlockCode
 			sl, ok := block2Top[bc]
@@ -350,14 +342,14 @@ func main() {
 	wg.Wait()
 	fmt.Println("\n ======= [" + api.Name() + "] progress bar completed ==========\n")
 	table := tableView.NewWriter(os.Stdout)
-	var row ResultInfo
+	var row models.ResultInfo
 	table.SetHeader(row.Headers())
 
 	elapsedTime := time.Since(mainStart) / time.Millisecond
 	goals := mapStock.Size()
 	fmt.Printf("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s\n", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
 	logger.Infof("CPU: %d, AVX2: %t, 总耗时: %.3fs, 总记录: %d, 命中: %d, 平均: %.3f/s", cpuNum, stat.GetAvx2Enabled(), float64(elapsedTime)/1000, count, goals, float64(count)/(float64(elapsedTime)/1000))
-	rs := make([]ResultInfo, 0)
+	rs := make([]models.ResultInfo, 0)
 	fmt.Println("")
 	// 执行曲线回归
 	wg = sync.WaitGroup{}
@@ -365,7 +357,7 @@ func main() {
 	pbarIndex++
 	mapStock.Each(func(key interface{}, value interface{}) {
 		bar.Add(1)
-		row := value.(ResultInfo)
+		row := value.(models.ResultInfo)
 		sc := row.Code
 		bs, ok := stock2Block[sc]
 		if ok {
@@ -373,7 +365,7 @@ func main() {
 			shot, ok1 := mapBlockData[btop]
 			if ok1 {
 				//row.BlockCode = shot.Code
-				row.BlockType = blockTypeName(shot.Code)
+				row.BlockType = models.BlockTypeName(shot.Code)
 				row.BlockName = shot.Name
 				row.BlockRate = (shot.Price/shot.LastClose - 1.00) * 100
 				//row.BlockTopCode = shot.TopCode
@@ -388,7 +380,7 @@ func main() {
 				row.BlockRank = shot.TopNo
 			}
 		}
-		predict := func(info ResultInfo, rs *[]ResultInfo, tbl *tableView.Table) {
+		predict := func(info models.ResultInfo, rs *[]models.ResultInfo, tbl *tableView.Table) {
 			defer wg.Done()
 			wg.Add(1)
 			info.Predict()
@@ -410,7 +402,7 @@ func main() {
 	fmt.Println("")
 	bar = progressbar.NewBar(pbarIndex, "执行[检测能量转强]", count)
 	pbarIndex++
-	rsValue := make([]ResultInfo, 0)
+	rsValue := make([]models.ResultInfo, 0)
 	mainStart = time.Now()
 	for _, v := range rs {
 		bar.Add(1)
@@ -429,7 +421,7 @@ func main() {
 	fmt.Println("")
 	bar = progressbar.NewBar(pbarIndex, "执行[置信区间检测]", count)
 	pbarIndex++
-	rsCib := make([]ResultInfo, 0)
+	rsCib := make([]models.ResultInfo, 0)
 	mainStart = time.Now()
 	for _, v := range rsValue {
 		bar.Add(1)
@@ -447,15 +439,15 @@ func main() {
 	output(api.Code()+10000, rsCib)
 }
 
-func evaluate(api Strategy, wg *sync.WaitGroup, code string, info *security.StaticBasic, result *treemap.Map) {
+func evaluate(api models.Strategy, wg *sync.WaitGroup, code string, info *security.StaticBasic, result *treemap.Map) {
 	defer wg.Done()
 	//wg.Add(1)
 	api.Evaluate(code, info, result)
 }
 
-func output(strategyNo int, v []ResultInfo) {
+func output(strategyNo int, v []models.ResultInfo) {
 	df := pandas.LoadStructs(v)
-	filename := fmt.Sprintf("%s/%s/%s-%d.csv", cache.CACHE_ROOT_PATH, CACHE_STRATEGY_PATH, cache.Today(), strategyNo)
+	filename := fmt.Sprintf("%s/%s/%s-%d.csv", cache.CACHE_ROOT_PATH, models.CACHE_STRATEGY_PATH, cache.Today(), strategyNo)
 	_ = cache.CheckFilepath(filename)
 	_ = df.WriteCSV(filename)
 
