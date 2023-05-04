@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.22] - 2023-05-04
+### Changed
+- 调整板块代码.
+
 ## [1.5.21] - 2023-05-04
 ### Changed
 - 合并t89k代码.
@@ -466,7 +470,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.21...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.22...HEAD
+[1.5.22]: https://gitee.com/mymmsc/quant/compare/v1.5.21...v1.5.22
 [1.5.21]: https://gitee.com/mymmsc/quant/compare/v1.5.20...v1.5.21
 [1.5.20]: https://gitee.com/mymmsc/quant/compare/v1.5.19...v1.5.20
 [1.5.19]: https://gitee.com/mymmsc/quant/compare/v1.5.18...v1.5.19
