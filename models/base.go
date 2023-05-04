@@ -32,42 +32,6 @@ type Strategy interface {
 	Evaluate(fullCode string, info *security.StaticBasic, result *treemap.Map)
 }
 
-//var (
-//	mapTag map[reflect.Type]map[int]string = nil
-//)
-//
-//func init() {
-//	mapTag = make(map[reflect.Type]map[int]string)
-//}
-//
-//func Decimal(value float64) float64 {
-//	return math.Trunc(value*1e2+0.5) * 1e-2
-//}
-//
-//func initTag(t reflect.Type, tagName string) map[int]string {
-//	ma, mok := mapTag[t]
-//	if mok {
-//		return ma
-//	}
-//	ma = nil
-//	fieldNum := t.NumField()
-//	for i := 0; i < fieldNum; i++ {
-//		field := t.Field(i)
-//		tag := field.Tag
-//		if len(tag) > 0 {
-//			tv, ok := tag.Lookup(tagName)
-//			if ok {
-//				if ma == nil {
-//					ma = make(map[int]string)
-//					mapTag[t] = ma
-//				}
-//				ma[i] = tv
-//			}
-//		}
-//	}
-//	return ma
-//}
-
 // ResultInfo 策略结果
 type ResultInfo struct {
 	Code         string  `name:"证券代码" json:"code" csv:"code" array:"0"`
@@ -99,9 +63,6 @@ type ResultInfo struct {
 
 func (this *ResultInfo) Headers() []string {
 	val := reflect.ValueOf(this)
-	//t := reflect.TypeOf(v)
-	//fieldNum := val.NumField()
-	//_ = fieldNum
 	obj := reflect.ValueOf(this)
 	t := val.Type()
 	if val.Kind() == reflect.Ptr {
