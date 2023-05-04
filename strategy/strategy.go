@@ -302,7 +302,7 @@ func main() {
 	stockCodes := []string{}
 	if strategy == 0 {
 		pbarIndex++
-		tb := models.TopBlock(pbarIndex)
+		tb := models.TopBlock(&pbarIndex)
 		for _, v := range tb {
 			bc := v.BlockCode
 			sl, ok := block2Top[bc]

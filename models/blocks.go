@@ -11,13 +11,15 @@ import (
 	"github.com/mymmsc/gox/logger"
 	"github.com/mymmsc/gox/progressbar"
 	"github.com/quant1x/quant/labs/trade"
+
 	"sort"
 )
 
 // 板块常量
 const (
-	BlockTopN = 3 // 板块排行前几名
-	StockTopN = 3 // 板块个股前几名
+	BlockTopN    = 3  // 板块排行前几名
+	StockTopN    = 3  // 板块个股前几名
+	AllStockTopN = 10 // 全部代码前几名
 )
 
 // BlockInfo 板块信息
@@ -67,7 +69,7 @@ func StockSort(a, b trade.QuoteSnapshot) bool {
 	return false
 }
 
-func scanBlock(pbarIndex int, blockType security.BlockType) []trade.QuoteSnapshot {
+func scanBlock(pbarIndex *int, blockType security.BlockType) []trade.QuoteSnapshot {
 	// 执行板块指数的检测
 	dfBlock := stock.BlockList()
 	var blockCodes []string
@@ -101,8 +103,8 @@ func scanBlock(pbarIndex int, blockType security.BlockType) []trade.QuoteSnapsho
 	if !ok {
 		btn = stat.AnyToString(blockType)
 	}
-	bar := progressbar.NewBar(pbarIndex, "执行[扫描"+btn+"板块指数]", blockCount)
-	pbarIndex++
+	bar := progressbar.NewBar(*pbarIndex, "执行[扫描"+btn+"板块指数]", blockCount)
+	*pbarIndex++
 	snapshots := []trade.QuoteSnapshot{}
 	mapBlockName := make(map[string]string)
 	for start := 0; start < blockCount; start += quotes.TDX_SECURITY_QUOTES_MAX {
@@ -146,9 +148,9 @@ func scanBlock(pbarIndex int, blockType security.BlockType) []trade.QuoteSnapsho
 			v.Name = mapBlockName[v.Code]
 			v.LiuTongPan = cache.GetLiuTongPan(v.Code)
 			v.FreeGuBen = cache.GetFreeGuBen(v.Code)
-			kpVol := cache.GetKaipanVol(v.Code)
-			kpVol = kpVol * 100
-			v.TurnZ = kpVol / v.FreeGuBen * 100
+			//kpVol := cache.GetKaipanVol(v.Code)
+			//kpVol = kpVol * 100
+			//v.TurnZ = kpVol / v.FreeGuBen * 100
 
 			snapshots = append(snapshots, v)
 		}
@@ -162,7 +164,7 @@ func scanBlock(pbarIndex int, blockType security.BlockType) []trade.QuoteSnapsho
 	return snapshots
 }
 
-func getBlockByType(pbarIndex int, blockType security.BlockType) []BlockInfo {
+func getBlockByType(pbarIndex *int, blockType security.BlockType) []BlockInfo {
 	bs := []BlockInfo{}
 	blocks := scanBlock(pbarIndex, blockType)
 	// 涨幅榜前N
@@ -192,15 +194,14 @@ func getBlockByType(pbarIndex int, blockType security.BlockType) []BlockInfo {
 }
 
 // TopBlock 板块排行
-func TopBlock(pbarIndex int) []BlockInfo {
+func TopBlock(pbarIndex *int) []BlockInfo {
 	bs := []BlockInfo{}
 	blockTypes := []security.BlockType{security.BK_HANGYE, security.BK_GAINIAN}
 	for _, bt := range blockTypes {
-		pbarIndex += 1
+		*pbarIndex += 1
 		blocks := getBlockByType(pbarIndex, bt)
 		bs = append(bs, blocks...)
 	}
-	fmt.Println()
 	return bs
 }
 
