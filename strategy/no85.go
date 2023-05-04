@@ -24,7 +24,7 @@ func (this FormulaNo85) Evaluate(fullCode string, info *security.StaticBasic, re
 		return
 	}
 	days := df.Nrow()
-	zf := df.Col("zf").DTypes()[days-1]
+	zf := df.Col("turnover_rate").DTypes()[days-1]
 
 	df1 := indicator.CDTD(df)
 

@@ -38,7 +38,7 @@ func (this *FormulaNo1) Evaluate(fullCode string, info *security.StaticBasic, re
 	if days < 1 {
 		return
 	}
-	zf := df.Col("zf").DTypes()[days-1]
+	zf := df.Col("turnover_rate").DTypes()[days-1]
 	// 取5、10、20日均线
 	ma5 := MA(CLOSE, 5)
 	ma10 := MA(CLOSE, 10)

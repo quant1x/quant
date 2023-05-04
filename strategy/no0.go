@@ -32,7 +32,7 @@ func (this *FormulaNo0) Evaluate(fullCode string, info *security.StaticBasic, re
 	//fmt.Println(fullCode, turnZ, kpVol, freeGuBen)
 
 	CLOSE := df.ColAsNDArray("close")
-	ZF := df.ColAsNDArray("zf")
+	ZF := df.ColAsNDArray("turnover_rate")
 	if days > 1 {
 		buy := CLOSE.IndexOf(-1).(float64)
 		zf := ZF.IndexOf(-1).(float64)

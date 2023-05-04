@@ -34,7 +34,7 @@ func (this FormulaNo89) Evaluate(fullCode string, info *security.StaticBasic, re
 	CLOSE := df.Col("close")
 	days := CLOSE.Len()
 	date := df.Col("date").Values().([]string)[days-1]
-	zf := df.Col("zf").DTypes()[days-1]
+	zf := df.Col("turnover_rate").DTypes()[days-1]
 	ret := indicator.F89K(df, N)
 	if ret.Nrow() < 1 {
 		return

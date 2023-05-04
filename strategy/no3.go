@@ -27,7 +27,7 @@ func (this FormulaNo3) Evaluate(fullCode string, info *security.StaticBasic, res
 		return
 	}
 	days := df.Nrow()
-	zf := df.Col("zf").DTypes()[days-1]
+	zf := df.Col("turnover_rate").DTypes()[days-1]
 	if p, ok := linear.W(df); ok {
 		rLen := df.Nrow()
 		date := df.Col("date").Values().([]string)[rLen-1]
