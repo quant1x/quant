@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.18] - 2023-05-04
+### Changed
+- 更新data版本号.
+
 ## [1.5.17] - 2023-05-04
 ### Changed
 - 更新data, gotdx版本号.
@@ -413,7 +417,8 @@ All notable changes to this project will be documented in this file.
 - Update README.md.
 - Initial commit.
 
-[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.17...HEAD
+[Unreleased]: https://gitee.com/mymmsc/quant/compare/v1.5.18...HEAD
+[1.5.18]: https://gitee.com/mymmsc/quant/compare/v1.5.17...v1.5.18
 [1.5.17]: https://gitee.com/mymmsc/quant/compare/v1.5.16...v1.5.17
 [1.5.16]: https://gitee.com/mymmsc/quant/compare/v1.5.15...v1.5.16
 [1.5.15]: https://gitee.com/mymmsc/quant/compare/v1.5.14...v1.5.15
