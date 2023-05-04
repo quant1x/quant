@@ -1,4 +1,4 @@
-package linear
+package indicator
 
 import (
 	"fmt"
@@ -16,9 +16,10 @@ func TestW(t *testing.T) {
 	//code = "sh000001"
 	code = "sh600703"
 	code = "sh688358"
+	code = "002564.sz"
 	df := stock.KLine(code)
 	//df = df.SelectRows(stat.RangeFinite(0, -5))
 	fmt.Println(df)
 	fmt.Printf("   证券代码: %s\n", code)
-	W(df, true)
+	W(df, true, true)
 }

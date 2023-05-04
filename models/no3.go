@@ -4,7 +4,7 @@ import (
 	"gitee.com/quant1x/data/security"
 	"gitee.com/quant1x/data/stock"
 	"github.com/mymmsc/gox/util/treemap"
-	"github.com/quant1x/quant/labs/linear"
+	"github.com/quant1x/quant/indicator"
 )
 
 type FormulaNo3 struct{}
@@ -28,7 +28,7 @@ func (this FormulaNo3) Evaluate(fullCode string, info *security.StaticBasic, res
 	}
 	days := df.Nrow()
 	zf := df.Col("turnover_rate").DTypes()[days-1]
-	if p, ok := linear.W(df); ok {
+	if p, ok := indicator.W(df); ok {
 		rLen := df.Nrow()
 		date := df.Col("date").Values().([]string)[rLen-1]
 		closes := df.Col("close").DTypes()

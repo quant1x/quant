@@ -5,43 +5,53 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.20] - 2023-05-04
 ### Changed
+- Update changelog.
 - 修复涨幅字段的问题.
 
 ## [1.5.19] - 2023-05-04
 ### Changed
+- Update changelog.
 - 更新data版本号.
 
 ## [1.5.18] - 2023-05-04
 ### Changed
+- Update changelog.
 - 更新data版本号.
 
 ## [1.5.17] - 2023-05-04
 ### Changed
+- Update changelog.
 - 更新data, gotdx版本号.
 
 ## [1.5.16] - 2023-05-03
 ### Changed
+- Update changelog.
 - 更新data, gotdx版本号.
 
 ## [1.5.15] - 2023-05-01
 ### Changed
+- Update changelog.
 - 更新data版本.
 - Update libs version.
 
 ## [1.5.14] - 2023-05-01
 ### Changed
+- Update changelog.
 - 更新data版本号.
 
 ## [1.5.13] - 2023-04-29
 ### Changed
+- Update changelog.
 - Update data version.
 
 ## [1.5.12] - 2023-04-27
 ### Changed
+- Update changelog.
 - Updata date version.
 
 ## [1.5.11] - 2023-04-26
 ### Changed
+- Update changelog.
 - Update data version.
 - 更新data版本号.
 - 更新data版本号.
@@ -49,18 +59,22 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.10] - 2023-04-26
 ### Changed
+- Update changelog.
 - 更新相关依赖库的最新版本.
 
 ## [1.5.9] - 2023-04-25
 ### Changed
+- Update changelog.
 - Update data version.
 
 ## [1.5.8] - 2023-04-25
 ### Changed
+- Update changelog.
 - 优化turnz的计算方法.
 
 ## [1.5.7] - 2023-04-25
 ### Changed
+- Update changelog.
 - 优化turnz的计算方法.
 - 更新data版本.
 - Update data version.
@@ -70,99 +84,121 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.6] - 2023-04-25
 ### Changed
+- Update changelog.
 - 更新data版本号.
 
 ## [1.5.5] - 2023-04-24
 ### Changed
+- Update changelog.
 - 删除废弃的代码.
 
 ## [1.5.4] - 2023-04-24
 ### Changed
+- Update changelog.
 - 调整开盘换手z代码.
 - 增加开盘换手z.
 - 增加开盘换手z.
 
 ## [1.5.3] - 2023-04-24
 ### Changed
+- Update changelog.
 - 新增0号策略.
 - 新增0号策略.
 - 更新data版本号, treemap加锁.
 
 ## [1.5.2] - 2023-04-21
 ### Changed
+- Update changelog.
 - Update data version.
 
 ## [1.5.1] - 2023-04-21
 ### Changed
+- Update changelog.
 - 更新data版本.
 
 ## [1.5.0] - 2023-04-21
 ### Changed
+- Update changelog.
 - 更新data版本号, 优化内外盘的计算方式, 对齐通达信的算法.
 
 ## [1.3.40] - 2023-04-20
 ### Changed
+- Update changelog.
 - Update data version.
 
 ## [1.3.39] - 2023-04-19
 ### Changed
+- Update changelog.
 - 更新date版本.
 
 ## [1.3.38] - 2023-04-19
 ### Changed
+- Update changelog.
 - 修改判断量比的条件.
 - 更新pandas版本号.
 
 ## [1.3.37] - 2023-04-17
 ### Changed
+- Update changelog.
 - 更新data, 以开放needIgnore函数.
 - 修复WaitGroup的错误用法.
 
 ## [1.3.36] - 2023-04-16
 ### Changed
+- Update changelog.
 - Update modules.
 - 增加编译脚本.
 
 ## [1.3.35] - 2023-04-14
 ### Changed
+- Update changelog.
 - 修复统计结果错误的bug.
 
 ## [1.3.34] - 2023-04-14
 ### Changed
+- Update changelog.
 - 更新data版本号.
 
 ## [1.3.33] - 2023-04-13
 ### Changed
+- Update changelog.
 - 更新data版本号.
 
 ## [1.3.32] - 2023-04-13
 ### Changed
+- Update changelog.
 - 更新data版本号.
 
 ## [1.3.31] - 2023-04-12
 ### Changed
+- Update changelog.
 - 升级data版本号.
 
 ## [1.3.30] - 2023-04-12
 ### Changed
+- Update changelog.
 - 调整代码.
 
 ## [1.3.29] - 2023-04-12
 ### Changed
+- Update changelog.
 - 调整涨幅.
 
 ## [1.3.28] - 2023-04-12
 ### Changed
+- Update changelog.
 - 结果集增加涨跌幅.
 
 ## [1.3.27] - 2023-04-12
 ### Changed
+- 更新changelog.
 - 增加数据校验.
 - 量比小于1.5的过滤掉.
 - 更新data版本.
 
-## [1.3.26] - 2023-04-06
+## [1.3.26] - 2023-04-11
 ### Changed
+- Update changelog.
 - 修正data版本号.
 
 ## [1.3.25] - 2023-04-06
